@@ -1,14 +1,35 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, I18nManager } from "react-native";
+import { createStackNavigator, createAppContainer } from 'react-navigation';
 
-export default function App() {
+import Login from './pages/Login';
+
+I18nManager.forceRTL(false);
+
+function App() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <Text>App4</Text>
+      <AppNavigator />
     </View>
   );
 }
+
+const AppNavigator = createStackNavigator({
+
+  Login,
+
+},
+  {
+    headerMode: 'none',
+    navigationOptions: {
+      headerVisable: false,
+    }
+  },
+  {
+    initialRouteName: 'Login',
+  });
+
+export default createAppContainer(AppNavigator);
 
 const styles = StyleSheet.create({
   container: {
