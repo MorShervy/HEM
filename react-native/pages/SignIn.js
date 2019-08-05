@@ -18,13 +18,12 @@ const fbId = "415744562619529";
 export default function SignIn(props) {
   const loginFB = async () => {
     try {
-      const {
-        type,
-        token,
-        permissions
-      } = await Expo.Facebook.logInWithReadPermissionsAsync(fbId, {
-        permissions: ["public_profile", "email"]
-      });
+      const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync(
+        fbId,
+        {
+          permissions: ["public_profile", "email"]
+        }
+      );
       if (type === "success") {
         // Get the user's name using Facebook's Graph API
         const response = await fetch(
