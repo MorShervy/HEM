@@ -11,39 +11,44 @@ import {
 
 const { width, height } = Dimensions.get("window");
 
-const SignUp = props => (
-  <View style={styles.container}>
-    <Logo styles={[styles.logo, styles.image]} />
+const SignUp = props => {
+  return (
+    <View style={styles.container}>
+      <Logo styles={[styles.logo, styles.image]} />
 
-    <View style={styles.formView}>
-      <View style={{ paddingTop: 10 }}>
-        <Text style={styles.txtBold}>Sign Un to HEM</Text>
-      </View>
-      <View style={{ paddingTop: 10 }}>
-        <TextInput style={styles.txtInput} placeholder="Example@example.com" />
-      </View>
-      <View style={{ paddingTop: 10 }}>
-        <TextInput style={styles.txtInput} placeholder="Password" />
-      </View>
-      <View style={{ paddingTop: 10 }}>
-        <TextInput style={styles.txtInput} placeholder="Confirm Password" />
-      </View>
-      {/* button sign in */}
-      <View style={{ paddingTop: 10 }}>
-        <TouchableOpacity style={[styles.btnStyle, styles.btnSignInColor]}>
-          <Text style={styles.btnTxtStyle}>Sign Un</Text>
-        </TouchableOpacity>
-      </View>
+      <View style={styles.formView}>
+        <View style={{ paddingTop: 10 }}>
+          <Text style={styles.txtBold}>Sign Un to HEM</Text>
+        </View>
+        <View style={{ paddingTop: 10 }}>
+          <TextInput
+            style={styles.txtInput}
+            placeholder="Example@example.com"
+          />
+        </View>
+        <View style={{ paddingTop: 10 }}>
+          <TextInput style={styles.txtInput} placeholder="Password" />
+        </View>
+        <View style={{ paddingTop: 10 }}>
+          <TextInput style={styles.txtInput} placeholder="Confirm Password" />
+        </View>
+        {/* button sign in */}
+        <View style={{ paddingTop: 10 }}>
+          <TouchableOpacity style={[styles.btnStyle, styles.btnSignInColor]}>
+            <Text style={styles.btnTxtStyle}>Sign Un</Text>
+          </TouchableOpacity>
+        </View>
 
-      <View style={{ paddingTop: 50 }}>
-        <Text>Have account in H.E.M?</Text>
-        <TouchableOpacity onPress={() => props.navigation.navigate("SignIn")}>
-          <Text style={styles.btnSignIn}>Sign In</Text>
-        </TouchableOpacity>
+        <View style={{ paddingTop: 50 }}>
+          <Text>Have account in H.E.M?</Text>
+          <TouchableOpacity onPress={() => props.navigation.navigate("SignIn")}>
+            <Text style={styles.btnSignIn}>Sign In</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
-  </View>
-);
+  );
+};
 export default SignUp;
 
 const styles = StyleSheet.create({
