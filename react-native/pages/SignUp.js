@@ -74,10 +74,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingBottom: 20
   },
-  btnView: {
-    paddingTop: 10,
-    paddingBottom: 10
-  },
   btnStyle: {
     height: 40,
     width: width - 120,
