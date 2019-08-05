@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet, KeyboardAvoidingView, Dimensions, TextInput, TouchableOpacity } from "react-native";
+import Logo from '../components/Logo';
 
 const { width, height } = Dimensions.get("window");
 
@@ -8,7 +9,7 @@ export default function SignIn() {
     return (
         <View style={styles.container}>
 
-            {/* <Logo /> */}
+            <Logo styles={[]} />
 
             <Text style={styles.txtBold}>House Expenses Management</Text>
             <Text style={styles.txtBold}>Sign In to HEM</Text>
@@ -43,5 +44,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         borderWidth: 1,
         borderColor: "black"
-    }
+    },
+    logo: {
+        alignItems: 'center',
+        paddingTop: 150,
+    },
+    image: {
+        width: 129,
+        height: 129,
+    },
 });
