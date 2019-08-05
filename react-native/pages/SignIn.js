@@ -28,10 +28,10 @@ export default function SignIn(props) {
       if (type === "success") {
         // Get the user's name using Facebook's Graph API
         const response = await fetch(
-          `https://graph.facebook.com/me?access_token=${token}`
+          `https://graph.facebook.com/me?fields=email&access_token=${token}`
         );
         //Alert.alert("Logged in!", `Hi ${await response.json()}!`);
-        console.log(permissions);
+        console.log(await response.json());
       } else {
         // type === 'cancel'
         Alert.alert(type);
