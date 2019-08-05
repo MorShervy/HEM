@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View, I18nManager } from "react-native";
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 
-import Login from './pages/Login';
+import SignIn from './pages/SignIn';
 
 I18nManager.forceRTL(false);
 
@@ -16,7 +16,7 @@ function App() {
 
 const AppNavigator = createStackNavigator({
 
-  Login,
+  SignIn,
 
 },
   {
@@ -26,7 +26,7 @@ const AppNavigator = createStackNavigator({
     }
   },
   {
-    initialRouteName: 'Login',
+    initialRouteName: 'SignIn',
   });
 
 export default createAppContainer(AppNavigator);

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, KeyboardAvoidingView, Dimensions, TextInput, To
 
 const { width, height } = Dimensions.get("window");
 
-export default function Login() {
+export default function SignIn() {
 
     return (
         <View style={styles.container}>
