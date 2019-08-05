@@ -4,7 +4,7 @@ import Logo from '../components/Logo';
 
 const { width, height } = Dimensions.get("window");
 
-export default function SignIn() {
+export default function SignIn(props) {
 
     return (
         <View style={styles.container}>
@@ -48,7 +48,9 @@ export default function SignIn() {
 
             <View style={{ paddingTop: 50 }}>
                 <Text>New to H.E.M?</Text>
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => { props.navigation.navigate('SignUp') }}
+                >
                     <Text style={styles.btnSignUp}>Create an account</Text>
                 </TouchableOpacity>
             </View>
