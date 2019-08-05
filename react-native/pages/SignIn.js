@@ -1,14 +1,48 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, KeyboardAvoidingView, Dimensions, TextInput, TouchableOpacity } from "react-native";
-import Logo from '../components/Logo';
+import {
+    View,
+    Text,
+    StyleSheet,
+    KeyboardAvoidingView,
+    Dimensions,
+    TextInput,
+    TouchableOpacity,
+    Alert
+} from "react-native";
+import Logo from "../components/Logo";
+import * as Expo from "expo";
 
 const { width, height } = Dimensions.get("window");
+const fbId = "415744562619529";
 
 export default function SignIn(props) {
+    const loginFB = async () => {
+        try {
+            const {
+                type,
+                token,
+                permissions
+            } = await Expo.Facebook.logInWithReadPermissionsAsync(fbId, {
+                permissions: ["public_profile", "email"]
+            });
+            if (type === "success") {
+                // Get the user's name using Facebook's Graph API
+                const response = await fetch(
+                    `https://graph.facebook.com/me?access_token=${token}`
+                );
+                //Alert.alert("Logged in!", `Hi ${await response.json()}!`);
+                console.log(permissions);
+            } else {
+                // type === 'cancel'
+                Alert.alert(type);
+            }
+        } catch ({ message }) {
+            alert(`Facebook Login Error: ${message}`);
+        }
+    };
 
     return (
         <View style={styles.container}>
-
             <Logo styles={[styles.logo, styles.image]} />
 
             <View style={styles.formView}>
@@ -16,14 +50,13 @@ export default function SignIn(props) {
                     <Text style={styles.txtBold}>Sign In to HEM</Text>
                 </View>
                 <View style={{ paddingTop: 10 }}>
-                    <TextInput style={styles.txtInput}
+                    <TextInput
+                        style={styles.txtInput}
                         placeholder="Example@example.com"
                     />
                 </View>
                 <View style={{ paddingTop: 10 }}>
-                    <TextInput style={styles.txtInput}
-                        placeholder="Password"
-                    />
+                    <TextInput style={styles.txtInput} placeholder="Password" />
                 </View>
                 {/* button sign in */}
                 <View style={{ paddingTop: 10 }}>
@@ -34,7 +67,10 @@ export default function SignIn(props) {
 
                 {/* button sign in facebook */}
                 <View style={{ paddingTop: 50 }}>
-                    <TouchableOpacity style={[styles.btnStyle, styles.btnFacebookColor]}>
+                    <TouchableOpacity
+                        onPress={loginFB}
+                        style={[styles.btnStyle, styles.btnFacebookColor]}
+                    >
                         <Text style={styles.btnTxtStyle}>Sign In with Facebook</Text>
                     </TouchableOpacity>
                 </View>
@@ -49,7 +85,9 @@ export default function SignIn(props) {
             <View style={{ paddingTop: 50 }}>
                 <Text>New to H.E.M?</Text>
                 <TouchableOpacity
-                    onPress={() => { props.navigation.navigate('SignUp') }}
+                    onPress={() => {
+                        props.navigation.navigate("SignUp");
+                    }}
                 >
                     <Text style={styles.btnSignUp}>Create an account</Text>
                 </TouchableOpacity>
@@ -61,7 +99,7 @@ export default function SignIn(props) {
 const styles = StyleSheet.create({
     container: {
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "center"
     },
     txtBold: {
         fontSize: 18,
@@ -75,12 +113,12 @@ const styles = StyleSheet.create({
         borderColor: "black"
     },
     logo: {
-        alignItems: 'center',
-        paddingTop: 100,
+        alignItems: "center",
+        paddingTop: 100
     },
     image: {
         width: 129,
-        height: 129,
+        height: 129
     },
     formView: {
         alignItems: "center",
@@ -89,7 +127,7 @@ const styles = StyleSheet.create({
     btnStyle: {
         height: 40,
         width: width - 120,
-        borderWidth: 1,
+        borderWidth: 1
     },
     btnSignInColor: {
         backgroundColor: "#2cb54b",
@@ -97,16 +135,16 @@ const styles = StyleSheet.create({
     },
     btnFacebookColor: {
         backgroundColor: "#415dae",
-        borderColor: "#415dae",
+        borderColor: "#415dae"
     },
     btnGoogleColor: {
         backgroundColor: "#cf4332",
-        borderColor: "#cf4332",
+        borderColor: "#cf4332"
     },
     btnTxtStyle: {
         fontSize: 18,
         color: "#fff",
-        textAlign: "center",
+        textAlign: "center"
     },
     btnSignUp: {
         color: "#00C22A"
