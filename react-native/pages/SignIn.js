@@ -44,11 +44,13 @@ export default function SignIn() {
                         <Text style={styles.btnTxtStyle}>Sign In with Google</Text>
                     </TouchableOpacity>
                 </View>
+            </View>
 
-                <View style={{ paddingTop: 50 }}>
-                    <Text>First time?</Text>
-                </View>
-
+            <View style={{ paddingTop: 50 }}>
+                <Text>New to H.E.M?</Text>
+                <TouchableOpacity>
+                    <Text style={styles.btnSignUp}>Create an account</Text>
+                </TouchableOpacity>
             </View>
         </View>
     );
@@ -56,7 +58,6 @@ export default function SignIn() {
 
 const styles = StyleSheet.create({
     container: {
-
         alignItems: "center",
         justifyContent: "center",
     },
@@ -92,20 +93,25 @@ const styles = StyleSheet.create({
         height: 40,
         width: width - 120,
         borderWidth: 1,
-        borderColor: "black",
     },
     btnSignInColor: {
-        backgroundColor: "#00C22A"
+        backgroundColor: "#2cb54b",
+        borderColor: "#289643"
     },
     btnFacebookColor: {
-        backgroundColor: "#0243D0"
+        backgroundColor: "#415dae",
+        borderColor: "#415dae",
     },
     btnGoogleColor: {
-        backgroundColor: "#F20900"
+        backgroundColor: "#cf4332",
+        borderColor: "#cf4332",
     },
     btnTxtStyle: {
         fontSize: 18,
         color: "#fff",
         textAlign: "center",
+    },
+    btnSignUp: {
+        color: "#00C22A"
     }
 });
