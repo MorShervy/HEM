@@ -1,15 +1,28 @@
-import React, { Component } from "react";
-import { View, Text, StyleSheet, KeyboardAvoidingView, Dimensions, TextInput, TouchableOpacity } from "react-native";
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
 
-const { width, height } = Dimensions.get("window");
+const SignUp = props => (
+  <View style={styles.container}>
+    <Logo styles={[]} />
 
-export default function SignUp() {
+    <Text style={styles.txtBold}>House Expenses Management</Text>
+    <Text style={styles.txtBold}>Sign Up to HEM</Text>
 
-    return (
-        <View>
+    <TextInput style={styles.txtInput} placeholder="Example@example.com" />
 
+    <TextInput style={styles.txtInput} placeholder="Password" />
 
-        </View>
-    )
+    <TouchableOpacity>
+      <Text>Sign Up</Text>
+    </TouchableOpacity>
+  </View>
+);
+export default SignUp;
 
-}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center"
+  }
+});
