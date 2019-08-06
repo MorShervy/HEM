@@ -6,18 +6,18 @@ import {
   KeyboardAvoidingView,
   Dimensions,
   TextInput,
-  TouchableOpacity,
-  Alert
+  TouchableOpacity
 } from "react-native";
 import Logo from "../components/Logo";
-import * as Expo from "expo";
+
+import { SignInWIthFB } from "../handlers/SignInWIthFB";
 
 import SignInWithGL from '../test/SignInWithGL';
 
 const { width, height } = Dimensions.get("window");
-const fbId = "415744562619529";
 
 export default function SignIn(props) {
+<<<<<<< HEAD
 
   const _HanleLoginWithGoogle = async () => {
     //alert("_HanleLoginWithGoogle")
@@ -48,6 +48,9 @@ export default function SignIn(props) {
       alert(`Facebook Login Error: ${message}`);
     }
   };
+=======
+  const UserFB = () => SignInWIthFB().then(res => console.log(res));
+>>>>>>> 6185dbddbc90cf489f42b9edb666c38a2645941a
 
   return (
     <View style={styles.container}>
@@ -76,7 +79,7 @@ export default function SignIn(props) {
         {/* button sign in facebook */}
         <View style={{ paddingTop: 50 }}>
           <TouchableOpacity
-            onPress={loginFB}
+            onPress={() => UserFB()}
             style={[styles.btnStyle, styles.btnFacebookColor]}
           >
             <Text style={styles.btnTxtStyle}>Sign In with Facebook</Text>
