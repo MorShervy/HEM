@@ -11,8 +11,8 @@ import {
 import Logo from "../components/Logo";
 
 import SignInWIthFB from "../handlers/SignInWIthFB";
-
 import SignInWithGL from '../handlers/SignInWithGL';
+import SQL from '../handlers/SQL';
 
 const { width, height } = Dimensions.get("window");
 
@@ -24,11 +24,13 @@ export default function SignIn(props) {
     console.log("type=", type)
     console.log("accessToken=", accessToken)
     console.log("user=", user)
+    const res = SQL.InsertUserFBandGL(user.email, user.name, user.photoUrl);
   }
 
   const _HanleLoginWithFacebook = async () => {
     const user = await SignInWIthFB.Login();
     console.log("user=", user)
+    const res = SQL.InsertUserFBandGL(user.email, user.name, user.picture.data.url);
   };
 
 
