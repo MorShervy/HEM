@@ -30,7 +30,7 @@ const SignUp = props => {
       regexPassword.test(getCPassword.toUpperCase())
     ) {
       SQL.InsertUser(getEmail, getPassword).then(res => {
-        (res.res === "0" && props.navigation.navigate("SignIn")) ||
+        (res.res === "0" && props.navigation.navigate("Overview")) ||
           (res.res === "1" && Alert.alert("Email already exist")) ||
           (res.res === "-1" && Alert.alert("There is problem with the server"));
       });

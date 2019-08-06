@@ -1,10 +1,10 @@
 import React from "react";
 import { StyleSheet, Text, View, I18nManager } from "react-native";
-import { createStackNavigator, createAppContainer } from 'react-navigation';
+import { createStackNavigator, createAppContainer } from "react-navigation";
 
-
-import SignIn from './pages/SignIn';
-import SignUp from './pages/SignUp';
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import Overview from "./pages/Overview";
 
 I18nManager.forceRTL(false);
 
@@ -16,21 +16,22 @@ function App() {
   );
 }
 
-const AppNavigator = createStackNavigator({
-
-  SignIn,
-  SignUp,
-
-},
+const AppNavigator = createStackNavigator(
   {
-    headerMode: 'none',
+    SignIn,
+    SignUp,
+    Overview
+  },
+  {
+    headerMode: "none",
     navigationOptions: {
-      headerVisable: false,
+      headerVisible: false
     }
   },
   {
-    initialRouteName: 'SignIn',
-  });
+    initialRouteName: "SignIn"
+  }
+);
 
 export default createAppContainer(AppNavigator);
 
