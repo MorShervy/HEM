@@ -24,13 +24,15 @@ export default function SignIn(props) {
     console.log("type=", type)
     console.log("accessToken=", accessToken)
     console.log("user=", user)
-    const res = SQL.InsertUserFBandGL(user.email, user.name, user.photoUrl);
+    SQL.InsertUserFBandGL(user.email, user.name, user.photoUrl).then((res) => { console.log("res=", res); });
+    
   }
 
   const _HanleLoginWithFacebook = async () => {
     const user = await SignInWIthFB.Login();
     console.log("user=", user)
-    const res = SQL.InsertUserFBandGL(user.email, user.name, user.picture.data.url);
+    SQL.InsertUserFBandGL(user.email, user.name, user.picture.data.url).then((res) => { console.log("res=", res); });
+
   };
 
 
