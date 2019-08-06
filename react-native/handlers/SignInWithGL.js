@@ -12,10 +12,7 @@ export default class SignInWithGL {
                 // iosClientId: YOUR_CLIENT_ID_HERE,
                 scopes: ['profile', 'email'],
             });
-            console.log("type=", type)
             if (type === 'success') {
-                console.log("accessToken=", accessToken)
-                console.log("user=", user);
                 return { type, accessToken, user }
             } else {
                 return { cancelled: true };

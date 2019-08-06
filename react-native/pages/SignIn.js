@@ -10,47 +10,27 @@ import {
 } from "react-native";
 import Logo from "../components/Logo";
 
-import { SignInWIthFB } from "../handlers/SignInWIthFB";
+import SignInWIthFB from "../handlers/SignInWIthFB";
 
-import SignInWithGL from '../test/SignInWithGL';
+import SignInWithGL from '../handlers/SignInWithGL';
 
 const { width, height } = Dimensions.get("window");
 
 export default function SignIn(props) {
-<<<<<<< HEAD
 
   const _HanleLoginWithGoogle = async () => {
     //alert("_HanleLoginWithGoogle")
-    const user = await SignInWithGL.Login();
+    const { type, accessToken, user } = await SignInWithGL.Login();
+    console.log("type=", type)
+    console.log("accessToken=", accessToken)
     console.log("user=", user)
   }
 
-  const loginFB = async () => {
-    try {
-      const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync(
-        fbId,
-        {
-          permissions: ["public_profile", "email"]
-        }
-      );
-      if (type === "success") {
-        // Get the user's name using Facebook's Graph API
-        const response = await fetch(
-          `https://graph.facebook.com/me?fields=email,name,picture.type(large)&access_token=${token}`
-        );
-        //Alert.alert("Logged in!", `Hi ${await response.json()}!`);
-        console.log(await response.json());
-      } else {
-        // type === 'cancel'
-        Alert.alert(type);
-      }
-    } catch ({ message }) {
-      alert(`Facebook Login Error: ${message}`);
-    }
+  const _HanleLoginWithFacebook = async () => {
+    const user = await SignInWIthFB.Login();
+    console.log("user=", user)
   };
-=======
-  const UserFB = () => SignInWIthFB().then(res => console.log(res));
->>>>>>> 6185dbddbc90cf489f42b9edb666c38a2645941a
+
 
   return (
     <View style={styles.container}>
@@ -79,7 +59,7 @@ export default function SignIn(props) {
         {/* button sign in facebook */}
         <View style={{ paddingTop: 50 }}>
           <TouchableOpacity
-            onPress={() => UserFB()}
+            onPress={() => _HanleLoginWithFacebook()}
             style={[styles.btnStyle, styles.btnFacebookColor]}
           >
             <Text style={styles.btnTxtStyle}>Sign In with Facebook</Text>
