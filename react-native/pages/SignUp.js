@@ -10,6 +10,7 @@ import {
   Alert,
   ActivityIndicator
 } from "react-native";
+import SQL from "../handlers/SQL";
 
 const { width, height } = Dimensions.get("window");
 const regexEmail = /^(([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}))$/;
@@ -28,11 +29,13 @@ const SignUp = props => {
       regexPassword.test(getPassword.toUpperCase()) &&
       regexPassword.test(getCPassword.toUpperCase())
     ) {
-      Alert.alert("Success");
-    } else {
-      Alert.alert("Failed");
+      SQL.InsertUser(getEmail, getPassword).then(res => {
+        (res.res === "0" && props.navigation.navigate("SignIn")) ||
+          (res.res === "1" && Alert.alert("Email already exist")) ||
+          (res.res === "-1" && Alert.alert("There is problem with the server"));
+      });
     }
-    //setIndicator(false);
+    setIndicator(false);
   };
 
   return (
