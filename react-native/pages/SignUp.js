@@ -61,7 +61,9 @@ const SignUp = props => {
               styles.txtInput,
               {
                 borderColor:
-                  (!regexEmail.test(getEmail.toUpperCase()) && "red") || "green"
+                  (getEmail === "" && "black") ||
+                  (!regexEmail.test(getEmail.toUpperCase()) && "red") ||
+                  "green"
               }
             ]}
             placeholder="Example@example.com"
@@ -75,6 +77,7 @@ const SignUp = props => {
               styles.txtInput,
               {
                 borderColor:
+                  (getPassword === "" && "black") ||
                   (!regexPassword.test(getPassword.toUpperCase()) && "red") ||
                   "green"
               }
@@ -92,6 +95,7 @@ const SignUp = props => {
               styles.txtInput,
               {
                 borderColor:
+                  (getCPassword === "" && "black") ||
                   ((!regexPassword.test(getCPassword.toUpperCase()) ||
                     getCPassword !== getPassword) &&
                     "red") ||
