@@ -12,10 +12,19 @@ import {
 import Logo from "../components/Logo";
 import * as Expo from "expo";
 
+import SignInWithGL from '../test/SignInWithGL';
+
 const { width, height } = Dimensions.get("window");
 const fbId = "415744562619529";
 
 export default function SignIn(props) {
+
+  const _HanleLoginWithGoogle = async () => {
+    //alert("_HanleLoginWithGoogle")
+    const user = await SignInWithGL.Login();
+    console.log("user=", user)
+  }
+
   const loginFB = async () => {
     try {
       const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync(
@@ -75,7 +84,10 @@ export default function SignIn(props) {
         </View>
         {/* butto sign in google */}
         <View style={{ paddingTop: 10 }}>
-          <TouchableOpacity style={[styles.btnStyle, styles.btnGoogleColor]}>
+          <TouchableOpacity
+            style={[styles.btnStyle, styles.btnGoogleColor]}
+            onPress={() => _HanleLoginWithGoogle()}
+          >
             <Text style={styles.btnTxtStyle}>Sign In with Google</Text>
           </TouchableOpacity>
         </View>

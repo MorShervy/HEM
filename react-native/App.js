@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View, I18nManager } from "react-native";
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 
+
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 
