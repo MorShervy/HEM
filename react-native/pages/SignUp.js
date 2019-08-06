@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Logo from "../components/Logo";
 import {
   View,
@@ -6,12 +6,31 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Dimensions
+  Dimensions,
+  Alert
 } from "react-native";
 
 const { width, height } = Dimensions.get("window");
+const regexEmail = /^(([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}))$/;
+const regexPassword = /^(.{6,12})$/;
 
 const SignUp = props => {
+  const [getEmail, setEmail] = useState("");
+  const [getPassword, setPassword] = useState("");
+  const [getCPassword, setCPassword] = useState("");
+
+  const HandleSignUp = () => {
+    if (
+      regexEmail.test(getEmail.toUpperCase()) &&
+      regexPassword.test(getPassword.toUpperCase()) &&
+      regexPassword.test(getCPassword.toUpperCase())
+    ) {
+      Alert.alert("Success");
+    } else {
+      Alert.alert("Failed");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Logo styles={[styles.logo, styles.image]} />
@@ -22,19 +41,60 @@ const SignUp = props => {
         </View>
         <View style={{ paddingTop: 10 }}>
           <TextInput
-            style={styles.txtInput}
+            style={[
+              styles.txtInput,
+              {
+                borderColor:
+                  (!regexEmail.test(getEmail.toUpperCase()) && "red") || "green"
+              }
+            ]}
             placeholder="Example@example.com"
+            value={getEmail}
+            onChangeText={e => setEmail(e)}
           />
         </View>
         <View style={{ paddingTop: 10 }}>
-          <TextInput style={styles.txtInput} placeholder="Password" />
+          <TextInput
+            style={[
+              styles.txtInput,
+              {
+                borderColor:
+                  (!regexPassword.test(getPassword.toUpperCase()) && "red") ||
+                  "green"
+              }
+            ]}
+            placeholder="Password"
+            maxLength={12}
+            secureTextEntry={true}
+            value={getPassword}
+            onChangeText={e => setPassword(e)}
+          />
         </View>
         <View style={{ paddingTop: 10 }}>
-          <TextInput style={styles.txtInput} placeholder="Confirm Password" />
+          <TextInput
+            style={[
+              styles.txtInput,
+              {
+                borderColor:
+                  ((!regexPassword.test(getCPassword.toUpperCase()) ||
+                    getCPassword !== getPassword) &&
+                    "red") ||
+                  "green"
+              }
+            ]}
+            placeholder="Confirm Password"
+            maxLength={12}
+            secureTextEntry={true}
+            value={getCPassword}
+            onChangeText={e => setCPassword(e)}
+          />
         </View>
         {/* button sign in */}
         <View style={{ paddingTop: 10 }}>
-          <TouchableOpacity style={[styles.btnStyle, styles.btnSignInColor]}>
+          <TouchableOpacity
+            style={[styles.btnStyle, styles.btnSignInColor]}
+            onPress={HandleSignUp}
+          >
             <Text style={styles.btnTxtStyle}>Sign Un</Text>
           </TouchableOpacity>
         </View>
