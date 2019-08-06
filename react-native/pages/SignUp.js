@@ -119,8 +119,8 @@ const SignUp = props => {
           </TouchableOpacity>
         </View>
 
-        <View style={{ paddingTop: 50 }}>
-          <Text>Have account in H.E.M?</Text>
+        <View style={{ paddingTop: 50, flexDirection: "row" }}>
+          <Text>Have account in H.E.M? </Text>
           <TouchableOpacity onPress={() => props.navigation.navigate("SignIn")}>
             <Text style={styles.btnSignIn}>Sign In</Text>
           </TouchableOpacity>

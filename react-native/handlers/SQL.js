@@ -18,7 +18,7 @@ export default class SQL {
         console.log(`${URL}/InsertUserFBandGL`, res);
         const data = await res.json();
         if (data.d === null) reject("something went wrong");
-        resolve(data.d);
+        resolve(JSON.parse(data.d));
       } catch (error) {
         reject(error);
       }

@@ -3,9 +3,9 @@ import {
   View,
   Text,
   StyleSheet,
-  KeyboardAvoidingView,
   Dimensions,
   TextInput,
+  Alert,
   TouchableOpacity
 } from "react-native";
 import Logo from "../components/Logo";
@@ -19,19 +19,35 @@ const { width, height } = Dimensions.get("window");
 export default function SignIn(props) {
 
   const _HanleLoginWithGoogle = async () => {
-    //alert("_HanleLoginWithGoogle")
+
     const { type, accessToken, user } = await SignInWithGL.Login();
     console.log("type=", type)
     console.log("accessToken=", accessToken)
     console.log("user=", user)
-    SQL.InsertUserFBandGL(user.email, user.name, user.photoUrl).then((res) => { console.log("res=", res); });
-    
+    if (user != undefined) {
+      SQL.InsertUserFBandGL(user.email, user.name, user.photoUrl)
+        .then((res) => {
+          console.log("res=", res.res);
+          (res.res === "0" && props.navigation.navigate("Overview")) ||
+            (res.res === "1" && props.navigation.navigate("Overview")) ||
+            (res.res === "-1" && Alert.alert("There is problem with the server"));
+        });
+    }
+
   }
 
   const _HanleLoginWithFacebook = async () => {
     const user = await SignInWIthFB.Login();
     console.log("user=", user)
-    SQL.InsertUserFBandGL(user.email, user.name, user.picture.data.url).then((res) => { console.log("res=", res); });
+    if (user != undefined) {
+      SQL.InsertUserFBandGL(user.email, user.name, user.picture.data.url)
+        .then(res => {
+          console.log("res=", res.res);
+          (res.res === "0" && props.navigation.navigate("Overview")) ||
+            (res.res === "1" && props.navigation.navigate("Overview")) ||
+            (res.res === "-1" && Alert.alert("There is problem with the server"));
+        });
+    }
 
   };
 
@@ -80,8 +96,8 @@ export default function SignIn(props) {
         </View>
       </View>
 
-      <View style={{ paddingTop: 50 }}>
-        <Text>New to H.E.M?</Text>
+      <View style={{ paddingTop: 50, flexDirection: "row" }}>
+        <Text>New to H.E.M? </Text>
         <TouchableOpacity
           onPress={() => {
             props.navigation.navigate("SignUp");
@@ -89,6 +105,7 @@ export default function SignIn(props) {
         >
           <Text style={styles.btnSignUp}>Create an account</Text>
         </TouchableOpacity>
+
       </View>
     </View>
   );
@@ -146,5 +163,11 @@ const styles = StyleSheet.create({
   },
   btnSignUp: {
     color: "#00C22A"
-  }
+  },
+  btnView: {
+
+
+    borderColor: "#000000"
+  },
+
 });
