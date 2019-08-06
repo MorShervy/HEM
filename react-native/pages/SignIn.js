@@ -6,39 +6,16 @@ import {
   KeyboardAvoidingView,
   Dimensions,
   TextInput,
-  TouchableOpacity,
-  Alert
+  TouchableOpacity
 } from "react-native";
 import Logo from "../components/Logo";
-import * as Expo from "expo";
+
+import { SignInWIthFB } from "../handlers/SignInWIthFB";
 
 const { width, height } = Dimensions.get("window");
-const fbId = "415744562619529";
 
 export default function SignIn(props) {
-  const loginFB = async () => {
-    try {
-      const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync(
-        fbId,
-        {
-          permissions: ["public_profile", "email"]
-        }
-      );
-      if (type === "success") {
-        // Get the user's name using Facebook's Graph API
-        const response = await fetch(
-          `https://graph.facebook.com/me?fields=email,name,picture.type(large)&access_token=${token}`
-        );
-        //Alert.alert("Logged in!", `Hi ${await response.json()}!`);
-        console.log(await response.json());
-      } else {
-        // type === 'cancel'
-        Alert.alert(type);
-      }
-    } catch ({ message }) {
-      alert(`Facebook Login Error: ${message}`);
-    }
-  };
+  const UserFB = () => SignInWIthFB().then(res => console.log(res));
 
   return (
     <View style={styles.container}>
@@ -67,7 +44,7 @@ export default function SignIn(props) {
         {/* button sign in facebook */}
         <View style={{ paddingTop: 50 }}>
           <TouchableOpacity
-            onPress={loginFB}
+            onPress={() => UserFB()}
             style={[styles.btnStyle, styles.btnFacebookColor]}
           >
             <Text style={styles.btnTxtStyle}>Sign In with Facebook</Text>
