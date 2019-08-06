@@ -53,7 +53,7 @@ const SignUp = props => {
 
       <View style={styles.formView}>
         <View style={{ paddingTop: 10 }}>
-          <Text style={styles.txtBold}>Sign Un to HEM</Text>
+          <Text style={styles.txtBold}>Sign Up to HEM</Text>
         </View>
         <View style={{ paddingTop: 10 }}>
           <TextInput
@@ -111,7 +111,7 @@ const SignUp = props => {
             style={[styles.btnStyle, styles.btnSignInColor]}
             onPress={HandleSignUp}
           >
-            <Text style={styles.btnTxtStyle}>Sign Un</Text>
+            <Text style={styles.btnTxtStyle}>Sign Up</Text>
           </TouchableOpacity>
         </View>
 
