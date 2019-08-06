@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   Dimensions,
-  Alert
+  Alert,
+  ActivityIndicator
 } from "react-native";
 
 const { width, height } = Dimensions.get("window");
@@ -18,8 +19,10 @@ const SignUp = props => {
   const [getEmail, setEmail] = useState("");
   const [getPassword, setPassword] = useState("");
   const [getCPassword, setCPassword] = useState("");
+  const [getIndicator, setIndicator] = useState(false);
 
   const HandleSignUp = () => {
+    setIndicator(true);
     if (
       regexEmail.test(getEmail.toUpperCase()) &&
       regexPassword.test(getPassword.toUpperCase()) &&
@@ -29,10 +32,20 @@ const SignUp = props => {
     } else {
       Alert.alert("Failed");
     }
+    //setIndicator(false);
   };
 
   return (
     <View style={styles.container}>
+      {getIndicator && (
+        <ActivityIndicator
+          size={77}
+          color="#0000ff"
+          style={{
+            position: "absolute"
+          }}
+        />
+      )}
       <Logo styles={[styles.logo, styles.image]} />
 
       <View style={styles.formView}>
