@@ -1,8 +1,10 @@
-﻿using System;
+﻿using _DAL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 using WebPush;
 
 namespace _BAL
@@ -41,6 +43,22 @@ namespace _BAL
             }
             return _keys.PublicKey;
         }
+
+        public object InsertUser(string email, string pass)
+        {
+            int result = DAL.InsertUser(email, pass);
+            var res = new { res = result.ToString() };
+            return new JavaScriptSerializer().Serialize(res);
+        }
+
+        public object InsertUserFBandGL(string email, string name, string photoUrl)
+        {
+            int result = DAL.InsertUserFBandGL(email, name, photoUrl);
+
+            var res = new { res = result.ToString() };
+            return new JavaScriptSerializer().Serialize(res);
+        }
+
 
 
     }

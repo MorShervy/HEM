@@ -1,4 +1,5 @@
-﻿using System;
+﻿using _BAL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -27,4 +28,15 @@ public class WebServiceM : System.Web.Services.WebService
         return "Hello World";
     }
 
+    [WebMethod]
+    public object InsertUser(string email,string pass)
+    {
+        return BAL.Instance.InsertUser(email, pass);
+    }
+
+    [WebMethod]
+    public object InsertUserFBandGL(string email, string name, string photoUrl)
+    {
+        return BAL.Instance.InsertUserFBandGL(email, name, photoUrl);
+    }
 }

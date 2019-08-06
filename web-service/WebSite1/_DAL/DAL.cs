@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
@@ -59,7 +60,71 @@ namespace _DAL
             return string.Empty;
         }
 
+        public static int InsertUser(string email, string pass)
+        {
+            int res = -1;
 
+            try
+            {
+                Con.Open();
+                _command = new SqlCommand($"InsertUser", Con);
+                _command.CommandType = CommandType.StoredProcedure;
+
+                /* input parameters */
+                _command.Parameters.Add(new SqlParameter("Email", email));
+                _command.Parameters.Add(new SqlParameter("Password", pass));
+
+                SqlParameter returnPar = new SqlParameter();
+                returnPar.Direction = ParameterDirection.ReturnValue;
+                _command.Parameters.Add(returnPar);
+                _command.ExecuteNonQuery();
+                res = (int)returnPar.Value;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            finally
+            {
+                if (Con.State == ConnectionState.Open)
+                    Con.Close();
+            }
+            return res;
+        }
+
+        public static int InsertUserFBandGL(string email, string name, string photoUrl)
+        {
+            int res = -1;
+
+            try
+            {
+                Con.Open();
+                _command = new SqlCommand($"InsertUserFBandGL", Con);
+                _command.CommandType = CommandType.StoredProcedure;
+
+                /* input parameters */
+                _command.Parameters.Add(new SqlParameter("Email", email));
+                _command.Parameters.Add(new SqlParameter("Name", name));
+                _command.Parameters.Add(new SqlParameter("PhotoUrl", photoUrl));
+
+                SqlParameter returnPar = new SqlParameter();
+                returnPar.Direction = ParameterDirection.ReturnValue;
+                _command.Parameters.Add(returnPar);
+                _command.ExecuteNonQuery();
+                res = (int)returnPar.Value;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            finally
+            {
+                if (Con.State == ConnectionState.Open)
+                    Con.Close();
+            }
+
+            return res;
+        }
 
     }
 }
