@@ -76,14 +76,14 @@ export default function SignIn(props) {
         <View style={{ paddingTop: 10 }}>
           <Text style={styles.txtBold}>Sign In to HEM</Text>
         </View>
-        <View style={{ paddingTop: 10 }}>
+        <View style={{ paddingTop: 10, width: width - 120, height: 30 }}>
           {
             getErrLogin &&
             <TouchableOpacity
-              style={{ flexDirection: "row" }}
+              style={{ justifyContent: "space-evenly", flexDirection: "row" }}
               onPress={() => setErrLogin(false)}
             >
-              <Text style={{ fontSize: 12, color: "red" }}>Incorrect username or password           </Text>
+              <Text style={{ fontSize: 12, color: "red" }}>Incorrect username or password</Text>
               <Ionicons name="ios-close" size={25} color="red" />
             </TouchableOpacity>
           }
@@ -108,7 +108,7 @@ export default function SignIn(props) {
           />
         </View>
         {/* button sign in */}
-        <View style={{ paddingTop: 10 }}>
+        <View style={{ paddingTop: 25 }}>
           <TouchableOpacity
             style={[styles.btnStyle, styles.btnSignInColor]}
             onPress={() => _HandleLogin()}
@@ -118,7 +118,7 @@ export default function SignIn(props) {
         </View>
 
         {/* button sign in facebook */}
-        <View style={{ paddingTop: 50 }}>
+        <View style={{ paddingTop: 70 }}>
           <TouchableOpacity
             onPress={() => _HanleLoginWithFacebook()}
             style={[styles.btnStyle, styles.btnFacebookColor]}
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     alignItems: "center",
-    paddingTop: 100
+    paddingTop: 50
   },
   image: {
     width: 129,

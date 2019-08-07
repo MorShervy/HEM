@@ -8,7 +8,7 @@ import {
   StyleSheet,
   Dimensions,
   Alert,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import SQL from "../handlers/SQL";
 
@@ -71,6 +71,15 @@ const SignUp = props => {
             onChangeText={e => setEmail(e)}
           />
         </View>
+        <View style={{ paddingTop: 5, width: width - 120 }}>
+          <Text style={{ fontSize: 11, color: "#bcb2a7" }}>
+            {(getEmail === "" || regexEmail.test(getEmail.toUpperCase())) &&
+              "We’ll occasionally send updates about your account to this inbox." +
+              "We’ll never share your email address with anyone." ||
+              "Email is invalid or already taken"
+            }
+          </Text>
+        </View>
         <View style={{ paddingTop: 10 }}>
           <TextInput
             style={[
@@ -88,6 +97,19 @@ const SignUp = props => {
             value={getPassword}
             onChangeText={e => setPassword(e)}
           />
+        </View>
+        <View style={{ flexDirection: "row", paddingTop: 5, width: width - 120 }}>
+          <Text style={{ fontSize: 11, color: "#bcb2a7" }}>Make sure it's
+          <Text style={{
+              fontSize: 11,
+              color:
+                (getPassword === "" && "#bcb2a7") ||
+                (getPassword.length < 6 && "red") ||
+                "green"
+            }}
+            > at least 6 characters</Text>
+            <Text style={{ fontSize: 11, color: "#bcb2a7" }}> and not longer than 12 characters including a number.</Text>
+          </Text>
         </View>
         <View style={{ paddingTop: 10 }}>
           <TextInput
@@ -109,8 +131,9 @@ const SignUp = props => {
             onChangeText={e => setCPassword(e)}
           />
         </View>
+
         {/* button sign in */}
-        <View style={{ paddingTop: 10 }}>
+        <View style={{ paddingTop: 20 }}>
           <TouchableOpacity
             style={[styles.btnStyle, styles.btnSignInColor]}
             onPress={HandleSignUp}
@@ -149,9 +172,10 @@ const styles = StyleSheet.create({
   },
   logo: {
     alignItems: "center",
-    paddingTop: 100
+    paddingTop: 50
   },
   image: {
+
     width: 129,
     height: 129
   },
@@ -175,5 +199,5 @@ const styles = StyleSheet.create({
   },
   btnSignIn: {
     color: "#00C22A"
-  }
+  },
 });
