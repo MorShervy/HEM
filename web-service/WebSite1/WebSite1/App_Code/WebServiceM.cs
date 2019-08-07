@@ -39,4 +39,10 @@ public class WebServiceM : System.Web.Services.WebService
     {
         return BAL.Instance.InsertUserFBandGL(email, name, photoUrl);
     }
+
+    [WebMethod]
+    public object Login(string email, string pass)
+    {
+        return BAL.Instance.Login(email, pass);
+    }
 }

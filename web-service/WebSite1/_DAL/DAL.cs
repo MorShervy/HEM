@@ -126,5 +126,36 @@ namespace _DAL
             return res;
         }
 
+        public static int Login(string email, string pass)
+        {
+            int res = -1;
+
+            try
+            {
+                Con.Open();
+                _command = new SqlCommand($"Login", Con);
+                _command.CommandType = CommandType.StoredProcedure;
+
+                /* input parameters */
+                _command.Parameters.Add(new SqlParameter("Email", email));
+                _command.Parameters.Add(new SqlParameter("Password", pass));
+
+                SqlParameter returnPar = new SqlParameter();
+                returnPar.Direction = ParameterDirection.ReturnValue;
+                _command.Parameters.Add(returnPar);
+                _command.ExecuteNonQuery();
+                res = (int)returnPar.Value;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            finally
+            {
+                if (Con.State == ConnectionState.Open)
+                    Con.Close();
+            }
+            return res;
+        }
     }
 }
