@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   Alert,
   TouchableOpacity
 } from "react-native";
+import { Ionicons } from '@expo/vector-icons';
 import Logo from "../components/Logo";
 
 import SignInWIthFB from "../handlers/SignInWIthFB";
@@ -15,15 +16,18 @@ import SignInWithGL from '../handlers/SignInWithGL';
 import SQL from '../handlers/SQL';
 
 const { width, height } = Dimensions.get("window");
+const regexEmail = /^(([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}))$/;
+const regexPassword = /^(.{6,12})$/;
 
 export default function SignIn(props) {
+
+  const [getEmail, setEmail] = useState("");
+  const [getPassword, setPassword] = useState("");
+  const [getErrLogin, setErrLogin] = useState(false);
 
   const _HanleLoginWithGoogle = async () => {
 
     const { type, accessToken, user } = await SignInWithGL.Login();
-    console.log("type=", type)
-    console.log("accessToken=", accessToken)
-    console.log("user=", user)
     if (user != undefined) {
       SQL.InsertUserFBandGL(user.email, user.name, user.photoUrl)
         .then((res) => {
@@ -33,7 +37,6 @@ export default function SignIn(props) {
             (res.res === "-1" && Alert.alert("There is problem with the server"));
         });
     }
-
   }
 
   const _HanleLoginWithFacebook = async () => {
@@ -48,8 +51,21 @@ export default function SignIn(props) {
             (res.res === "-1" && Alert.alert("There is problem with the server"));
         });
     }
-
   };
+
+  const _HandleLogin = async () => {
+    if (regexEmail.test(getEmail.toUpperCase()) &&
+      regexPassword.test(getPassword.toUpperCase())) {
+      SQL.Login(getEmail, getPassword).then(res => {
+        console.log("res=", res);
+        (res.res === "0" && setErrLogin(false), setEmail(""), setPassword(""), props.navigation.navigate("Overview")) ||
+          (res.res === "1" && setErrLogin(true))
+      });
+      return;
+    }
+
+    setErrLogin(true)
+  }
 
 
   return (
@@ -61,17 +77,42 @@ export default function SignIn(props) {
           <Text style={styles.txtBold}>Sign In to HEM</Text>
         </View>
         <View style={{ paddingTop: 10 }}>
+          {
+            getErrLogin &&
+            <TouchableOpacity
+              style={{ flexDirection: "row" }}
+              onPress={() => setErrLogin(false)}
+            >
+              <Text style={{ fontSize: 12, color: "red" }}>Incorrect username or password           </Text>
+              <Ionicons name="ios-close" size={25} color="red" />
+            </TouchableOpacity>
+          }
+
+        </View>
+        <View style={{ paddingTop: 10 }}>
           <TextInput
             style={styles.txtInput}
             placeholder="Example@example.com"
+            value={getEmail}
+            onChangeText={e => setEmail(e)}
           />
         </View>
         <View style={{ paddingTop: 10 }}>
-          <TextInput style={styles.txtInput} placeholder="Password" />
+          <TextInput
+            style={styles.txtInput}
+            placeholder="Password"
+            maxLength={12}
+            secureTextEntry={true}
+            value={getPassword}
+            onChangeText={e => setPassword(e)}
+          />
         </View>
         {/* button sign in */}
         <View style={{ paddingTop: 10 }}>
-          <TouchableOpacity style={[styles.btnStyle, styles.btnSignInColor]}>
+          <TouchableOpacity
+            style={[styles.btnStyle, styles.btnSignInColor]}
+            onPress={() => _HandleLogin()}
+          >
             <Text style={styles.btnTxtStyle}>Sign In</Text>
           </TouchableOpacity>
         </View>

@@ -47,4 +47,27 @@ export default class SQL {
       }
     });
   } //End InsertUser
+
+  static Login(email, pass){
+    return new Promise(async(resolve,reject) => {
+      try{
+        const res = await fetch(`${URL}/Login` , {
+          body: JSON.stringify({
+            email,
+            pass
+          }),
+          headers:{
+            "content-type": "application/json"
+          },
+          method:"POST"
+        });
+        const data = await res.json();
+        if (data.d === null) reject("something went wrong")
+        resolve(JSON.parse(data.d));
+      } catch (error){
+        reject(error);
+      }
+    });
+  } // End Login
+  
 }
