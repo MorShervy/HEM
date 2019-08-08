@@ -26,13 +26,13 @@ export default function SignIn(props) {
   const [getErrLogin, setErrLogin] = useState(false);
 
   useEffect(() => {
+    AsyncStorage.removeItem("user");
     AsyncStorage.getItem("user").then(res => {
-      debugger;
       res !== null && props.navigation.navigate("HomeNav");
     });
   }, []);
 
-  const _HanleLoginWithGoogle = async () => {
+  const _HandleLoginWithGoogle = async () => {
     const { type, accessToken, user } = await SignInWithGL.Login();
     if (user != undefined) {
       SQL.InsertUserFBandGL(user.email, user.name, user.photoUrl).then(res => {
@@ -46,19 +46,18 @@ export default function SignIn(props) {
                 name: user.name,
                 url: user.photoUrl
               })
-            ).then(props.navigation.navigate("HomeNav"))) ||
+            ).then(successAuth())) ||
           (res.res === "-1" && Alert.alert("There is problem with the server"));
       });
     }
   };
 
-  const _HanleLoginWithFacebook = async () => {
+  const _HandleLoginWithFacebook = async () => {
     const user = await SignInWIthFB.Login();
     console.log("user=", user);
     if (user != undefined) {
       SQL.InsertUserFBandGL(user.email, user.name, user.picture.data.url).then(
         res => {
-          debugger;
           console.log("res=", res.res);
           res.res === "0" ||
             (res.res === "1" &&
@@ -69,12 +68,19 @@ export default function SignIn(props) {
                   name: user.name,
                   url: user.picture.data.url
                 })
-              ).then(props.navigation.navigate("HomeNav"))) ||
+              ).then(successAuth())) ||
             (res.res === "-1" &&
               Alert.alert("There is problem with the server"));
         }
       );
     }
+  };
+
+  const successAuth = () => {
+    setErrLogin(false);
+    setEmail("");
+    setPassword("");
+    props.navigation.navigate("HomeNav");
   };
 
   const _HandleLogin = async () => {
@@ -84,10 +90,7 @@ export default function SignIn(props) {
     ) {
       SQL.Login(getEmail, getPassword).then(res => {
         console.log("res=", res);
-        (res.res === "0" && setErrLogin(false),
-        setEmail(""),
-        setPassword(""),
-        props.navigation.navigate("HomeNav")) ||
+        (res.res === "0" && successAuth()) ||
           (res.res === "1" && setErrLogin(true));
       });
       return;
@@ -139,7 +142,7 @@ export default function SignIn(props) {
         <View style={{ paddingTop: 25 }}>
           <TouchableOpacity
             style={[styles.btnStyle, styles.btnSignInColor]}
-            onPress={() => _HandleLogin()}
+            onPress={_HandleLogin}
           >
             <Text style={styles.btnTxtStyle}>Sign In</Text>
           </TouchableOpacity>
@@ -148,17 +151,17 @@ export default function SignIn(props) {
         {/* button sign in facebook */}
         <View style={{ paddingTop: 70 }}>
           <TouchableOpacity
-            onPress={() => _HanleLoginWithFacebook()}
+            onPress={_HandleLoginWithFacebook}
             style={[styles.btnStyle, styles.btnFacebookColor]}
           >
             <Text style={styles.btnTxtStyle}>Sign In with Facebook</Text>
           </TouchableOpacity>
         </View>
-        {/* butto sign in google */}
+        {/* button sign in google */}
         <View style={{ paddingTop: 10 }}>
           <TouchableOpacity
             style={[styles.btnStyle, styles.btnGoogleColor]}
-            onPress={() => _HanleLoginWithGoogle()}
+            onPress={_HandleLoginWithGoogle}
           >
             <Text style={styles.btnTxtStyle}>Sign In with Google</Text>
           </TouchableOpacity>
