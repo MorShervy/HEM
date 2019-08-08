@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 
 const Home = props => {
   return (
-    <View style={styles.container}>
+    <View >
       <Text>Home</Text>
     </View>
   );

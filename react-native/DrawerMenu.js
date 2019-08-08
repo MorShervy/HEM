@@ -34,16 +34,23 @@ const DrawerWithLogoutButton = (props) => {
                     <Text style={styles.label}>{getUser.email}</Text>
                 </View>
                 <DrawerItems {...props} />
+                <TouchableOpacity
+                    onPress={() => AsyncStorage.removeItem("user").then(props.navigation.replace("AuthNav"))}
+                >
+                    <View style={styles.item}>
+                        <View style={styles.iconContainer}>
+                            <Ionicons
+                                name="ios-log-out"
+                                size={25}
+                            />
+                        </View>
+                        <Text style={{ fontWeight: "bold" }} > Sign Out</Text>
+                    </View>
+                </TouchableOpacity>
+
             </SafeAreaView>
 
-            <View style={styles.item}>
-                <View style={styles.iconContainer}>
-                    <Ionicons
-                        name="ios-home"
-                        size={25}
-                    />
-                </View>
-            </View>
+
         </ScrollView>
     )
 }
@@ -56,12 +63,13 @@ const styles = StyleSheet.create({
     },
     item: {
         flexDirection: 'row',
-        alignItems: 'center',
+        justifyContent: 'flex-start',
+        paddingHorizontal: 5,
     },
     iconContainer: {
-        marginBottom: 46,
+
         width: 24,
-        alignItems: 'center',
+
     },
     img: {
         alignSelf: 'center',

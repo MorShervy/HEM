@@ -27,7 +27,7 @@ export default function SignIn(props) {
 
   useEffect(() => {
     AsyncStorage.getItem("user").then(res => {
-      res !== null && props.navigation.navigate("HomeNav");
+      res !== null && props.navigation.replace("HomeNav");
     });
   }, []);
 
@@ -79,7 +79,7 @@ export default function SignIn(props) {
     setErrLogin(false);
     setEmail("");
     setPassword("");
-    props.navigation.navigate("HomeNav");
+    props.navigation.replace("HomeNav");
   };
 
   const _HandleLogin = async () => {

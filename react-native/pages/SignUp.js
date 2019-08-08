@@ -25,7 +25,7 @@ const SignUp = props => {
 
   useEffect(() => {
     AsyncStorage.getItem("user").then(
-      res => res !== null && props.navigation.navigate("HomeNav")
+      res => res !== null && props.navigation.replace("HomeNav")
     );
   }, []);
 
@@ -42,7 +42,7 @@ const SignUp = props => {
           AsyncStorage.setItem(
             "user",
             JSON.stringify({ email: getEmail })
-          ).then(props.navigation.navigate("HomeNav"))) ||
+          ).then(props.navigation.replace("HomeNav"))) ||
           (res.res === "1" && Alert.alert("Email already exist")) ||
           (res.res === "-1" && Alert.alert("There is problem with the server"));
       });
@@ -87,7 +87,7 @@ const SignUp = props => {
           <Text style={{ fontSize: 11, color: "#bcb2a7" }}>
             {((getEmail === "" || regexEmail.test(getEmail.toUpperCase())) &&
               "We’ll occasionally send updates about your account to this inbox." +
-                "We’ll never share your email address with anyone.") ||
+              "We’ll never share your email address with anyone.") ||
               "Email is invalid or already taken"}
           </Text>
         </View>
