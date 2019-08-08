@@ -1,14 +1,14 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-const Overview = props => {
+const Home = props => {
   return (
     <View style={styles.container}>
-      <Text>Overview</Text>
+      <Text>Home</Text>
     </View>
   );
 };
-export default Overview;
+export default Home;
 
 const styles = StyleSheet.create({
   container: {

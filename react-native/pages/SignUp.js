@@ -24,13 +24,14 @@ const SignUp = props => {
 
   const HandleSignUp = () => {
     setIndicator(true);
+
     if (
       regexEmail.test(getEmail.toUpperCase()) &&
       regexPassword.test(getPassword.toUpperCase()) &&
       regexPassword.test(getCPassword.toUpperCase())
     ) {
       SQL.InsertUser(getEmail, getPassword).then(res => {
-        (res.res === "0" && props.navigation.navigate("Overview")) ||
+        (res.res === "0" && props.navigation.navigate("HomeNav")) ||
           (res.res === "1" && Alert.alert("Email already exist")) ||
           (res.res === "-1" && Alert.alert("There is problem with the server"));
       });
@@ -172,7 +173,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     alignItems: "center",
-    paddingTop: 50
+    paddingTop: 20
   },
   image: {
 

@@ -32,8 +32,8 @@ export default function SignIn(props) {
       SQL.InsertUserFBandGL(user.email, user.name, user.photoUrl)
         .then((res) => {
           console.log("res=", res.res);
-          (res.res === "0" && props.navigation.navigate("Overview")) ||
-            (res.res === "1" && props.navigation.navigate("Overview")) ||
+          (res.res === "0" && props.navigation.navigate("HomeNav")) ||
+            (res.res === "1" && props.navigation.navigate("HomeNav")) ||
             (res.res === "-1" && Alert.alert("There is problem with the server"));
         });
     }
@@ -46,8 +46,8 @@ export default function SignIn(props) {
       SQL.InsertUserFBandGL(user.email, user.name, user.picture.data.url)
         .then(res => {
           console.log("res=", res.res);
-          (res.res === "0" && props.navigation.navigate("Overview")) ||
-            (res.res === "1" && props.navigation.navigate("Overview")) ||
+          (res.res === "0" && props.navigation.navigate("HomeNav")) ||
+            (res.res === "1" && props.navigation.navigate("HomeNav")) ||
             (res.res === "-1" && Alert.alert("There is problem with the server"));
         });
     }
@@ -58,7 +58,7 @@ export default function SignIn(props) {
       regexPassword.test(getPassword.toUpperCase())) {
       SQL.Login(getEmail, getPassword).then(res => {
         console.log("res=", res);
-        (res.res === "0" && setErrLogin(false), setEmail(""), setPassword(""), props.navigation.navigate("Overview")) ||
+        (res.res === "0" && setErrLogin(false), setEmail(""), setPassword(""), props.navigation.navigate("HomeNav")) ||
           (res.res === "1" && setErrLogin(true))
       });
       return;
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     alignItems: "center",
-    paddingTop: 50
+    paddingTop: 30
   },
   image: {
     width: 129,

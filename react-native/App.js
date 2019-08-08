@@ -1,39 +1,28 @@
 import React from "react";
 import { StyleSheet, Text, View, I18nManager } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
+import AuthNav from "./AuthNav";
+import HomeNav from './HomeNav';
 
-import SignIn from "./pages/SignIn";
-import SignUp from "./pages/SignUp";
-import Overview from "./pages/Overview";
 
 I18nManager.forceRTL(false);
 
 function App() {
   return (
     <View style={styles.container}>
-      <AppNavigator />
+      <AppNav />
     </View>
   );
 }
 
-const AppNavigator = createStackNavigator(
+const AppNav = createStackNavigator(
   {
-    SignIn,
-    SignUp,
-    Overview
+    AuthNav,
+    HomeNav
   },
-  {
-    headerMode: "none",
-    navigationOptions: {
-      headerVisible: false
-    }
-  },
-  {
-    initialRouteName: "SignIn"
-  }
 );
 
-export default createAppContainer(AppNavigator);
+export default createAppContainer(AppNav);
 
 const styles = StyleSheet.create({
   container: {
