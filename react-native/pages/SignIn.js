@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,67 +6,95 @@ import {
   Dimensions,
   TextInput,
   Alert,
-  TouchableOpacity
+  TouchableOpacity,
+  AsyncStorage
 } from "react-native";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 import Logo from "../components/Logo";
 
 import SignInWIthFB from "../handlers/SignInWIthFB";
-import SignInWithGL from '../handlers/SignInWithGL';
-import SQL from '../handlers/SQL';
+import SignInWithGL from "../handlers/SignInWithGL";
+import SQL from "../handlers/SQL";
 
 const { width, height } = Dimensions.get("window");
 const regexEmail = /^(([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}))$/;
 const regexPassword = /^(.{6,12})$/;
 
 export default function SignIn(props) {
-
   const [getEmail, setEmail] = useState("");
   const [getPassword, setPassword] = useState("");
   const [getErrLogin, setErrLogin] = useState(false);
 
-  const _HanleLoginWithGoogle = async () => {
+  useEffect(() => {
+    AsyncStorage.getItem("user").then(res => {
+      debugger;
+      res !== null && props.navigation.navigate("HomeNav");
+    });
+  }, []);
 
+  const _HanleLoginWithGoogle = async () => {
     const { type, accessToken, user } = await SignInWithGL.Login();
     if (user != undefined) {
-      SQL.InsertUserFBandGL(user.email, user.name, user.photoUrl)
-        .then((res) => {
-          console.log("res=", res.res);
-          (res.res === "0" && props.navigation.navigate("HomeNav")) ||
-            (res.res === "1" && props.navigation.navigate("HomeNav")) ||
-            (res.res === "-1" && Alert.alert("There is problem with the server"));
-        });
+      SQL.InsertUserFBandGL(user.email, user.name, user.photoUrl).then(res => {
+        console.log("res=", res.res);
+        res.res === "0" ||
+          (res.res === "1" &&
+            AsyncStorage.setItem(
+              "user",
+              JSON.stringify({
+                email: user.email,
+                name: user.name,
+                url: user.photoUrl
+              })
+            ).then(props.navigation.navigate("HomeNav"))) ||
+          (res.res === "-1" && Alert.alert("There is problem with the server"));
+      });
     }
-  }
+  };
 
   const _HanleLoginWithFacebook = async () => {
     const user = await SignInWIthFB.Login();
-    console.log("user=", user)
+    console.log("user=", user);
     if (user != undefined) {
-      SQL.InsertUserFBandGL(user.email, user.name, user.picture.data.url)
-        .then(res => {
+      SQL.InsertUserFBandGL(user.email, user.name, user.picture.data.url).then(
+        res => {
+          debugger;
           console.log("res=", res.res);
-          (res.res === "0" && props.navigation.navigate("HomeNav")) ||
-            (res.res === "1" && props.navigation.navigate("HomeNav")) ||
-            (res.res === "-1" && Alert.alert("There is problem with the server"));
-        });
+          res.res === "0" ||
+            (res.res === "1" &&
+              AsyncStorage.setItem(
+                "user",
+                JSON.stringify({
+                  email: user.email,
+                  name: user.name,
+                  url: user.picture.data.url
+                })
+              ).then(props.navigation.navigate("HomeNav"))) ||
+            (res.res === "-1" &&
+              Alert.alert("There is problem with the server"));
+        }
+      );
     }
   };
 
   const _HandleLogin = async () => {
-    if (regexEmail.test(getEmail.toUpperCase()) &&
-      regexPassword.test(getPassword.toUpperCase())) {
+    if (
+      regexEmail.test(getEmail.toUpperCase()) &&
+      regexPassword.test(getPassword.toUpperCase())
+    ) {
       SQL.Login(getEmail, getPassword).then(res => {
         console.log("res=", res);
-        (res.res === "0" && setErrLogin(false), setEmail(""), setPassword(""), props.navigation.navigate("HomeNav")) ||
-          (res.res === "1" && setErrLogin(true))
+        (res.res === "0" && setErrLogin(false),
+        setEmail(""),
+        setPassword(""),
+        props.navigation.navigate("HomeNav")) ||
+          (res.res === "1" && setErrLogin(true));
       });
       return;
     }
 
-    setErrLogin(true)
-  }
-
+    setErrLogin(true);
+  };
 
   return (
     <View style={styles.container}>
@@ -77,17 +105,17 @@ export default function SignIn(props) {
           <Text style={styles.txtBold}>Sign In to HEM</Text>
         </View>
         <View style={{ paddingTop: 10, width: width - 120, height: 30 }}>
-          {
-            getErrLogin &&
+          {getErrLogin && (
             <TouchableOpacity
               style={{ justifyContent: "space-evenly", flexDirection: "row" }}
               onPress={() => setErrLogin(false)}
             >
-              <Text style={{ fontSize: 12, color: "red" }}>Incorrect username or password</Text>
+              <Text style={{ fontSize: 12, color: "red" }}>
+                Incorrect username or password
+              </Text>
               <Ionicons name="ios-close" size={25} color="red" />
             </TouchableOpacity>
-          }
-
+          )}
         </View>
         <View style={{ paddingTop: 10 }}>
           <TextInput
@@ -146,7 +174,6 @@ export default function SignIn(props) {
         >
           <Text style={styles.btnSignUp}>Create an account</Text>
         </TouchableOpacity>
-
       </View>
     </View>
   );
@@ -206,9 +233,6 @@ const styles = StyleSheet.create({
     color: "#00C22A"
   },
   btnView: {
-
-
     borderColor: "#000000"
-  },
-
+  }
 });

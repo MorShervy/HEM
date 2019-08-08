@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Logo from "../components/Logo";
 import {
   View,
@@ -9,6 +9,7 @@ import {
   Dimensions,
   Alert,
   ActivityIndicator,
+  AsyncStorage
 } from "react-native";
 import SQL from "../handlers/SQL";
 
@@ -22,6 +23,12 @@ const SignUp = props => {
   const [getCPassword, setCPassword] = useState("");
   const [getIndicator, setIndicator] = useState(false);
 
+  useEffect(() => {
+    AsyncStorage.getItem("user").then(
+      res => res !== null && props.navigation.navigate("HomeNav")
+    );
+  }, []);
+
   const HandleSignUp = () => {
     setIndicator(true);
 
@@ -31,7 +38,11 @@ const SignUp = props => {
       regexPassword.test(getCPassword.toUpperCase())
     ) {
       SQL.InsertUser(getEmail, getPassword).then(res => {
-        (res.res === "0" && props.navigation.navigate("HomeNav")) ||
+        (res.res === "0" &&
+          AsyncStorage.setItem(
+            "user",
+            JSON.stringify({ email: getEmail })
+          ).then(props.navigation.navigate("HomeNav"))) ||
           (res.res === "1" && Alert.alert("Email already exist")) ||
           (res.res === "-1" && Alert.alert("There is problem with the server"));
       });
@@ -74,11 +85,10 @@ const SignUp = props => {
         </View>
         <View style={{ paddingTop: 5, width: width - 120 }}>
           <Text style={{ fontSize: 11, color: "#bcb2a7" }}>
-            {(getEmail === "" || regexEmail.test(getEmail.toUpperCase())) &&
+            {((getEmail === "" || regexEmail.test(getEmail.toUpperCase())) &&
               "We’ll occasionally send updates about your account to this inbox." +
-              "We’ll never share your email address with anyone." ||
-              "Email is invalid or already taken"
-            }
+                "We’ll never share your email address with anyone.") ||
+              "Email is invalid or already taken"}
           </Text>
         </View>
         <View style={{ paddingTop: 10 }}>
@@ -99,17 +109,27 @@ const SignUp = props => {
             onChangeText={e => setPassword(e)}
           />
         </View>
-        <View style={{ flexDirection: "row", paddingTop: 5, width: width - 120 }}>
-          <Text style={{ fontSize: 11, color: "#bcb2a7" }}>Make sure it's
-          <Text style={{
-              fontSize: 11,
-              color:
-                (getPassword === "" && "#bcb2a7") ||
-                (getPassword.length < 6 && "red") ||
-                "green"
-            }}
-            > at least 6 characters</Text>
-            <Text style={{ fontSize: 11, color: "#bcb2a7" }}> and not longer than 12 characters including a number.</Text>
+        <View
+          style={{ flexDirection: "row", paddingTop: 5, width: width - 120 }}
+        >
+          <Text style={{ fontSize: 11, color: "#bcb2a7" }}>
+            Make sure it's
+            <Text
+              style={{
+                fontSize: 11,
+                color:
+                  (getPassword === "" && "#bcb2a7") ||
+                  (getPassword.length < 6 && "red") ||
+                  "green"
+              }}
+            >
+              {" "}
+              at least 6 characters
+            </Text>
+            <Text style={{ fontSize: 11, color: "#bcb2a7" }}>
+              {" "}
+              and not longer than 12 characters including a number.
+            </Text>
           </Text>
         </View>
         <View style={{ paddingTop: 10 }}>
@@ -176,7 +196,6 @@ const styles = StyleSheet.create({
     paddingTop: 20
   },
   image: {
-
     width: 129,
     height: 129
   },
@@ -200,5 +219,5 @@ const styles = StyleSheet.create({
   },
   btnSignIn: {
     color: "#00C22A"
-  },
+  }
 });
