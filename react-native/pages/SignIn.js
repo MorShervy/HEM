@@ -26,7 +26,6 @@ export default function SignIn(props) {
   const [getErrLogin, setErrLogin] = useState(false);
 
   useEffect(() => {
-    AsyncStorage.removeItem("user");
     AsyncStorage.getItem("user").then(res => {
       res !== null && props.navigation.navigate("HomeNav");
     });
