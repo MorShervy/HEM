@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import {
     View,
-    Dimensions
+    Dimensions,
+
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
@@ -11,28 +12,31 @@ import DraweMenu from './DrawerMenu';
 import Home from './pages/Home';
 import MyProfile from './pages/MyProfile';
 
+
 const { height, width } = Dimensions.get("window");
+
+
 
 const HomeNav = createDrawerNavigator(
     {
         Home: {
             screen: Home,
+            initialRouteName: "Home",
             navigationOptions: {
                 drwaerLabel: 'Home',
-                drwaerLabel: 'MyProfile',
                 drawerIcon: ({ tintColor }) => (
                     <Ionicons
                         name="ios-home"
                         size={25}
                     />
-                )
+                ),
             },
-
         },
         MyProfile: {
             screen: MyProfile,
+            initialRouteName: "MyProfile",
             navigationOptions: {
-                drwaerLabel: 'MyProfile',
+                drwaerLabel: 'My Profile',
                 drawerIcon: ({ tintColor }) => (
                     <Ionicons
                         name="ios-contact"
@@ -44,12 +48,26 @@ const HomeNav = createDrawerNavigator(
     },
     {
         contentComponent: DraweMenu,
+        contentOptions: {
+            activeItemKey: 0,
+            itemsContainerStyle: {
+                marginVertical: 0,
+            },
+            iconContainerStyle: {
+                opacity: 0.3
+            }
+        }
     }
 
 )
 
 export default class AppScreen extends Component {
     static router = HomeNav.router;
+    static navigationOptions = ({ navigation }) => {
+        return {
+            title: navigation.getParam('otherParam', 'Home'),
+        };
+    };
 
     render() {
 

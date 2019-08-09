@@ -18,9 +18,16 @@ const DrawerWithLogoutButton = (props) => {
     useEffect(() => {
         AsyncStorage.getItem("user").then(
             user => setUser(JSON.parse(user))
-        ).then(console.log("user.url=", getUser.url))
+        ).then()
     }, [])
 
+    const onChangeHeaderBar = (r) => {
+        console.log("route=", r.route.key)
+        props.navigation.setParams({ otherParam: r.route.key })
+        props.navigation.navigate(r.route.key, {
+            otherParam: r.route.key
+        })
+    }
 
     return (
         <ScrollView contentContainerStyle={{ flex: 1, flexDirection: 'column', justifyContent: 'space-between' }}>
@@ -32,8 +39,9 @@ const DrawerWithLogoutButton = (props) => {
                         style={styles.img}
                     />
                     <Text style={styles.label}>{getUser.email}</Text>
+
                 </View>
-                <DrawerItems {...props} />
+                <DrawerItems {...props} onItemPress={(r) => { onChangeHeaderBar(r) }} />
                 <TouchableOpacity
                     onPress={() => AsyncStorage.removeItem("user").then(props.navigation.replace("AuthNav"))}
                 >
