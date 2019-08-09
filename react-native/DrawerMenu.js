@@ -28,9 +28,10 @@ const DrawerWithLogoutButton = (props) => {
             otherParam: r.route.key
         })
     }
-
     return (
-        <ScrollView contentContainerStyle={{ flex: 1, flexDirection: 'column', justifyContent: 'space-between' }}>
+
+        < ScrollView contentContainerStyle={{ flex: 1, flexDirection: 'column', justifyContent: 'space-between' }
+        }>
             <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
 
                 <View style={styles.user}>
@@ -59,7 +60,7 @@ const DrawerWithLogoutButton = (props) => {
             </SafeAreaView>
 
 
-        </ScrollView>
+        </ScrollView >
     )
 }
 
