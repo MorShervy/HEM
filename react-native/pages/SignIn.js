@@ -89,7 +89,7 @@ export default function SignIn(props) {
     ) {
       SQL.Login(getEmail, getPassword).then(res => {
         console.log("res=", res);
-        (res.res === "0" && successAuth()) ||
+        (res.res === "0" && AsyncStorage.setItem("user", JSON.stringify({email: user.email})).then(successAuth())) ||
           (res.res === "1" && setErrLogin(true));
       });
       return;
