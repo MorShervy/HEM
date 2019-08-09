@@ -10,25 +10,6 @@ import Logo from './components/Logo';
 
 I18nManager.forceRTL(false);
 
-const stackNavigatorConfigAuthNav = () => {
-
-  return (
-    {
-      headerMode: 'none',
-      navigationOptions: {
-        headerVisable: false,
-      }
-    }
-  )
-}
-
-
-
-
-
-
-
-
 
 const RootStack = createStackNavigator(
   {
@@ -40,7 +21,7 @@ const RootStack = createStackNavigator(
 
       headerLeft: (
         <TouchableOpacity
-          onPress={() => console.log(navigation.state.routeName === "HomeNav")} //navigation.toggleDrawer()
+          onPress={() => navigation.toggleDrawer()}
           disabled={navigation.state.routeName === "AuthNav"}
 
         >
