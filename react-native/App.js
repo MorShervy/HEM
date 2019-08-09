@@ -10,6 +10,24 @@ import Logo from './components/Logo';
 
 I18nManager.forceRTL(false);
 
+const stackNavigatorConfigAuthNav = () => {
+
+  return (
+    {
+      headerMode: 'none',
+      navigationOptions: {
+        headerVisable: false,
+      }
+    }
+  )
+}
+
+
+
+
+
+
+
 
 
 const RootStack = createStackNavigator(
@@ -22,7 +40,8 @@ const RootStack = createStackNavigator(
 
       headerLeft: (
         <TouchableOpacity
-          onPress={() => console.log(navigation.state.routeName)} //navigation.toggleDrawer()
+          onPress={() => console.log(navigation.state.routeName === "HomeNav")} //navigation.toggleDrawer()
+          disabled={navigation.state.routeName === "AuthNav"}
 
         >
           <Ionicons name="md-menu" size={50} style={styles.icon}></Ionicons>
@@ -39,6 +58,8 @@ const RootStack = createStackNavigator(
       }
     })
   }
+
+
 );
 
 
