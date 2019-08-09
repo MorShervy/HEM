@@ -44,22 +44,10 @@ const Home = props => {
           />
         ))}
       </Animated.ScrollView>
-      <TouchableOpacity
-        style={[styles.monthButton, styles.monthButtonLeft]}
-        onPress={Animated.event(
-          [{ nativeEvent: { contentOffset: { x: xOffset - 1 } } }],
-          { useNativeDriver: true }
-        )}
-      >
+      <TouchableOpacity style={[styles.monthButton, styles.monthButtonLeft]}>
         <Text style={{ fontSize: 30 }}>{`<`}</Text>
       </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.monthButton, styles.monthButtonRight]}
-        onPress={Animated.event(
-          [{ nativeEvent: { contentOffset: { x: xOffset + 1 } } }],
-          { useNativeDriver: true }
-        )}
-      >
+      <TouchableOpacity style={[styles.monthButton, styles.monthButtonRight]}>
         <Text style={{ fontSize: 30 }}>{`>`}</Text>
       </TouchableOpacity>
     </View>
