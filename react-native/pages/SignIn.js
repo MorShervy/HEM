@@ -26,8 +26,9 @@ export default function SignIn(props) {
   const [getErrLogin, setErrLogin] = useState(false);
 
   useEffect(() => {
+    console.log('userEfect')
     AsyncStorage.getItem("user").then(res => {
-      res !== null && props.navigation.replace("HomeNav");
+      res !== null && props.navigation.replace("HomeNav");//
     });
   }, []);
 
@@ -89,7 +90,7 @@ export default function SignIn(props) {
     ) {
       SQL.Login(getEmail, getPassword).then(res => {
         console.log("res=", res);
-        (res.res === "0" && AsyncStorage.setItem("user", JSON.stringify({email: getEmail})).then(successAuth())) ||
+        (res.res === "0" && AsyncStorage.setItem("user", JSON.stringify({ email: getEmail })).then(successAuth())) ||
           (res.res === "1" && setErrLogin(true));
       });
       return;
@@ -97,7 +98,7 @@ export default function SignIn(props) {
 
     setErrLogin(true);
   };
-
+  console.log("user=")
   return (
     <View style={styles.container}>
       <Logo styles={[styles.logo, styles.image]} />

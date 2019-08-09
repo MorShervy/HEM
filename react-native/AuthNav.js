@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import {
     View,
-    Dimensions
+    Dimensions,
+    AsyncStorage
 } from "react-native";
 import { createMaterialTopTabNavigator } from "react-navigation";
 import KeyboardSpacer from 'react-native-keyboard-spacer';
@@ -24,10 +25,13 @@ const AuthNav = createMaterialTopTabNavigator(
 );
 
 export default class AuthScreen extends Component {
+    constructor(props) {
+        super(props)
+    }
     static router = AuthNav.router;
 
-    render() {
 
+    render() {
         return (
             <View
                 style={{

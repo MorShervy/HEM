@@ -13,6 +13,7 @@ import Home from './pages/Home';
 import MyProfile from './pages/MyProfile';
 
 
+
 const { height, width } = Dimensions.get("window");
 
 
@@ -21,7 +22,6 @@ const HomeNav = createDrawerNavigator(
     {
         Home: {
             screen: Home,
-            initialRouteName: "Home",
             navigationOptions: {
                 drwaerLabel: 'Home',
                 drawerIcon: ({ tintColor }) => (
@@ -34,7 +34,6 @@ const HomeNav = createDrawerNavigator(
         },
         MyProfile: {
             screen: MyProfile,
-            initialRouteName: "MyProfile",
             navigationOptions: {
                 drwaerLabel: 'My Profile',
                 drawerIcon: ({ tintColor }) => (
@@ -44,7 +43,7 @@ const HomeNav = createDrawerNavigator(
                     />
                 )
             },
-        }
+        },
     },
     {
         contentComponent: DraweMenu,
