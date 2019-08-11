@@ -45,4 +45,15 @@ public class WebServiceM : System.Web.Services.WebService
     {
         return BAL.Instance.Login(email, pass);
     }
+
+    [WebMethod]
+    public object UpdateUserName(string email, string name)
+    {
+        return BAL.Instance.UpdateUserName(email, name);
+    }
+    [WebMethod]
+    public object UpdateUserPicture(string email, string photoUrl)
+    {
+        return BAL.Instance.UpdateUserPicture(email, photoUrl);
+    }
 }

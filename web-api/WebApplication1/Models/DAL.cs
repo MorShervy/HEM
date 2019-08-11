@@ -155,5 +155,69 @@ namespace WebApplication1.Models
             }
             return res;
         }
+
+        public static int UpdateUserName(string email, string name)
+        {
+            int res = -1;
+
+            try
+            {
+                Con.Open();
+                _command = new SqlCommand($"UpdateUserName", Con);
+                _command.CommandType = CommandType.StoredProcedure;
+
+                /* input parameters */
+                _command.Parameters.Add(new SqlParameter("Email", email));
+                _command.Parameters.Add(new SqlParameter("Name", name));
+
+                SqlParameter returnPar = new SqlParameter();
+                returnPar.Direction = ParameterDirection.ReturnValue;
+                _command.Parameters.Add(returnPar);
+                _command.ExecuteNonQuery();
+                res = (int)returnPar.Value;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            finally
+            {
+                if (Con.State == ConnectionState.Open)
+                    Con.Close();
+            }
+            return res;
+        }
+
+        public static int UpdateUserPicture(string email, string photoUrl)
+        {
+            int res = -1;
+
+            try
+            {
+                Con.Open();
+                _command = new SqlCommand($"UpdateUserPicture", Con);
+                _command.CommandType = CommandType.StoredProcedure;
+
+                /* input parameters */
+                _command.Parameters.Add(new SqlParameter("Email", email));
+                _command.Parameters.Add(new SqlParameter("PhotoUrl", photoUrl));
+
+                SqlParameter returnPar = new SqlParameter();
+                returnPar.Direction = ParameterDirection.ReturnValue;
+                _command.Parameters.Add(returnPar);
+                _command.ExecuteNonQuery();
+                res = (int)returnPar.Value;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            finally
+            {
+                if (Con.State == ConnectionState.Open)
+                    Con.Close();
+            }
+            return res;
+        }
     }
 }

@@ -57,9 +57,25 @@ namespace WebApplication1.Models
             return new JavaScriptSerializer().Serialize(res);
         }
 
-        public static string Login(string email, string pass)
+        public object Login(string email, string pass)
         {
             int result = DAL.Login(email, pass);
+
+            var res = new { res = result.ToString() };
+            return new JavaScriptSerializer().Serialize(res);
+        }
+
+        public object UpdateUserName(string email, string name)
+        {
+            int result = DAL.UpdateUserName(email, name);
+
+            var res = new { res = result.ToString() };
+            return new JavaScriptSerializer().Serialize(res);
+        }
+
+        public object UpdateUserPicture(string email, string photoUrl)
+        {
+            int result = DAL.UpdateUserPicture(email, photoUrl);
 
             var res = new { res = result.ToString() };
             return new JavaScriptSerializer().Serialize(res);

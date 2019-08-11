@@ -43,6 +43,13 @@ namespace WebApplication1.Controllers
         }
 
 
+        [HttpGet]
+        [Route("HelloWorld")]
+        public string HelloWorld()
+        {
+            return "Hello World";
+        }
+
         [HttpPost]
         [Route("InsertUser")]
         public object InsertUser([FromBody]User user)
@@ -59,10 +66,25 @@ namespace WebApplication1.Controllers
 
         [HttpPost]
         [Route("Login")]
-        public string Login([FromBody]User user)
+        public object Login([FromBody]User user)
         {
-            return BAL.Login(user.Email, user.Pass);
+            return BAL.Instance.Login(user.Email, user.Pass);
         }
+
+        [HttpPost]
+        [Route("UpdateUserName")]
+        public object UpdateUserName([FromBody]User user)
+        {
+            return BAL.Instance.UpdateUserName(user.Email, user.Name);
+        }
+
+        [HttpPost]
+        [Route("UpdateUserPicture")]
+        public object UpdateUserPicture([FromBody]User user)
+        {
+            return BAL.Instance.UpdateUserPicture(user.Email, user.PhotoUrl);
+        }
+
 
         [Route("uploadpicture")]
         public Task<HttpResponseMessage> Post()
