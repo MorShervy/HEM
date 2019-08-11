@@ -14,7 +14,8 @@ import {
     Platform,
     Modal,
     Image,
-    Dimensions
+    Dimensions,
+    AsyncStorage
 } from 'react-native';
 //import GalleryScreen from './GalleryScreen';
 import isIPhoneX from 'react-native-is-iphonex';
@@ -26,6 +27,8 @@ import {
     MaterialCommunityIcons,
     Octicons
 } from '@expo/vector-icons';
+import SQL from '../handlers/SQL';
+import { StackActions, NavigationActions } from 'react-navigation';
 
 const { height, width } = Dimensions.get("window");
 const landmarkSize = 2;
@@ -78,12 +81,17 @@ export default class CameraScreen extends Component {
         pictureSizeId: 0,
         showMoreOptions: false,
         openModalPic: false,
-        picUri: ""
+        picUri: "",
+        user: null,
     };
 
     async componentWillMount() {
         const { status } = await Permissions.askAsync(Permissions.CAMERA);
         this.setState({ permissionsGranted: status === 'granted' });
+
+        AsyncStorage.getItem("user").then(user => {
+            this.setState({ user: JSON.parse(user) })
+        })
     }
 
 
@@ -143,6 +151,24 @@ export default class CameraScreen extends Component {
         this.setState({ pictureSize: this.state.pictureSizes[newId], pictureSizeId: newId });
     }
 
+    btnUploadPictureFromCamera = () => {
+        console.log("user=", this.state.user.email)
+        console.log("picuri=", this.state.picUri)
+        const email = this.state.user.email;
+        const photoUrl = this.state.picUri;
+
+        SQL.UpdateUserPicture(email, photoUrl).then(res => { console.log(res) })
+        AsyncStorage.setItem("user", JSON.stringify({ email: email, url: photoUrl }))
+        this.setState({ openModalPic: false }, () => {
+            const replaceAction = StackActions.replace({
+                routeName: "HomeNav",
+                action: NavigationActions.navigate("HomeNav"),
+
+            })
+            this.props.navigation.dispatch(replaceAction);
+        });
+    }
+
     renderPicUri() {
         return (
             <Modal
@@ -162,7 +188,7 @@ export default class CameraScreen extends Component {
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={{ alignSelf: 'center' }}
-                        onPress={() => alert('clicked')}
+                        onPress={this.btnUploadPictureFromCamera}
                     >
                         <Text style={{ color: '#fff', textAlign: 'center', fontSize: 18 }}>Save</Text>
                     </TouchableOpacity>

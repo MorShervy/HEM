@@ -42,7 +42,7 @@ export default class SQL {
           },
           method: "POST"
         });
-        //console.log(`${URL}/InsertUser`, res);
+        console.log(`${URL}/InsertUser`, res);
         const data = await res.json();
         if (data.d === null) reject("something went wrong");
         resolve(JSON.parse(data));
@@ -65,6 +65,7 @@ export default class SQL {
           },
           method: "POST"
         });
+        console.log(`${URL}/Login`, res);
         const data = await res.json();
         if (data.d === null) reject("something went wrong")
         resolve(JSON.parse(data));
@@ -73,5 +74,51 @@ export default class SQL {
       }
     });
   } // End Login
+
+  static UpdateUserName(email, name) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await fetch(`${URL}/UpdateUserName`, {
+          body: JSON.stringify({
+            email,
+            name
+          }),
+          headers: {
+            "content-type": "application/json"
+          },
+          method: "POST"
+        });
+        console.log(`${URL}/UpdateUserName`, res);
+        const data = await res.json();
+        if (data.d === null) reject("something went wrong")
+        resolve(JSON.parse(data));
+      } catch (error) {
+        reject(error);
+      }
+    });
+  } // End UpdateUserName
+
+  static UpdateUserPicture(email, photoUrl) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await fetch(`${URL}/UpdateUserPicture`, {
+          body: JSON.stringify({
+            email,
+            photoUrl
+          }),
+          headers: {
+            "content-type": "application/json"
+          },
+          method: "POST"
+        });
+        console.log(`${URL}/UpdateUserPicture`, res);
+        const data = await res.json();
+        if (data.d === null) reject("something went wrong")
+        resolve(JSON.parse(data));
+      } catch (error) {
+        reject(error);
+      }
+    });
+  } // End UpdateUserPicture
 
 }
