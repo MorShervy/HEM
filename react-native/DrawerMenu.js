@@ -11,6 +11,12 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { DrawerItems } from 'react-navigation';
 
+const headerTitle = [
+    { key: 'Home', value: 'Home' },
+    { key: 'MyProfile', value: 'My Profile' },
+    { key: 'CameraScreen', value: 'Camera' }
+]
+
 const DrawerWithLogoutButton = (props) => {
     const [getUser, setUser] = useState("");
 
@@ -22,10 +28,12 @@ const DrawerWithLogoutButton = (props) => {
     }, [])
 
     const onChangeHeaderBar = (r) => {
-        console.log("route=", r.route.key)
-        props.navigation.setParams({ otherParam: r.route.key })
+
+        const [titleToShow] = headerTitle.filter(item => item.key === r.route.key)
+        console.log("title=", titleToShow.value)
+        props.navigation.setParams({ otherParam: titleToShow.value })
         props.navigation.navigate(r.route.key, {
-            otherParam: r.route.key
+            otherParam: titleToShow.value
         })
     }
     return (

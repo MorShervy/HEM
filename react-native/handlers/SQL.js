@@ -1,7 +1,10 @@
-const URL = "http://ruppinmobile.tempdomain.co.il/site04/WebServiceM.asmx";
+const URL = "http://ruppinmobile.tempdomain.co.il/site04";
+
 
 export default class SQL {
   static InsertUserFBandGL(email, name, photoUrl) {
+    console.log(email, name, photoUrl)
+
     return new Promise(async (resolve, reject) => {
       try {
         const res = await fetch(`${URL}/InsertUserFBandGL`, {
@@ -17,8 +20,9 @@ export default class SQL {
         });
         console.log(`${URL}/InsertUserFBandGL`, res);
         const data = await res.json();
+
         if (data.d === null) reject("something went wrong");
-        resolve(JSON.parse(data.d));
+        resolve(JSON.parse(data));
       } catch (error) {
         reject(error);
       }
@@ -41,33 +45,33 @@ export default class SQL {
         //console.log(`${URL}/InsertUser`, res);
         const data = await res.json();
         if (data.d === null) reject("something went wrong");
-        resolve(JSON.parse(data.d));
+        resolve(JSON.parse(data));
       } catch (error) {
         reject(error);
       }
     });
   } //End InsertUser
 
-  static Login(email, pass){
-    return new Promise(async(resolve,reject) => {
-      try{
-        const res = await fetch(`${URL}/Login` , {
+  static Login(email, pass) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await fetch(`${URL}/Login`, {
           body: JSON.stringify({
             email,
             pass
           }),
-          headers:{
+          headers: {
             "content-type": "application/json"
           },
-          method:"POST"
+          method: "POST"
         });
         const data = await res.json();
         if (data.d === null) reject("something went wrong")
-        resolve(JSON.parse(data.d));
-      } catch (error){
+        resolve(JSON.parse(data));
+      } catch (error) {
         reject(error);
       }
     });
   } // End Login
-  
+
 }

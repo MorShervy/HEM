@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {
     View,
     Dimensions,
-
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
@@ -11,7 +10,7 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 import DraweMenu from './DrawerMenu';
 import Home from './pages/Home';
 import MyProfile from './pages/MyProfile';
-
+import CameraScreen from './pages/CameraScreen';
 
 
 const { height, width } = Dimensions.get("window");
@@ -44,24 +43,22 @@ const HomeNav = createDrawerNavigator(
                 )
             },
         },
+
     },
     {
         contentComponent: DraweMenu,
-        contentOptions: {
-            activeItemKey: 0,
-            itemsContainerStyle: {
-                marginVertical: 0,
-            },
-            iconContainerStyle: {
-                opacity: 0.3
-            }
-        }
+        // contentOptions: {
+        //     iconContainerStyle: {
+        //         opacity: 0.3
+        //     }
+        // },
     }
 
 )
 
 export default class AppScreen extends Component {
     static router = HomeNav.router;
+
     static navigationOptions = ({ navigation }) => {
         return {
             title: navigation.getParam('otherParam', 'Home'),
@@ -69,7 +66,7 @@ export default class AppScreen extends Component {
     };
 
     render() {
-
+        //console.log("router=", this.props.navigation)
         return (
 
             <View
@@ -84,3 +81,4 @@ export default class AppScreen extends Component {
         );
     }
 }
+

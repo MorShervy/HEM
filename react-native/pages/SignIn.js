@@ -7,7 +7,8 @@ import {
   TextInput,
   Alert,
   TouchableOpacity,
-  AsyncStorage
+  AsyncStorage,
+  StatusBar
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Logo from "../components/Logo";
@@ -88,6 +89,7 @@ export default function SignIn(props) {
       regexEmail.test(getEmail.toUpperCase()) &&
       regexPassword.test(getPassword.toUpperCase())
     ) {
+      console.log(getEmail, getPassword)
       SQL.Login(getEmail, getPassword).then(res => {
         console.log("res=", res);
         (res.res === "0" && AsyncStorage.setItem("user", JSON.stringify({ email: getEmail })).then(successAuth())) ||
@@ -98,9 +100,9 @@ export default function SignIn(props) {
 
     setErrLogin(true);
   };
-  console.log("user=")
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor="blue" barStyle="light-content" />
       <Logo styles={[styles.logo, styles.image]} />
 
       <View style={styles.formView}>
@@ -138,6 +140,7 @@ export default function SignIn(props) {
             onChangeText={e => setPassword(e)}
           />
         </View>
+
         {/* button sign in */}
         <View style={{ paddingTop: 25 }}>
           <TouchableOpacity
@@ -177,6 +180,7 @@ export default function SignIn(props) {
         >
           <Text style={styles.btnSignUp}>Create an account</Text>
         </TouchableOpacity>
+
       </View>
     </View>
   );

@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image, AsyncStorage, TouchableOpacity, Dimensions, ImageBackground, TextInput } from "react-native";
+import { View, Text, StyleSheet, Image, AsyncStorage, TouchableOpacity, Dimensions, ImageBackground, TextInput, Modal } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import CameraScreen from "./CameraScreen";
 
 
 const { height, width } = Dimensions.get("window");
 
 const MyProfile = props => {
     const [getUser, setUser] = useState("");
+    const [getShowCamera, setShowCamera] = useState(false);
 
 
     useEffect(() => {
@@ -17,55 +19,74 @@ const MyProfile = props => {
     }, [])
 
 
-    return (
-        <View style={{ flex: 1 }}>
+    if (getShowCamera) {
+        return (
+            <Modal
+                style={{ flex: 1 }}
+                animationType="slide"
+                transparent={false}
+                visible={getShowCamera}
+                onRequestClose={() => {
+                    setShowCamera(false);
+                }}>
 
-            <View style={styles.container}>
-                <ImageBackground
-                    source={require('../assets/money.jpg')}
-                    style={{ width: '100%', height: '100%' }}
-                >
+                <CameraScreen navigation={props.navigation} />
+            </Modal>
+        )
+    }
+    else {
+        return (
+            <View style={{ flex: 1 }}>
 
-                    <View style={styles.user}>
-                        <Image
-                            source={(getUser.url === undefined && require('../assets/user.png')) || { uri: getUser.url }}
-                            style={styles.img}
-                        />
-                        <TouchableOpacity
-                            style={styles.icon}
-                            onPress={() => console.log("clicked")}
-                        >
-                            <Ionicons name="md-add-circle-outline" size={50} color='#708090' />
-                        </TouchableOpacity>
-                        <Text style={styles.label}>{getUser.email}</Text>
-                    </View>
-                </ImageBackground>
-            </View >
-            <View style={styles.form}>
-                <View style={{ paddingTop: 10 }}>
-                    <TextInput
-                        style={styles.txtInput}
-                        placeholder="Enter First Name"
-                    />
-                </View>
-                <View style={{ paddingTop: 10 }}>
-                    <TextInput
-                        style={styles.txtInput}
-                        placeholder="Enter Last Name"
-                    />
-                </View>
-                <View style={{ paddingTop: 20 }}>
-
-                    <TouchableOpacity
-                        style={styles.btnStyle}
+                <View style={styles.container}>
+                    <ImageBackground
+                        source={require('../assets/money.jpg')}
+                        style={{ width: '100%', height: '100%' }}
                     >
-                        <Text style={styles.btnTxt}>Save</Text>
-                    </TouchableOpacity>
+
+                        <View style={styles.user}>
+                            <Image
+                                source={(getUser.url === undefined && require('../assets/user.png')) || { uri: getUser.url }}
+                                style={styles.img}
+                            />
+                            <TouchableOpacity
+                                style={styles.icon}
+                                onPress={() => setShowCamera(true)} //props.navigation.navigate('Camera')
+                            >
+                                <Ionicons name="md-add-circle-outline" size={50} color='#708090' />
+                            </TouchableOpacity>
+                            <Text style={styles.label}>{getUser.email}</Text>
+                        </View>
+                    </ImageBackground>
+                </View >
+                <View style={styles.form}>
+                    <View style={{ paddingTop: 10 }}>
+                        <TextInput
+                            style={styles.txtInput}
+                            placeholder="Enter First Name"
+                        />
+                    </View>
+                    <View style={{ paddingTop: 10 }}>
+                        <TextInput
+                            style={styles.txtInput}
+                            placeholder="Enter Last Name"
+                        />
+                    </View>
+                    <View style={{ paddingTop: 20 }}>
+
+                        <TouchableOpacity
+                            style={styles.btnStyle}
+                        >
+                            <Text style={styles.btnTxt}>Save</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
+                <KeyboardSpacer />
             </View>
-            <KeyboardSpacer />
-        </View>
-    );
+        )
+    }
+
+
 };
 export default MyProfile;
 

@@ -18,16 +18,16 @@ const AuthNav = createMaterialTopTabNavigator(
         SignUp,
     },
     {
+        // swipeEnabled: true,
+        // tabBarComponent: null,
         swipeEnabled: true,
-        tabBarComponent: null,
-
+        lazy: true,
+        tabBarComponent: null
     }
 );
 
 export default class AuthScreen extends Component {
-    constructor(props) {
-        super(props)
-    }
+
     static router = AuthNav.router;
 
 

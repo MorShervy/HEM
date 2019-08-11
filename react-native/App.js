@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, I18nManager, Image } from "react-native";
-import { createStackNavigator, createAppContainer } from "react-navigation";
-import { activateKeepAwake, deactivateKeepAwake } from 'expo-keep-awake';
+import { createStackNavigator, createAppContainer, createSwitchNavigator } from "react-navigation";
+import { activateKeepAwake } from 'expo-keep-awake';
 import AuthNav from "./AuthNav";
 import HomeNav from './HomeNav';
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import Logo from './components/Logo';
+
 
 I18nManager.forceRTL(false);
 
@@ -14,7 +15,7 @@ I18nManager.forceRTL(false);
 const RootStack = createStackNavigator(
   {
     AuthNav,
-    HomeNav
+    HomeNav,
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -39,12 +40,11 @@ const RootStack = createStackNavigator(
       }
     })
   }
-
-
 );
 
 
 const AppContainer = createAppContainer(RootStack)
+
 
 export default class App extends Component {
 
@@ -52,7 +52,7 @@ export default class App extends Component {
   render() {
 
     activateKeepAwake();
-
+    console.log("App")
     return (
       <AppContainer />
     )
@@ -72,3 +72,5 @@ const styles = StyleSheet.create({
     paddingEnd: 15
   }
 });
+
+
