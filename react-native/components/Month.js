@@ -27,7 +27,10 @@ const month = [
 
 const Month = props => {
   const _renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.touchableOpacity}>
+    <TouchableOpacity
+      style={styles.touchableOpacity}
+      onPress={() => props.HandleClickMonth(item.key)}
+    >
       <View style={styles.graphSize}>
         <View style={styles.graphFilled} />
       </View>
