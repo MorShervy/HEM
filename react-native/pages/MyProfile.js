@@ -111,7 +111,7 @@ const MyProfile = props => {
 
             <View style={styles.container}>
                 <ImageBackground
-                    source={require('../assets/money.jpg')}
+                    source={require('../assets/bg.png')}
                     style={{ width: '100%', height: '100%' }}
                 >
 
@@ -124,7 +124,7 @@ const MyProfile = props => {
                             style={styles.icon}
                             onPress={() => setShowCamera(true)} //props.navigation.navigate('Camera')
                         >
-                            <Ionicons name="md-add-circle-outline" size={50} color='#3D9970' />
+                            <Ionicons name="md-add-circle-outline" size={50} color='#ffe6e6' />
                         </TouchableOpacity>
 
                     </View>
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
         width: 160,
         height: 160,
         borderRadius: 160 / 2 + 160 / (8 + 14.8), // get radius 
-        borderColor: '#3D9970',
+        borderColor: '#ffe6e6',
         borderWidth: 5,
     },
     label: {

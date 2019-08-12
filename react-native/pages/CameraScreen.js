@@ -151,13 +151,15 @@ export default class CameraScreen extends Component {
         this.setState({ pictureSize: this.state.pictureSizes[newId], pictureSizeId: newId });
     }
 
-    btnUploadPictureFromCamera = () => {
+    btnUploadPictureFromCamera = async () => {
         console.log("user=", this.state.user.email)
         console.log("picuri=", this.state.picUri)
         const email = this.state.user.email;
         const photoUrl = this.state.picUri;
+        let imgName = 'imgFromCamera.jpg';
 
         SQL.UpdateUserPicture(email, photoUrl).then(res => { console.log(res) })
+        await SQL.ImgUpload(photoUrl, imgName);
         AsyncStorage.setItem("user", JSON.stringify({ email: email, url: photoUrl }))
         this.setState({ openModalPic: false }, () => {
             const replaceAction = StackActions.replace({

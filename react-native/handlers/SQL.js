@@ -121,4 +121,47 @@ export default class SQL {
     });
   } // End UpdateUserPicture
 
+  static ImgUpload(imgUri, picName) {
+    let urlAPI = "http://ruppinmobile.tempdomain.co.il/site04/uploadpicture";
+    let dataI = new FormData();
+    dataI.append('picture', {
+      uri: imgUri,
+      name: picName,
+      type: 'image/jpg'
+    });
+
+    // Create the config object for the POST
+    // You typically have an OAuth2 token that you use for authentication
+    const config = {
+      method: 'POST',
+      // headers: {
+      //   'Accept': 'application/json',
+      //  // 'Content-Type': 'multipart/form-data;',
+      //   'Authorization': 'Bearer ' + 'SECRET_OAUTH2_TOKEN_IF_AUTH',
+      // },
+      body: dataI,
+    }
+
+
+    fetch(urlAPI, config)
+      .then((responseData) => {
+        // Log the response form the server
+
+        console.log("res=", responseData.status)
+        if (responseData.status == 201) {
+
+          alert(`uploaded successfully!`);
+        }
+        else {
+
+          alert('error uploding ...');
+        }
+      })
+      .catch(err => {
+        alert('err upload= ' + err);
+
+      })
+  }
+
+
 }

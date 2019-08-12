@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, I18nManager, Image } from "react-native";
 import { createStackNavigator, createAppContainer, createSwitchNavigator } from "react-navigation";
-import { activateKeepAwake } from 'expo-keep-awake';
 import AuthNav from "./AuthNav";
 import HomeNav from './HomeNav';
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import Logo from './components/Logo';
-
+import MyProfile from './pages/MyProfile';
 
 I18nManager.forceRTL(false);
 
@@ -16,6 +15,7 @@ const RootStack = createStackNavigator(
   {
     AuthNav,
     HomeNav,
+    MyProfile
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -51,7 +51,7 @@ export default class App extends Component {
 
   render() {
 
-    activateKeepAwake();
+
     console.log("App")
     return (
       <AppContainer />
