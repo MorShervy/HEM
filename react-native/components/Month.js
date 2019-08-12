@@ -52,16 +52,17 @@ const styles = StyleSheet.create({
   flatList: { flex: 1, width: width },
   touchableOpacity: {
     flex: 1,
-    width: width / 5,
+    width: width / 15,
     alignItems: "center",
-    marginHorizontal: 15
+    marginHorizontal: 10
   },
   graphSize: {
     flex: 0.85,
     width: "100%",
     borderWidth: 1,
-    justifyContent: "flex-end"
+    justifyContent: "flex-end",
+    backgroundColor: "green"
   },
-  graphFilled: { flex: 0.2, backgroundColor: "blue" },
+  graphFilled: { flex: 0.2, backgroundColor: "red" },
   text: { flex: 0.15 }
 });
