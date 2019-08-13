@@ -5,7 +5,8 @@ import {
   View,
   TouchableOpacity,
   FlatList,
-  Dimensions
+  Dimensions,
+  AsyncStorage
 } from "react-native";
 
 const { width, height } = Dimensions.get("window");
@@ -26,17 +27,42 @@ const month = [
 ];
 
 const Month = props => {
-  const _renderItem = ({ item }) => (
-    <TouchableOpacity
-      style={styles.touchableOpacity}
-      onPress={() => props.HandleClickMonth(item.key)}
-    >
-      <View style={styles.graphSize}>
-        <View style={styles.graphFilled} />
-      </View>
-      <Text style={styles.text}>{item.value}</Text>
-    </TouchableOpacity>
-  );
+  const _renderItem = ({ item }) => {
+    // render ech month (as component)
+    let _graphFilled = []; // cant change with state, so we set difference reference for ech item
+    AsyncStorage.getItem(item.key.toString())
+      .then(res => JSON.parse(res))
+      .then(res => {
+        let salary = res !== null && parseFloat(res.salary);
+        let expend = res !== null && parseFloat(res.expend);
+
+        salary !== false && expend !== false && salary > expend // change the graph fill with ref
+          ? _graphFilled[item.key].setNativeProps({
+              style: { flex: parseFloat((expend / salary).toFixed(2)) }
+            })
+          : salary !== false && salary > expend
+          ? _graphFilled[item.key].setNativeProps({ style: { flex: 0 } })
+          : _graphFilled[item.key].setNativeProps({ style: { flex: 1 } });
+      });
+
+    return (
+      <TouchableOpacity
+        style={styles.touchableOpacity}
+        onPress={() => props.HandleClickMonth(item.key)}
+      >
+        <View style={styles.graphSize}>
+          <View
+            style={styles.graphFilled}
+            ref={ref => {
+              // cant change with state, so we set difference reference for ech item
+              _graphFilled[item.key] = ref;
+            }}
+          />
+        </View>
+        <Text style={styles.text}>{item.value}</Text>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <FlatList
@@ -55,7 +81,7 @@ const styles = StyleSheet.create({
   flatList: { flex: 1, width: width },
   touchableOpacity: {
     flex: 1,
-    width: width / 15,
+    width: width / 13,
     alignItems: "center",
     marginHorizontal: 10
   },
@@ -66,6 +92,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     backgroundColor: "green"
   },
-  graphFilled: { flex: 0.2, backgroundColor: "red" },
+  graphFilled: { backgroundColor: "red" },
   text: { flex: 0.15 }
 });
