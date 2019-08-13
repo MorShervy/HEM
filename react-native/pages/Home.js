@@ -12,6 +12,18 @@ const Home = props => {
   const [getSelectedMonth, setSelectedMonth] = useState(
     new Date().getMonth() + 1
   );
+  const [getSelectedMonthSalary, setSelectedMonthSalary] = useState(0);
+
+  useEffect(() => {
+    // change the salary to the selected month
+    AsyncStorage.getItem(getSelectedMonth.toString())
+      .then(res => JSON.parse(res))
+      .then(res =>
+        res !== null
+          ? setSelectedMonthSalary(res.salary)
+          : setSelectedMonthSalary(0)
+      );
+  }, [getSelectedMonth]);
 
   const HandleClickMonth = month => {
     setSelectedMonth(month);
@@ -50,7 +62,7 @@ const Home = props => {
       <View
         style={{ flex: 0.1, justifyContent: "center", alignItems: "center" }}
       >
-        <Text style={{ fontWeight: "bold" }}>0</Text>
+        <Text style={{ fontWeight: "bold" }}>{getSelectedMonthSalary}</Text>
       </View>
 
       <View style={{ flex: 0.2 }}>
