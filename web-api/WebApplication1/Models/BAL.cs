@@ -80,10 +80,10 @@ namespace WebApplication1.Models
                     Name = result.Rows[0]["Name"].ToString(),
                     PhotoUrl = result.Rows[0]["PhotoUrl"].ToString()
                 };
-                return new JavaScriptSerializer().Serialize(userInfo);
+                return userInfo;
             }
             var error = new { error = result.Rows[0][0].ToString() };
-            return new JavaScriptSerializer().Serialize(error);
+            return error;
         }
 
         public object Login(string email, string pass)
@@ -101,22 +101,19 @@ namespace WebApplication1.Models
                     Name = result.Rows[0]["Name"].ToString(),
                     PhotoUrl = result.Rows[0]["PhotoUrl"].ToString()
                 };
-                return new JavaScriptSerializer().Serialize(userInfo);
+                return userInfo;
             }
             var error = new { error = result.Rows[0][0].ToString() };
-            return new JavaScriptSerializer().Serialize(error);
+            return error;
         }
 
-        public object GetIncomeUserByYear(int accountId, string date)
+        public List<IncomeByYear> GetIncomeUserByYear(int accountId, string date)
         {
             DataTable result = DAL.GetIncomeUserByYear(accountId, date);
             List<IncomeByYear> income = null;
 
-            if (result.Columns.Count <= 1)
-            {
-                var error = new { error = result.Rows[0][0].ToString() };
-                return new JavaScriptSerializer().Serialize(error);
-            }
+            if (result == null)
+                return null;
 
             foreach (DataRow row in result.Rows)
             {
@@ -133,19 +130,16 @@ namespace WebApplication1.Models
                 });
             }
 
-            return new JavaScriptSerializer().Serialize(income);
+            return income;
         }
 
-        public object GetExpensesUserByYear(int accountId, string date)
+        public List<ExpensesByYear> GetExpensesUserByYear(int accountId, string date)
         {
             DataTable result = DAL.GetExpensesUserByYear(accountId, date);
             List<ExpensesByYear> expenses = null;
 
-            if (result.Columns.Count <= 1)
-            {
-                var error = new { error = result.Rows[0][0].ToString() };
-                return new JavaScriptSerializer().Serialize(error);
-            }
+            if (result == null)
+                return null;
 
             foreach (DataRow row in result.Rows)
             {
@@ -165,7 +159,7 @@ namespace WebApplication1.Models
                 });
             }
 
-            return new JavaScriptSerializer().Serialize(expenses);
+            return expenses;
         }
 
         public object UpdateUserName(string email, string name)

@@ -88,14 +88,14 @@ namespace WebApplication1.Controllers
 
         [HttpPost]
         [Route("GetIncomeUserByYear")]
-        public object GetIncomeUserByYear([FromBody]Income income)
+        public List<IncomeByYear> GetIncomeUserByYear([FromBody]Income income)
         {
             return BAL.Instance.GetIncomeUserByYear(income.AccountID, income.Date);
         }
 
         [HttpPost]
         [Route("GetExpensesUserByYear")]
-        public object GetExpensesUserByYear([FromBody]Expenses expenses)
+        public List<ExpensesByYear> GetExpensesUserByYear([FromBody]Expenses expenses)
         {
             return BAL.Instance.GetExpensesUserByYear(expenses.AccountID, expenses.Date);
         }
