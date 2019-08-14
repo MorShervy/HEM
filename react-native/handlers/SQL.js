@@ -31,6 +31,7 @@ export default class SQL {
 
   static InsertUser(email, pass) {
     return new Promise(async (resolve, reject) => {
+      console.log(email, " ", pass);
       try {
         const res = await fetch(`${URL}/InsertUser`, {
           body: JSON.stringify({
@@ -42,7 +43,7 @@ export default class SQL {
           },
           method: "POST"
         });
-        //console.log(`${URL}/InsertUser`, res);
+        console.log(`${URL}/InsertUser`, res);
         const data = await res.json();
         console.log("data=", data);
         if (data.d === null) reject("something went wrong");
@@ -127,6 +128,7 @@ export default class SQL {
 
   static GetIncomeUserByYear(accountID, date) {
     return new Promise(async (resolve, reject) => {
+      console.log(accountID, " ", date);
       try {
         const res = await fetch(`${URL}/GetIncomeUserByYear`, {
           body: JSON.stringify({
@@ -148,6 +150,32 @@ export default class SQL {
       }
     });
   } // End GetIncomeUserByYear
+
+
+  static GetExpensesUserByYear(accountID, date) {
+    return new Promise(async (resolve, reject) => {
+      console.log(accountID, " ", date);
+      try {
+        const res = await fetch(`${URL}/GetExpensesUserByYear`, {
+          body: JSON.stringify({
+            accountID,
+            date
+          }),
+          headers: {
+            "content-type": "application/json"
+          },
+          method: "POST"
+        });
+        console.log(`${URL}/GetExpensesUserByYear`, res);
+        const data = await res.json();
+        console.log("data=", data);
+        if (data.d === null) reject("something went wrong")
+        resolve(data);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  } // End GetExpensesUserByYear
 
   static ImgUpload(imgUri, picName) {
     let urlAPI = "http://ruppinmobile.tempdomain.co.il/site04/uploadpicture";

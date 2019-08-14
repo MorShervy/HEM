@@ -31,19 +31,19 @@ const SignUp = props => {
 
   const HandleSignUp = () => {
     setIndicator(true);
-
+    //SQL.GetIncomeUserByYear(1000, '2019-02-02').then(res => console.log("res=", res))
     if (
       regexEmail.test(getEmail.toUpperCase()) &&
       regexPassword.test(getPassword.toUpperCase()) &&
       regexPassword.test(getCPassword.toUpperCase())
     ) {
       SQL.InsertUser(getEmail, getPassword).then(res => {
-        console.log("res=", res)
-          (res.res === "0" &&
-            AsyncStorage.setItem(
-              "user",
-              JSON.stringify({ email: getEmail })
-            ).then(props.navigation.replace("HomeNav"))) ||
+
+        (res.res === "0" &&
+          AsyncStorage.setItem(
+            "user",
+            JSON.stringify({ email: getEmail })
+          ).then(props.navigation.replace("HomeNav"))) ||
           (res.res === "1" && Alert.alert("Email already exist")) ||
           (res.res === "-1" && Alert.alert("There is problem with the server"));
       });
