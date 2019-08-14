@@ -37,7 +37,7 @@ export default function SignIn(props) {
     const { type, accessToken, user } = await SignInWithGL.Login();
     if (user != undefined) {
       SQL.InsertUserFBandGL(user.email, user.name, user.photoUrl).then(res => {
-        console.log("res=", res.res);
+        console.log("res=", res);
         res.res === "0" ||
           (res.res === "1" &&
             AsyncStorage.setItem(
@@ -59,7 +59,7 @@ export default function SignIn(props) {
     if (user != undefined) {
       SQL.InsertUserFBandGL(user.email, user.name, user.picture.data.url).then(
         res => {
-          console.log("res=", res.res);
+          console.log("res=", res);
           res.res === "0" ||
             (res.res === "1" &&
               AsyncStorage.setItem(

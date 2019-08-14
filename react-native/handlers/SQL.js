@@ -20,8 +20,8 @@ export default class SQL {
         });
         console.log(`${URL}/InsertUserFBandGL`, res);
         const data = await res.json();
-
-        if (data.d === null) reject("something went wrong");
+        console.log("data=", data)
+        //if (data.d === null) reject("something went wrong");
         resolve(JSON.parse(data));
       } catch (error) {
         reject(error);
@@ -42,10 +42,11 @@ export default class SQL {
           },
           method: "POST"
         });
-        console.log(`${URL}/InsertUser`, res);
+        //console.log(`${URL}/InsertUser`, res);
         const data = await res.json();
+        console.log("data=", data);
         if (data.d === null) reject("something went wrong");
-        resolve(JSON.parse(data));
+        resolve(data);
       } catch (error) {
         reject(error);
       }
@@ -65,10 +66,11 @@ export default class SQL {
           },
           method: "POST"
         });
-        console.log(`${URL}/Login`, res);
+        //console.log(`${URL}/Login`, res);
         const data = await res.json();
+        //console.log("data=", data);
         if (data.d === null) reject("something went wrong")
-        resolve(JSON.parse(data));
+        resolve(data);
       } catch (error) {
         reject(error);
       }
@@ -90,8 +92,9 @@ export default class SQL {
         });
         console.log(`${URL}/UpdateUserName`, res);
         const data = await res.json();
+        console.log("data=", data);
         if (data.d === null) reject("something went wrong")
-        resolve(JSON.parse(data));
+        resolve(data);
       } catch (error) {
         reject(error);
       }
@@ -113,13 +116,38 @@ export default class SQL {
         });
         console.log(`${URL}/UpdateUserPicture`, res);
         const data = await res.json();
+        console.log("data=", data);
         if (data.d === null) reject("something went wrong")
-        resolve(JSON.parse(data));
+        resolve(data);
       } catch (error) {
         reject(error);
       }
     });
   } // End UpdateUserPicture
+
+  static GetIncomeUserByYear(accountID, date) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await fetch(`${URL}/GetIncomeUserByYear`, {
+          body: JSON.stringify({
+            accountID,
+            date
+          }),
+          headers: {
+            "content-type": "application/json"
+          },
+          method: "POST"
+        });
+        console.log(`${URL}/GetIncomeUserByYear`, res);
+        const data = await res.json();
+        console.log("data=", data);
+        if (data.d === null) reject("something went wrong")
+        resolve(data);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  } // End GetIncomeUserByYear
 
   static ImgUpload(imgUri, picName) {
     let urlAPI = "http://ruppinmobile.tempdomain.co.il/site04/uploadpicture";

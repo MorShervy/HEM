@@ -38,15 +38,17 @@ const SignUp = props => {
       regexPassword.test(getCPassword.toUpperCase())
     ) {
       SQL.InsertUser(getEmail, getPassword).then(res => {
-        (res.res === "0" &&
-          AsyncStorage.setItem(
-            "user",
-            JSON.stringify({ email: getEmail })
-          ).then(props.navigation.replace("HomeNav"))) ||
+        console.log("res=", res)
+          (res.res === "0" &&
+            AsyncStorage.setItem(
+              "user",
+              JSON.stringify({ email: getEmail })
+            ).then(props.navigation.replace("HomeNav"))) ||
           (res.res === "1" && Alert.alert("Email already exist")) ||
           (res.res === "-1" && Alert.alert("There is problem with the server"));
       });
     }
+
     setIndicator(false);
   };
 
