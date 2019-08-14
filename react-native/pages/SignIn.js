@@ -27,29 +27,31 @@ export default function SignIn(props) {
   const [getErrLogin, setErrLogin] = useState(false);
 
   useEffect(() => {
-    console.log('userEfect')
+    console.log("userEfect");
     AsyncStorage.getItem("user").then(res => {
-      res !== null && props.navigation.replace("HomeNav");//
+      res !== null && props.navigation.replace("HomeNav"); //
     });
   }, []);
+
+  const SaveToAsyncStorage = (email, name, url) => {
+    SQL.InsertUserFBandGL(email, name, url).then(res => {
+      console.log("res=", res);
+      AsyncStorage.setItem(
+        "user",
+        JSON.stringify({
+          accountID: res.AccountID,
+          email: res.Email,
+          name: res.Name,
+          url: res.PhotoUrl
+        })
+      ).then(successAuth());
+    });
+  };
 
   const _HandleLoginWithGoogle = async () => {
     const { type, accessToken, user } = await SignInWithGL.Login();
     if (user != undefined) {
-      SQL.InsertUserFBandGL(user.email, user.name, user.photoUrl).then(res => {
-        console.log("res=", res);
-        res.res === "0" ||
-          (res.res === "1" &&
-            AsyncStorage.setItem(
-              "user",
-              JSON.stringify({
-                email: user.email,
-                name: user.name,
-                url: user.photoUrl
-              })
-            ).then(successAuth())) ||
-          (res.res === "-1" && Alert.alert("There is problem with the server"));
-      });
+      SaveToAsyncStorage(user.email, user.name, user.photoUrl);
     }
   };
 
@@ -57,23 +59,7 @@ export default function SignIn(props) {
     const user = await SignInWIthFB.Login();
     console.log("user=", user);
     if (user != undefined) {
-      SQL.InsertUserFBandGL(user.email, user.name, user.picture.data.url).then(
-        res => {
-          console.log("res=", res);
-          res.res === "0" ||
-            (res.res === "1" &&
-              AsyncStorage.setItem(
-                "user",
-                JSON.stringify({
-                  email: user.email,
-                  name: user.name,
-                  url: user.picture.data.url
-                })
-              ).then(successAuth())) ||
-            (res.res === "-1" &&
-              Alert.alert("There is problem with the server"));
-        }
-      );
+      SaveToAsyncStorage(user.email, user.name, user.picture.data.url);
     }
   };
 
@@ -89,11 +75,20 @@ export default function SignIn(props) {
       regexEmail.test(getEmail.toUpperCase()) &&
       regexPassword.test(getPassword.toUpperCase())
     ) {
-      console.log(getEmail, getPassword)
+      console.log(getEmail, getPassword);
       SQL.Login(getEmail, getPassword).then(res => {
         console.log("res=", res);
-        (res.res === "0" && AsyncStorage.setItem("user", JSON.stringify({ email: getEmail })).then(successAuth())) ||
-          (res.res === "1" && setErrLogin(true));
+        (res.error === undefined &&
+          AsyncStorage.setItem(
+            "user",
+            JSON.stringify({
+              accountID: res.AccountID,
+              email: res.Email,
+              name: res.Name,
+              url: res.PhotoUrl
+            })
+          ).then(successAuth())) ||
+          setErrLogin(true);
       });
       return;
     }
@@ -180,7 +175,6 @@ export default function SignIn(props) {
         >
           <Text style={styles.btnSignUp}>Create an account</Text>
         </TouchableOpacity>
-
       </View>
     </View>
   );

@@ -38,14 +38,17 @@ const SignUp = props => {
       regexPassword.test(getCPassword.toUpperCase())
     ) {
       SQL.InsertUser(getEmail, getPassword).then(res => {
-
-        (res.res === "0" &&
+        (res.error === undefined &&
           AsyncStorage.setItem(
             "user",
-            JSON.stringify({ email: getEmail })
+            JSON.stringify({
+              accountID: res.AccountID,
+              email: res.Email,
+              name: res.Name,
+              url: res.PhotoUrl
+            })
           ).then(props.navigation.replace("HomeNav"))) ||
-          (res.res === "1" && Alert.alert("Email already exist")) ||
-          (res.res === "-1" && Alert.alert("There is problem with the server"));
+          Alert.alert(res.error);
       });
     }
 
@@ -81,6 +84,7 @@ const SignUp = props => {
               }
             ]}
             placeholder="Example@example.com"
+            keyboardType="email-address"
             value={getEmail}
             onChangeText={e => setEmail(e)}
           />
@@ -89,7 +93,7 @@ const SignUp = props => {
           <Text style={{ fontSize: 11, color: "#bcb2a7" }}>
             {((getEmail === "" || regexEmail.test(getEmail.toUpperCase())) &&
               "We’ll occasionally send updates about your account to this inbox." +
-              "We’ll never share your email address with anyone.") ||
+                "We’ll never share your email address with anyone.") ||
               "Email is invalid or already taken"}
           </Text>
         </View>
