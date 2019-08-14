@@ -197,7 +197,12 @@
     </Compile>
     <Compile Include="Models\BAL.cs" />
     <Compile Include="Models\DAL.cs" />
+    <Compile Include="Models\Expenses.cs" />
+    <Compile Include="Models\ExpensesByYear.cs" />
+    <Compile Include="Models\Income.cs" />
+    <Compile Include="Models\IncomeByYear.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Models\UserInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

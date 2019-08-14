@@ -58,9 +58,8 @@ namespace WebApplication1.Models
             return string.Empty;
         }
 
-        public static int InsertUser(string email, string pass)
+        public static DataTable InsertUser(string email, string pass)
         {
-            int res = -1;
 
             try
             {
@@ -72,11 +71,19 @@ namespace WebApplication1.Models
                 _command.Parameters.Add(new SqlParameter("Email", email));
                 _command.Parameters.Add(new SqlParameter("Password", pass));
 
-                SqlParameter returnPar = new SqlParameter();
-                returnPar.Direction = ParameterDirection.ReturnValue;
-                _command.Parameters.Add(returnPar);
-                _command.ExecuteNonQuery();
-                res = (int)returnPar.Value;
+                //SqlParameter returnPar = new SqlParameter();
+                //returnPar.Direction = ParameterDirection.ReturnValue;
+                //_command.Parameters.Add(returnPar);
+                //_command.ExecuteNonQuery();
+                //res = (int)returnPar.Value;
+
+                _adtr = new SqlDataAdapter(_command);
+                DataSet ds = new DataSet();
+                _adtr.Fill(ds, "User");
+
+                if (ds.Tables["User"].Rows.Count != 0)
+                    return ds.Tables["User"];
+
             }
             catch (Exception e)
             {
@@ -87,12 +94,11 @@ namespace WebApplication1.Models
                 if (Con.State == ConnectionState.Open)
                     Con.Close();
             }
-            return res;
+            return null;
         }
 
-        public static int InsertUserFBandGL(string email, string name, string photoUrl)
+        public static DataTable InsertUserFBandGL(string email, string name, string photoUrl)
         {
-            int res = -1;
 
             try
             {
@@ -105,11 +111,18 @@ namespace WebApplication1.Models
                 _command.Parameters.Add(new SqlParameter("Name", name));
                 _command.Parameters.Add(new SqlParameter("PhotoUrl", photoUrl));
 
-                SqlParameter returnPar = new SqlParameter();
-                returnPar.Direction = ParameterDirection.ReturnValue;
-                _command.Parameters.Add(returnPar);
-                _command.ExecuteNonQuery();
-                res = (int)returnPar.Value;
+                //SqlParameter returnPar = new SqlParameter();
+                //returnPar.Direction = ParameterDirection.ReturnValue;
+                //_command.Parameters.Add(returnPar);
+                //_command.ExecuteNonQuery();
+                //res = (int)returnPar.Value;
+
+                _adtr = new SqlDataAdapter(_command);
+                DataSet ds = new DataSet();
+                _adtr.Fill(ds, "User");
+
+                if (ds.Tables["User"].Rows.Count != 0)
+                    return ds.Tables["User"];
             }
             catch (Exception e)
             {
@@ -121,12 +134,11 @@ namespace WebApplication1.Models
                     Con.Close();
             }
 
-            return res;
+            return null;
         }
 
-        public static int Login(string email, string pass)
+        public static DataTable Login(string email, string pass)
         {
-            int res = -1;
 
             try
             {
@@ -138,11 +150,19 @@ namespace WebApplication1.Models
                 _command.Parameters.Add(new SqlParameter("Email", email));
                 _command.Parameters.Add(new SqlParameter("Password", pass));
 
-                SqlParameter returnPar = new SqlParameter();
-                returnPar.Direction = ParameterDirection.ReturnValue;
-                _command.Parameters.Add(returnPar);
-                _command.ExecuteNonQuery();
-                res = (int)returnPar.Value;
+                //SqlParameter returnPar = new SqlParameter();
+                //returnPar.Direction = ParameterDirection.ReturnValue;
+                //_command.Parameters.Add(returnPar);
+                //_command.ExecuteNonQuery();
+                //res = (int)returnPar.Value;
+
+                _adtr = new SqlDataAdapter(_command);
+                DataSet ds = new DataSet();
+                _adtr.Fill(ds, "User");
+
+                if (ds.Tables["User"].Rows.Count != 0)
+                    return ds.Tables["User"];
+
             }
             catch (Exception e)
             {
@@ -153,7 +173,71 @@ namespace WebApplication1.Models
                 if (Con.State == ConnectionState.Open)
                     Con.Close();
             }
-            return res;
+            return null;
+        }
+
+        public static DataTable GetIncomeUserByYear(int accountId, string date)
+        {
+            try
+            {
+                Con.Open();
+                _command = new SqlCommand($"GetIncomeUserByYear", Con);
+                _command.CommandType = CommandType.StoredProcedure;
+
+                /* input parameters */
+                _command.Parameters.Add(new SqlParameter("AccountID", accountId));
+                _command.Parameters.Add(new SqlParameter("Date", date));
+
+                _adtr = new SqlDataAdapter(_command);
+                DataSet ds = new DataSet();
+                _adtr.Fill(ds, "Income");
+
+                if (ds.Tables["Income"].Rows.Count != 0)
+                    return ds.Tables["Income"];
+
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            finally
+            {
+                if (Con.State == ConnectionState.Open)
+                    Con.Close();
+            }
+            return null;
+        }
+
+        public static DataTable GetExpensesUserByYear(int accountId, string date)
+        {
+            try
+            {
+                Con.Open();
+                _command = new SqlCommand($"GetExpensesUserByYear", Con);
+                _command.CommandType = CommandType.StoredProcedure;
+
+                /* input parameters */
+                _command.Parameters.Add(new SqlParameter("AccountID", accountId));
+                _command.Parameters.Add(new SqlParameter("Date", date));
+
+                _adtr = new SqlDataAdapter(_command);
+                DataSet ds = new DataSet();
+                _adtr.Fill(ds, "Expenses");
+
+                if (ds.Tables["Expenses"].Rows.Count != 0)
+                    return ds.Tables["Expenses"];
+
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            finally
+            {
+                if (Con.State == ConnectionState.Open)
+                    Con.Close();
+            }
+            return null;
         }
 
         public static int UpdateUserName(string email, string name)
