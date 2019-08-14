@@ -6,13 +6,14 @@ import {
   StyleSheet,
   AsyncStorage
 } from "react-native";
-import Month from "../components/Month";
+import MonthList from "../components/MonthList";
+import { MonthData } from "../data/MonthData";
 
 const Home = props => {
   const [getSelectedMonth, setSelectedMonth] = useState(
     new Date().getMonth() + 1
   );
-  const [getSelectedMonthSalary, setSelectedMonthSalary] = useState(0);
+  const [getSelectedMonthCanExpend, setSelectedMonthCanExpend] = useState(0);
 
   useEffect(() => {
     // change the salary to the selected month
@@ -20,8 +21,10 @@ const Home = props => {
       .then(res => JSON.parse(res))
       .then(res =>
         res !== null
-          ? setSelectedMonthSalary(res.salary)
-          : setSelectedMonthSalary(0)
+          ? setSelectedMonthCanExpend(
+              parseFloat(res.salary - res.expend).toFixed(2)
+            )
+          : setSelectedMonthCanExpend(0)
       );
   }, [getSelectedMonth]);
 
@@ -40,6 +43,11 @@ const Home = props => {
             expend: res !== null ? parseFloat(res.expend) : 0
           })
         );
+        res !== null
+          ? setSelectedMonthCanExpend(
+              parseFloat(res.salary - res.expend).toFixed(2)
+            )
+          : setSelectedMonthCanExpend(1) && setSelectedMonthCanExpend(0);
       });
   };
 
@@ -54,30 +62,46 @@ const Home = props => {
             expend: res !== null ? parseFloat(res.expend) + 5000 : 5000
           })
         );
+        res !== null
+          ? setSelectedMonthCanExpend(
+              parseFloat(res.salary - res.expend).toFixed(2)
+            )
+          : setSelectedMonthCanExpend(1) && setSelectedMonthCanExpend(0);
       });
   };
-  //AsyncStorage.removeItem("8");
+
+  // for (let index = 1; index <= 12; index++) {
+  //   AsyncStorage.removeItem(index.toString());
+  // }
   return (
     <View style={styles.container}>
-      <View
-        style={{ flex: 0.1, justifyContent: "center", alignItems: "center" }}
-      >
-        <Text style={{ fontWeight: "bold" }}>{getSelectedMonthSalary}</Text>
+      <View style={styles.selectedMonthPosition}>
+        <Text>{`at ${
+          MonthData.find(month => month.key === getSelectedMonth).value
+        }`}</Text>
+        <Text>you can expend</Text>
+        <Text
+          style={[
+            styles.canExpend,
+            {
+              color: (getSelectedMonthCanExpend <= 0 && "red") || "green"
+            }
+          ]}
+        >
+          {getSelectedMonthCanExpend}
+        </Text>
       </View>
 
-      <View style={{ flex: 0.2 }}>
-        <Month HandleClickMonth={HandleClickMonth} />
+      <View style={styles.graphFilledPosition}>
+        <MonthList
+          HandleClickMonth={HandleClickMonth}
+          getSelectedMonth={getSelectedMonth}
+          getSelectedMonthCanExpend={getSelectedMonthCanExpend}
+        />
       </View>
-      <View
-        style={{
-          flex: 0.6,
-          flexDirection: "row",
-          justifyContent: "space-evenly",
-          flexWrap: "wrap"
-        }}
-      >
-        <Click text="Add" onPress={() => HandleAddSalary()} />
-        <Click text="Remove" onPress={() => HandleExpendSalary()} />
+      <View style={styles.buttonsPosition}>
+        <Click text="Add" onPress={HandleAddSalary} />
+        <Click text="Remove" onPress={HandleExpendSalary} />
         <Click text="Edit" />
         <Click text="Bamba" />
         <Click text="Bisli" />
@@ -112,7 +136,18 @@ export const Click = props => (
 );
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1
+  container: { flex: 1 },
+  selectedMonthPosition: {
+    flex: 0.1,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  canExpend: { fontWeight: "bold" },
+  graphFilledPosition: { flex: 0.2 },
+  buttonsPosition: {
+    flex: 0.6,
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    flexWrap: "wrap"
   }
 });
