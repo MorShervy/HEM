@@ -3,6 +3,8 @@ import {
   View,
   Text,
   TouchableOpacity,
+  Modal,
+  TextInput,
   StyleSheet,
   AsyncStorage
 } from "react-native";
@@ -14,6 +16,8 @@ const Home = props => {
     new Date().getMonth() + 1
   );
   const [getSelectedMonthCanExpend, setSelectedMonthCanExpend] = useState(0);
+  const [getSalary, setSalary] = useState(0);
+  const [getSalaryModal, setSalaryModal] = useState(false);
 
   useEffect(() => {
     // change the salary to the selected month
@@ -26,6 +30,8 @@ const Home = props => {
             )
           : setSelectedMonthCanExpend(0)
       );
+    console.log("prps=", props.navigation.getParam("incomes"));
+    console.log("prps=", props.navigation.getParam("expenses"));
   }, [getSelectedMonth]);
 
   const HandleClickMonth = month => {
@@ -33,6 +39,7 @@ const Home = props => {
   };
 
   const HandleAddSalary = () => {
+    //setSalaryModal(true);
     AsyncStorage.getItem(getSelectedMonth.toString())
       .then(res => JSON.parse(res))
       .then(res => {
@@ -42,12 +49,13 @@ const Home = props => {
             salary: 20000,
             expend: res !== null ? parseFloat(res.expend) : 0
           })
+        ).then(
+          res !== null
+            ? setSelectedMonthCanExpend(
+                parseFloat(res.salary - res.expend).toFixed(2)
+              )
+            : setSelectedMonthCanExpend(2000)
         );
-        res !== null
-          ? setSelectedMonthCanExpend(
-              parseFloat(res.salary - res.expend).toFixed(2)
-            )
-          : setSelectedMonthCanExpend(1) && setSelectedMonthCanExpend(0);
       });
   };
 
@@ -61,18 +69,20 @@ const Home = props => {
             salary: res !== null ? parseFloat(res.salary) : 0,
             expend: res !== null ? parseFloat(res.expend) + 5000 : 5000
           })
+        ).then(
+          res !== null
+            ? setSelectedMonthCanExpend(
+                parseFloat(res.salary - res.expend).toFixed(2)
+              )
+            : setSelectedMonthCanExpend(-5000)
         );
-        res !== null
-          ? setSelectedMonthCanExpend(
-              parseFloat(res.salary - res.expend).toFixed(2)
-            )
-          : setSelectedMonthCanExpend(1) && setSelectedMonthCanExpend(0);
       });
   };
 
   // for (let index = 1; index <= 12; index++) {
   //   AsyncStorage.removeItem(index.toString());
   // }
+
   return (
     <View style={styles.container}>
       <View style={styles.selectedMonthPosition}>
@@ -107,6 +117,18 @@ const Home = props => {
         <Click text="Bisli" />
         <Click text="Tapo chips" />
       </View>
+
+      <Modal style={{ flex: 1 }} visible={getSalaryModal}>
+        <Text>Edit Salary</Text>
+        <TextInput
+          placeholder="Enter Salary"
+          value={getSalary.toString()}
+          onChangeText={e => setSalary(e)}
+        />
+        <TouchableOpacity onPress={() => setSalaryModal(false)}>
+          <Text>Close</Text>
+        </TouchableOpacity>
+      </Modal>
     </View>
   );
 };

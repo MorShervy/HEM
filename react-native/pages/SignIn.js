@@ -8,7 +8,8 @@ import {
   Alert,
   TouchableOpacity,
   AsyncStorage,
-  StatusBar
+  StatusBar,
+  ActivityIndicator
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Logo from "../components/Logo";
@@ -22,16 +23,42 @@ const regexEmail = /^(([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}))$/;
 const regexPassword = /^(.{6,12})$/;
 
 export default function SignIn(props) {
+  const [getLoading, setLoading] = useState(false);
   const [getEmail, setEmail] = useState("");
   const [getPassword, setPassword] = useState("");
   const [getErrLogin, setErrLogin] = useState(false);
+  const [getIncome, setIncome] = useState(null);
 
   useEffect(() => {
     console.log("userEfect");
-    AsyncStorage.getItem("user").then(res => {
-      res !== null && props.navigation.replace("HomeNav"); //
-    });
+    AsyncStorage.getItem("user")
+      .then(res => JSON.parse(res))
+      .then(res => {
+        res !== null && GetUserDetailsFromDB(res);
+        // SQL.GetIncomeUserByYear(
+        //   res.accountID,
+        //   date.toLocaleDateString()
+        // ).then(res => props.navigation.replace("HomeNav", { incomes: res })); //
+      });
+
+    setLoading(false);
   }, []);
+
+  const GetUserDetailsFromDB = async res => {
+    const date = new Date();
+    const income = await SQL.GetIncomeUserByYear(
+      res.accountID,
+      date.toLocaleDateString()
+    );
+    const expenses = await SQL.GetExpensesUserByYear(
+      res.accountID,
+      date.toLocaleDateString()
+    );
+    props.navigation.replace("HomeNav", {
+      incomes: income,
+      expenses: expenses
+    });
+  };
 
   const SaveToAsyncStorage = (email, name, url) => {
     SQL.InsertUserFBandGL(email, name, url).then(res => {
@@ -49,6 +76,7 @@ export default function SignIn(props) {
   };
 
   const _HandleLoginWithGoogle = async () => {
+    setLoading(true);
     const { type, accessToken, user } = await SignInWithGL.Login();
     if (user != undefined) {
       SaveToAsyncStorage(user.email, user.name, user.photoUrl);
@@ -56,6 +84,7 @@ export default function SignIn(props) {
   };
 
   const _HandleLoginWithFacebook = async () => {
+    setLoading(true);
     const user = await SignInWIthFB.Login();
     console.log("user=", user);
     if (user != undefined) {
@@ -71,6 +100,7 @@ export default function SignIn(props) {
   };
 
   const _HandleLogin = async () => {
+    setLoading(true);
     if (
       regexEmail.test(getEmail.toUpperCase()) &&
       regexPassword.test(getPassword.toUpperCase())
@@ -95,8 +125,15 @@ export default function SignIn(props) {
 
     setErrLogin(true);
   };
+
   return (
     <View style={styles.container}>
+      {getLoading && (
+        <ActivityIndicator
+          style={{ flex: 1, paddingTop: 150, position: "absolute" }}
+          size="large"
+        />
+      )}
       <StatusBar backgroundColor="blue" barStyle="light-content" />
       <Logo styles={[styles.logo, styles.image]} />
 
@@ -122,6 +159,7 @@ export default function SignIn(props) {
             style={styles.txtInput}
             placeholder="Example@example.com"
             value={getEmail}
+            keyboardType="email-address"
             onChangeText={e => setEmail(e)}
           />
         </View>
