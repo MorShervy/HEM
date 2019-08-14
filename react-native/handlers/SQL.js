@@ -22,7 +22,7 @@ export default class SQL {
         const data = await res.json();
         console.log("data=", data)
         //if (data.d === null) reject("something went wrong");
-        resolve(JSON.parse(data));
+        resolve(data);
       } catch (error) {
         reject(error);
       }
