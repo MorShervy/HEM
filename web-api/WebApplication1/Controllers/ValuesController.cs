@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -85,6 +86,19 @@ namespace WebApplication1.Controllers
             return BAL.Instance.UpdateUserPicture(user.Email, user.PhotoUrl);
         }
 
+        [HttpPost]
+        [Route("GetIncomeUserByYear")]
+        public object GetIncomeUserByYear([FromBody]Income income)
+        {
+            return BAL.Instance.GetIncomeUserByYear(income.AccountID, income.Date);
+        }
+
+        [HttpPost]
+        [Route("GetExpensesUserByYear")]
+        public object GetExpensesUserByYear([FromBody]Expenses expenses)
+        {
+            return BAL.Instance.GetExpensesUserByYear(expenses.AccountID, expenses.Date);
+        }
 
         [Route("uploadpicture")]
         public Task<HttpResponseMessage> Post()

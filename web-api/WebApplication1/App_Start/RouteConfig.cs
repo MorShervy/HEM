@@ -13,7 +13,6 @@ namespace WebApplication1
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            routes.IgnoreRoute("WebService.asmx/{*pathInfo}");
 
             routes.MapRoute(
                 name: "Default",
