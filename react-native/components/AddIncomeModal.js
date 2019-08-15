@@ -24,6 +24,8 @@ const AddIncomeModal = props => {
         >
             <Text>Add Income at Month{props.user !== null && props.user.accountID} </Text>
 
+
+
         </Modal>
     )
 }
