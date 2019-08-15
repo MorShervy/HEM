@@ -6,10 +6,14 @@ import {
   Modal,
   TextInput,
   StyleSheet,
-  AsyncStorage
+  AsyncStorage,
+  Dimensions
 } from "react-native";
 import MonthList from "../components/MonthList";
 import { MonthData } from "../data/MonthData";
+import { Ionicons } from "@expo/vector-icons";
+
+const { height, width } = Dimensions.get("window");
 
 const Home = props => {
   const [getSelectedMonth, setSelectedMonth] = useState(
@@ -18,6 +22,7 @@ const Home = props => {
   const [getSelectedMonthCanExpend, setSelectedMonthCanExpend] = useState(0);
   const [getSalary, setSalary] = useState(0);
   const [getSalaryModal, setSalaryModal] = useState(false);
+  const [toggleAdding, setToggleAdding] = useState(false);
 
   useEffect(() => {
     // change the salary to the selected month
@@ -26,17 +31,46 @@ const Home = props => {
       .then(res =>
         res !== null
           ? setSelectedMonthCanExpend(
-              parseFloat(res.salary - res.expend).toFixed(2)
-            )
+            parseFloat(res.salary - res.expend).toFixed(2)
+          )
           : setSelectedMonthCanExpend(0)
       );
-    console.log("prps=", props.navigation.getParam("incomes"));
-    console.log("prps=", props.navigation.getParam("expenses"));
+    console.log("incomes=", props.navigation.getParam("incomes"));
+    console.log("expenses=", props.navigation.getParam("expenses"));
   }, [getSelectedMonth]);
 
   const HandleClickMonth = month => {
     setSelectedMonth(month);
   };
+
+  const ToggleAdding = () => {
+    setToggleAdding(!toggleAdding);
+  }
+
+  const renderAddingIncome = () => (
+    <View style={{ marginTop: "62%", position: "absolute", marginLeft: "80%" }}>
+      <TouchableOpacity
+        style={[styles.btnAdd, { backgroundColor: "#07D60D" }]}
+        onPress={ToggleAdding}
+      >
+        <Ionicons name="ios-add" size={30} color="#fff" style={{ textAlign: "center", marginTop: 15 }} />
+      </TouchableOpacity>
+    </View>
+  )
+
+  const renderAddingExpenses = () => (
+
+
+    <View style={{ marginTop: "80%", position: "absolute", marginLeft: "80%" }}>
+      <TouchableOpacity
+        style={[styles.btnAdd, { backgroundColor: "#FF0000" }]}
+        onPress={ToggleAdding}
+      >
+        <Ionicons name="ios-add" size={30} color="#fff" style={{ textAlign: "center", marginTop: 15 }} />
+      </TouchableOpacity>
+    </View>
+
+  )
 
   const HandleAddSalary = () => {
     //setSalaryModal(true);
@@ -52,8 +86,8 @@ const Home = props => {
         ).then(
           res !== null
             ? setSelectedMonthCanExpend(
-                parseFloat(res.salary - res.expend).toFixed(2)
-              )
+              parseFloat(res.salary - res.expend).toFixed(2)
+            )
             : setSelectedMonthCanExpend(2000)
         );
       });
@@ -72,8 +106,8 @@ const Home = props => {
         ).then(
           res !== null
             ? setSelectedMonthCanExpend(
-                parseFloat(res.salary - res.expend).toFixed(2)
-              )
+              parseFloat(res.salary - res.expend).toFixed(2)
+            )
             : setSelectedMonthCanExpend(-5000)
         );
       });
@@ -88,7 +122,7 @@ const Home = props => {
       <View style={styles.selectedMonthPosition}>
         <Text>{`at ${
           MonthData.find(month => month.key === getSelectedMonth).value
-        }`}</Text>
+          }`}</Text>
         <Text>you can expend</Text>
         <Text
           style={[
@@ -116,7 +150,19 @@ const Home = props => {
         <Click text="Bamba" />
         <Click text="Bisli" />
         <Click text="Tapo chips" />
+        {toggleAdding && renderAddingIncome() || null}
+        {toggleAdding && renderAddingExpenses() || null}
+        <View style={{ marginTop: "98%", position: "absolute", marginLeft: "80%" }}>
+          <TouchableOpacity
+            style={styles.btnAdd}
+            onPress={ToggleAdding}
+          >
+            <Ionicons name="ios-add" size={30} color="#fff" style={{ textAlign: "center", marginTop: 15 }} />
+          </TouchableOpacity>
+        </View>
       </View>
+
+
 
       <Modal style={{ flex: 1 }} visible={getSalaryModal}>
         <Text>Edit Salary</Text>
@@ -129,7 +175,7 @@ const Home = props => {
           <Text>Close</Text>
         </TouchableOpacity>
       </Modal>
-    </View>
+    </View >
   );
 };
 export default Home;
@@ -171,5 +217,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
     flexWrap: "wrap"
-  }
+  },
+  btnAdd: {
+    width: 60,
+    height: 60,
+    borderRadius: 60 / 2 + 60 / (8 + 14.8), // get radius
+
+    backgroundColor: "#2D60FF",
+    shadowOpacity: 1,
+    shadowColor: "rgba(0,0,0,0.15)",
+    shadowRadius: 5,
+    elevation: 15
+  },
 });

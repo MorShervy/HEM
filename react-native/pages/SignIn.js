@@ -46,15 +46,18 @@ export default function SignIn(props) {
 
   const GetUserDetailsFromDB = async res => {
     const date = new Date();
+
     const income = await SQL.GetIncomeUserByYear(
       res.accountID,
       date.toLocaleDateString()
     );
+
     const expenses = await SQL.GetExpensesUserByYear(
       res.accountID,
       date.toLocaleDateString()
     );
-    props.navigation.replace("HomeNav", {
+
+    await props.navigation.replace("HomeNav", {
       incomes: income,
       expenses: expenses
     });
@@ -134,7 +137,6 @@ export default function SignIn(props) {
           size="large"
         />
       )}
-      <StatusBar backgroundColor="blue" barStyle="light-content" />
       <Logo styles={[styles.logo, styles.image]} />
 
       <View style={styles.formView}>

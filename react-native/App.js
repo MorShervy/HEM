@@ -12,6 +12,7 @@ import {
   createAppContainer,
   createSwitchNavigator
 } from "react-navigation";
+import { useKeepAwake } from 'expo-keep-awake';
 import AuthNav from "./AuthNav";
 import HomeNav from "./HomeNav";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -56,9 +57,14 @@ export default class App extends Component {
     this.state = {
       isLoggedIn: false
     };
+
   }
 
+
   render() {
+    componentWillMount = () => {
+      useKeepAwake();
+    }
     return <AppContainer />;
   }
 }

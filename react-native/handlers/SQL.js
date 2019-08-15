@@ -143,7 +143,7 @@ export default class SQL {
         console.log(`${URL}/GetIncomeUserByYear`, res);
         const data = await res.json();
         console.log("data=", data);
-        if (data.d === null) reject("something went wrong")
+        //if (data === null) return null//reject("something went wrong")
         resolve(data);
       } catch (error) {
         reject(error);
@@ -169,7 +169,7 @@ export default class SQL {
         console.log(`${URL}/GetExpensesUserByYear`, res);
         const data = await res.json();
         console.log("data=", data);
-        if (data.d === null) reject("something went wrong")
+        //if (data === null) reject("something went wrong")
         resolve(data);
       } catch (error) {
         reject(error);
