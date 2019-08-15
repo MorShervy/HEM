@@ -67,10 +67,18 @@ const Home = props => {
     const incomes = props.navigation.getParam("incomes");
     const expenses = props.navigation.getParam("expenses");
 
+    console.log("incomes: ", incomes);
+
     const incomesFiltered =
-      (incomes !== null && incomes.filter(res => res.Month === month)) || [];
+      (incomes !== null &&
+        incomes !== undefined &&
+        incomes.filter(res => res.Month === month)) ||
+      [];
     const expensesFiltered =
-      (expenses !== null && expenses.filter(res => res.Month === month)) || [];
+      (expenses !== null &&
+        expenses !== undefined &&
+        expenses.filter(res => res.Month === month)) ||
+      [];
 
     setSalaryOfMonth(incomesFiltered);
     setExpensesOfMonth(expensesFiltered);
