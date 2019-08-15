@@ -23,8 +23,11 @@ const Home = props => {
     new Date().getMonth() + 1
   );
   const [getSelectedMonthCanExpend, setSelectedMonthCanExpend] = useState(0);
-  const [getSalaryOfMonth, setSalaryOfMonth] = useState(0);
-  const [getExpensesOfMonth, setExpensesOfMonth] = useState(0);
+  const [getSalaryOfMonth, setSalaryOfMonth] = useState(null);
+  const [getExpensesOfMonth, setExpensesOfMonth] = useState(null);
+
+  const [getIncomeSum, setIncomeSum] = useState(0);
+  const [getExpendSum, setExpendSum] = useState(0);
 
   const [toggleAdding, setToggleAdding] = useState(false);
   const [expensesModal, setExpensesModal] = useState(false);
@@ -32,7 +35,6 @@ const Home = props => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    //AsyncStorage.getItem("user").then(res => JSON.parse(res)).then(res => setUser(res))
     // change the salary to the selected month
     AsyncStorage.getItem(getSelectedMonth.toString())
       .then(res => JSON.parse(res))
@@ -42,9 +44,14 @@ const Home = props => {
               parseFloat(res.salary - res.expend).toFixed(2)
             )
           : setSelectedMonthCanExpend(0);
-      });
-    HandleGetIncomeAndExpensesFromAsyncStoreg(getSelectedMonth);
+      })
+      .then(HandleGetIncomeAndExpensesFromAsyncStoreg(getSelectedMonth));
   }, [getSelectedMonth]);
+
+  useEffect(() => {
+    IncomeSum();
+    ExpendSum();
+  }, [getSalaryOfMonth, getExpensesOfMonth]);
 
   useEffect(() => {
     AsyncStorage.getItem("user")
@@ -56,12 +63,14 @@ const Home = props => {
     setSelectedMonth(month);
   };
 
-  const HandleGetIncomeAndExpensesFromAsyncStoreg = month => {
+  const HandleGetIncomeAndExpensesFromAsyncStoreg = async month => {
     const incomes = props.navigation.getParam("incomes");
     const expenses = props.navigation.getParam("expenses");
 
-    const incomesFiltered = incomes.filter(res => res.Month === month);
-    const expensesFiltered = expenses.filter(res => res.Month === month);
+    const incomesFiltered =
+      (incomes !== null && incomes.filter(res => res.Month === month)) || [];
+    const expensesFiltered =
+      (expenses !== null && expenses.filter(res => res.Month === month)) || [];
 
     setSalaryOfMonth(incomesFiltered);
     setExpensesOfMonth(expensesFiltered);
@@ -205,22 +214,35 @@ const Home = props => {
   //   AsyncStorage.removeItem(index.toString());
   // }
 
+  const IncomeSum = () => {
+    let income = 0;
+    getSalaryOfMonth !== null &&
+      getSalaryOfMonth.map(res => (income += parseFloat(res.Amount)));
+
+    setIncomeSum(income);
+  };
+
+  const ExpendSum = () => {
+    let expend = 0;
+    getExpensesOfMonth !== null &&
+      getExpensesOfMonth.map(res => (expend += parseFloat(res.Amount)));
+
+    setExpendSum(expend);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.selectedMonthPosition}>
-        <Text>{`at ${
-          MonthData.find(month => month.key === getSelectedMonth).value
-        }`}</Text>
-        <Text>you can expend</Text>
-        <Text
-          style={[
-            styles.canExpend,
-            {
-              color: (getSelectedMonthCanExpend <= 0 && "red") || "green"
-            }
-          ]}
-        >
-          {getSelectedMonthCanExpend}
+        <Text style={[styles.headerText, styles.headerSelectedMonth]}>
+          {`at\n${
+            MonthData.find(month => month.key === getSelectedMonth).value
+          }`}
+        </Text>
+        <Text style={[styles.headerText, styles.headerSalaryAndExpend]}>
+          {`Salary\n${getIncomeSum}`}
+        </Text>
+        <Text style={[styles.headerText, styles.headerSalaryAndExpend]}>
+          {`Can Expend\n${getIncomeSum - getExpendSum}`}
         </Text>
       </View>
 
@@ -230,6 +252,7 @@ const Home = props => {
           getSelectedMonthCanExpend={getSelectedMonthCanExpend}
         />
       </View>
+
       <View style={styles.expendDetailsPosition}>
         <ExpendList getExpensesOfMonth={getExpensesOfMonth} />
 
@@ -276,8 +299,20 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   selectedMonthPosition: {
     flex: 0.1,
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center"
+  },
+  headerText: {
+    flex: 0.3,
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  headerSelectedMonth: {
+    fontSize: 14 * (Dimensions.get("screen").fontScale * 1.3)
+  },
+  headerSalaryAndExpend: {
+    fontSize: 14 * Dimensions.get("screen").fontScale
   },
   canExpend: { fontWeight: "bold" },
   graphFilledPosition: { flex: 0.2 },
