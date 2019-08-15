@@ -8,14 +8,11 @@ import {
   FlatList,
   Dimensions,
   StyleSheet,
-  AsyncStorage,
-  Dimensions
+  AsyncStorage
 } from "react-native";
 import MonthList from "../components/MonthList";
 import { MonthData } from "../data/MonthData";
 import { Ionicons } from "@expo/vector-icons";
-
-const { height, width } = Dimensions.get("window");
 
 const { width, height } = Dimensions.get("window");
 
@@ -26,6 +23,7 @@ const Home = props => {
   const [getSelectedMonthCanExpend, setSelectedMonthCanExpend] = useState(0);
   const [getSalaryOfMonth, setSalaryOfMonth] = useState(0);
   const [getExpensesOfMonth, setExpensesOfMonth] = useState(0);
+
   const [getAllIncomesAndExpenses, setAllIncomesAndExpenses] = useState(0);
   const [getSalaryModal, setSalaryModal] = useState(false);
   const [toggleAdding, setToggleAdding] = useState(false);
@@ -37,15 +35,10 @@ const Home = props => {
       .then(res =>
         res !== null
           ? setSelectedMonthCanExpend(
-            parseFloat(res.salary - res.expend).toFixed(2)
-          )
+              parseFloat(res.salary - res.expend).toFixed(2)
+            )
           : setSelectedMonthCanExpend(0)
       );
-<<<<<<< HEAD
-    console.log("incomes=", props.navigation.getParam("incomes"));
-    console.log("expenses=", props.navigation.getParam("expenses"));
-=======
->>>>>>> 9bfc880982312329188ce8ad3db5035c9839b619
   }, [getSelectedMonth]);
 
   const HandleClickMonth = async month => {
@@ -64,7 +57,7 @@ const Home = props => {
 
   const ToggleAdding = () => {
     setToggleAdding(!toggleAdding);
-  }
+  };
 
   const renderAddingIncome = () => (
     <View style={{ marginTop: "62%", position: "absolute", marginLeft: "80%" }}>
@@ -72,24 +65,31 @@ const Home = props => {
         style={[styles.btnAdd, { backgroundColor: "#07D60D" }]}
         onPress={ToggleAdding}
       >
-        <Ionicons name="ios-add" size={30} color="#fff" style={{ textAlign: "center", marginTop: 15 }} />
+        <Ionicons
+          name="ios-add"
+          size={30}
+          color="#fff"
+          style={{ textAlign: "center", marginTop: 15 }}
+        />
       </TouchableOpacity>
     </View>
-  )
+  );
 
   const renderAddingExpenses = () => (
-
-
     <View style={{ marginTop: "80%", position: "absolute", marginLeft: "80%" }}>
       <TouchableOpacity
         style={[styles.btnAdd, { backgroundColor: "#FF0000" }]}
         onPress={ToggleAdding}
       >
-        <Ionicons name="ios-add" size={30} color="#fff" style={{ textAlign: "center", marginTop: 15 }} />
+        <Ionicons
+          name="ios-add"
+          size={30}
+          color="#fff"
+          style={{ textAlign: "center", marginTop: 15 }}
+        />
       </TouchableOpacity>
     </View>
-
-  )
+  );
 
   const HandleAddSalary = () => {
     //setSalaryModal(true);
@@ -105,8 +105,8 @@ const Home = props => {
         ).then(
           res !== null
             ? setSelectedMonthCanExpend(
-              parseFloat(res.salary - res.expend).toFixed(2)
-            )
+                parseFloat(res.salary - res.expend).toFixed(2)
+              )
             : setSelectedMonthCanExpend(2000)
         );
       });
@@ -125,8 +125,8 @@ const Home = props => {
         ).then(
           res !== null
             ? setSelectedMonthCanExpend(
-              parseFloat(res.salary - res.expend).toFixed(2)
-            )
+                parseFloat(res.salary - res.expend).toFixed(2)
+              )
             : setSelectedMonthCanExpend(-5000)
         );
       });
@@ -141,7 +141,7 @@ const Home = props => {
       <View style={styles.selectedMonthPosition}>
         <Text>{`at ${
           MonthData.find(month => month.key === getSelectedMonth).value
-          }`}</Text>
+        }`}</Text>
         <Text>you can expend</Text>
         <Text
           style={[
@@ -180,23 +180,24 @@ const Home = props => {
         <Click text="Edit" />
         <Click text="Bamba" />
         <Click text="Bisli" />
-<<<<<<< HEAD
-        <Click text="Tapo chips" />
-        {toggleAdding && renderAddingIncome() || null}
-        {toggleAdding && renderAddingExpenses() || null}
-        <View style={{ marginTop: "98%", position: "absolute", marginLeft: "80%" }}>
-          <TouchableOpacity
-            style={styles.btnAdd}
-            onPress={ToggleAdding}
-          >
-            <Ionicons name="ios-add" size={30} color="#fff" style={{ textAlign: "center", marginTop: 15 }} />
+        <Click text="Tapo chips" /> */}
+        {(toggleAdding && renderAddingIncome()) || null}
+        {(toggleAdding && renderAddingExpenses()) || null}
+        <View
+          style={{ marginTop: "98%", position: "absolute", marginLeft: "80%" }}
+        >
+          <TouchableOpacity style={styles.btnAdd} onPress={ToggleAdding}>
+            <Ionicons
+              name="ios-add"
+              size={30}
+              color="#fff"
+              style={{ textAlign: "center", marginTop: 15 }}
+            />
           </TouchableOpacity>
         </View>
       </View>
 
-
-
-      <Modal style={{ flex: 1 }} visible={getSalaryModal}>
+      {/* <Modal style={{ flex: 1 }} visible={getSalaryModal}>
         <Text>Edit Salary</Text>
         <TextInput
           placeholder="Enter Salary"
@@ -206,13 +207,8 @@ const Home = props => {
         <TouchableOpacity onPress={() => setSalaryModal(false)}>
           <Text>Close</Text>
         </TouchableOpacity>
-      </Modal>
-    </View >
-=======
-        <Click text="Tapo chips" /> */}
-      </View>
+      </Modal> */}
     </View>
->>>>>>> 9bfc880982312329188ce8ad3db5035c9839b619
   );
 };
 export default Home;
@@ -249,13 +245,10 @@ const styles = StyleSheet.create({
   },
   canExpend: { fontWeight: "bold" },
   graphFilledPosition: { flex: 0.2 },
-<<<<<<< HEAD
-  buttonsPosition: {
-    flex: 0.6,
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    flexWrap: "wrap"
+  DetailsPosition: {
+    flex: 0.6
   },
+  flatList: { flex: 1, width: width },
   btnAdd: {
     width: 60,
     height: 60,
@@ -266,9 +259,5 @@ const styles = StyleSheet.create({
     shadowColor: "rgba(0,0,0,0.15)",
     shadowRadius: 5,
     elevation: 15
-  },
-=======
-  DetailsPosition: { flex: 0.6 },
-  flatList: { flex: 1, width: width }
->>>>>>> 9bfc880982312329188ce8ad3db5035c9839b619
+  }
 });
