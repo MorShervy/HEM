@@ -6,8 +6,6 @@ import Month from "./Month";
 const { width } = Dimensions.get("window");
 
 const MonthList = props => {
-  //useEffect(() => {}, [props.getSelectedMonthCanExpend]);
-
   const _renderItem = item => {
     return Month(item, props);
   };
@@ -20,7 +18,7 @@ const MonthList = props => {
       keyExtractor={item => item.key.toString()}
       showsHorizontalScrollIndicator={false}
       horizontal
-      //extraData={props}
+      extraData={props.getCanExpend}
     />
   );
 };

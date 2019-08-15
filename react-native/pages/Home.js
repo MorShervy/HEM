@@ -28,6 +28,7 @@ const Home = props => {
 
   const [getIncomeSum, setIncomeSum] = useState(0);
   const [getExpendSum, setExpendSum] = useState(0);
+  const [getCanExpend, setCanExpend] = useState(0);
 
   const [toggleAdding, setToggleAdding] = useState(false);
   const [expensesModal, setExpensesModal] = useState(false);
@@ -67,7 +68,11 @@ const Home = props => {
     const incomes = props.navigation.getParam("incomes");
     const expenses = props.navigation.getParam("expenses");
 
-    console.log("incomes: ", incomes);
+    // incomes !== null &&
+    //   incomes !== undefined &&
+    //   expenses !== null &&
+    //   expenses !== undefined &&
+    //   setAllIncomesAndExpenses(incomes.concat(expenses));
 
     const incomesFiltered =
       (incomes !== null &&
@@ -185,16 +190,10 @@ const Home = props => {
         AsyncStorage.setItem(
           getSelectedMonth.toString(),
           JSON.stringify({
-            salary: 20000,
-            expend: res !== null ? parseFloat(res.expend) : 0
+            salary: res !== null && parseFloat(res.salary + 20000),
+            expend: res !== null && parseFloat(res.expend)
           })
-        ).then(
-          res !== null
-            ? setSelectedMonthCanExpend(
-                parseFloat(res.salary - res.expend).toFixed(2)
-              )
-            : setSelectedMonthCanExpend(2000)
-        );
+        ).then(res !== null && setIncomeSum(getIncomeSum + 20000));
       });
   };
 
@@ -205,16 +204,10 @@ const Home = props => {
         AsyncStorage.setItem(
           getSelectedMonth.toString(),
           JSON.stringify({
-            salary: res !== null ? parseFloat(res.salary) : 0,
-            expend: res !== null ? parseFloat(res.expend) + 5000 : 5000
+            salary: res !== null && parseFloat(res.salary),
+            expend: res !== null && parseFloat(res.expend) + 5000
           })
-        ).then(
-          res !== null
-            ? setSelectedMonthCanExpend(
-                parseFloat(res.salary - res.expend).toFixed(2)
-              )
-            : setSelectedMonthCanExpend(-5000)
-        );
+        ).then(res !== null && setExpendSum(getExpendSum + 5000));
       });
   };
 
@@ -222,19 +215,17 @@ const Home = props => {
   //   AsyncStorage.removeItem(index.toString());
   // }
 
-  const IncomeSum = () => {
+  const IncomeSum = async () => {
     let income = 0;
     getSalaryOfMonth !== null &&
       getSalaryOfMonth.map(res => (income += parseFloat(res.Amount)));
-
     setIncomeSum(income);
   };
 
-  const ExpendSum = () => {
+  const ExpendSum = async () => {
     let expend = 0;
     getExpensesOfMonth !== null &&
       getExpensesOfMonth.map(res => (expend += parseFloat(res.Amount)));
-
     setExpendSum(expend);
   };
 
@@ -246,11 +237,12 @@ const Home = props => {
             MonthData.find(month => month.key === getSelectedMonth).value
           }`}
         </Text>
+
         <Text style={[styles.headerText, styles.headerSalaryAndExpend]}>
           {`Salary\n${getIncomeSum}`}
         </Text>
         <Text style={[styles.headerText, styles.headerSalaryAndExpend]}>
-          {`Can Expend\n${getIncomeSum - getExpendSum}`}
+          {`Can Expend\n${(getIncomeSum - getExpendSum).toFixed(2)}`}
         </Text>
       </View>
 
@@ -258,11 +250,21 @@ const Home = props => {
         <MonthList
           HandleClickMonth={HandleClickMonth}
           getSelectedMonthCanExpend={getSelectedMonthCanExpend}
+          getCanExpend={getIncomeSum - getExpendSum}
         />
       </View>
 
       <View style={styles.expendDetailsPosition}>
         <ExpendList getExpensesOfMonth={getExpensesOfMonth} />
+
+        {/* start checking  */}
+        <TouchableOpacity onPress={HandleAddSalary}>
+          <Text>Click to add salary</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={HandleExpendSalary}>
+          <Text>Click to expend</Text>
+        </TouchableOpacity>
+        {/* end checking  */}
 
         {(toggleAdding && renderAddingIncome()) || null}
         {(toggleAdding && renderAddingExpenses()) || null}
