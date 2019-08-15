@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
+  FlatList,
+  Dimensions,
   StyleSheet,
   AsyncStorage,
   Dimensions
@@ -15,12 +17,16 @@ import { Ionicons } from "@expo/vector-icons";
 
 const { height, width } = Dimensions.get("window");
 
+const { width, height } = Dimensions.get("window");
+
 const Home = props => {
   const [getSelectedMonth, setSelectedMonth] = useState(
     new Date().getMonth() + 1
   );
   const [getSelectedMonthCanExpend, setSelectedMonthCanExpend] = useState(0);
-  const [getSalary, setSalary] = useState(0);
+  const [getSalaryOfMonth, setSalaryOfMonth] = useState(0);
+  const [getExpensesOfMonth, setExpensesOfMonth] = useState(0);
+  const [getAllIncomesAndExpenses, setAllIncomesAndExpenses] = useState(0);
   const [getSalaryModal, setSalaryModal] = useState(false);
   const [toggleAdding, setToggleAdding] = useState(false);
 
@@ -35,12 +41,25 @@ const Home = props => {
           )
           : setSelectedMonthCanExpend(0)
       );
+<<<<<<< HEAD
     console.log("incomes=", props.navigation.getParam("incomes"));
     console.log("expenses=", props.navigation.getParam("expenses"));
+=======
+>>>>>>> 9bfc880982312329188ce8ad3db5035c9839b619
   }, [getSelectedMonth]);
 
-  const HandleClickMonth = month => {
+  const HandleClickMonth = async month => {
     setSelectedMonth(month);
+    const incomes = props.navigation.getParam("incomes");
+    const expenses = props.navigation.getParam("expenses");
+
+    const incomesFiltered = incomes.filter(res => res.Month === month);
+    const expensesFiltered = expenses.filter(res => res.Month === month);
+
+    setSalaryOfMonth(incomesFiltered);
+    setExpensesOfMonth(expensesFiltered);
+    setAllIncomesAndExpenses(incomesFiltered.concat(expensesFiltered));
+    console.log("getAllIncomesAndExpenses: ", getAllIncomesAndExpenses);
   };
 
   const ToggleAdding = () => {
@@ -143,12 +162,25 @@ const Home = props => {
           getSelectedMonthCanExpend={getSelectedMonthCanExpend}
         />
       </View>
-      <View style={styles.buttonsPosition}>
-        <Click text="Add" onPress={HandleAddSalary} />
+      <View style={styles.DetailsPosition}>
+        <FlatList
+          style={styles.flatList}
+          data={MonthData}
+          renderItem={({ item }) => (
+            <View>
+              <Text>asd</Text>
+            </View>
+          )}
+          keyExtractor={(item, index) => index.toString()}
+          showsVerticalScrollIndicator={false}
+          extraData={props}
+        />
+        {/* <Click text="Add" onPress={HandleAddSalary} />
         <Click text="Remove" onPress={HandleExpendSalary} />
         <Click text="Edit" />
         <Click text="Bamba" />
         <Click text="Bisli" />
+<<<<<<< HEAD
         <Click text="Tapo chips" />
         {toggleAdding && renderAddingIncome() || null}
         {toggleAdding && renderAddingExpenses() || null}
@@ -176,6 +208,11 @@ const Home = props => {
         </TouchableOpacity>
       </Modal>
     </View >
+=======
+        <Click text="Tapo chips" /> */}
+      </View>
+    </View>
+>>>>>>> 9bfc880982312329188ce8ad3db5035c9839b619
   );
 };
 export default Home;
@@ -212,6 +249,7 @@ const styles = StyleSheet.create({
   },
   canExpend: { fontWeight: "bold" },
   graphFilledPosition: { flex: 0.2 },
+<<<<<<< HEAD
   buttonsPosition: {
     flex: 0.6,
     flexDirection: "row",
@@ -229,4 +267,8 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 15
   },
+=======
+  DetailsPosition: { flex: 0.6 },
+  flatList: { flex: 1, width: width }
+>>>>>>> 9bfc880982312329188ce8ad3db5035c9839b619
 });
