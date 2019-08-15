@@ -184,32 +184,46 @@ const Home = props => {
   );
 
   const HandleAddSalary = () => {
-    AsyncStorage.getItem(getSelectedMonth.toString())
-      .then(res => JSON.parse(res))
-      .then(res => {
-        AsyncStorage.setItem(
-          getSelectedMonth.toString(),
-          JSON.stringify({
-            salary: res !== null && parseFloat(res.salary + 20000),
-            expend: res !== null && parseFloat(res.expend)
-          })
-        ).then(res !== null && setIncomeSum(getIncomeSum + 20000));
-      });
+    // AsyncStorage.getItem(getSelectedMonth.toString())
+    //   .then(res => JSON.parse(res))
+    //   .then(res => {
+    setIncomeSum(getIncomeSum + 20000);
+    AsyncStorage.setItem(
+      getSelectedMonth.toString(),
+      JSON.stringify({
+        salary: getIncomeSum,
+        expend: getExpendSum
+      })
+    );
+    //.then(res !== null && setIncomeSum(getIncomeSum + 20000));
+    //});
   };
 
   const HandleExpendSalary = () => {
-    AsyncStorage.getItem(getSelectedMonth.toString())
-      .then(res => JSON.parse(res))
-      .then(res => {
-        AsyncStorage.setItem(
-          getSelectedMonth.toString(),
-          JSON.stringify({
-            salary: res !== null && parseFloat(res.salary),
-            expend: res !== null && parseFloat(res.expend) + 5000
-          })
-        ).then(res !== null && setExpendSum(getExpendSum + 5000));
-      });
+    // AsyncStorage.getItem(getSelectedMonth.toString())
+    //   .then(res => JSON.parse(res))
+    //   .then(res => {
+    setExpendSum(getExpendSum + 5000);
+    AsyncStorage.setItem(
+      getSelectedMonth.toString(),
+      JSON.stringify({
+        salary: getIncomeSum,
+        expend: getExpendSum
+      })
+    );
+    //.then(res !== null && setExpendSum(getExpendSum + 5000));
+    //});
   };
+
+  // for (let index = 1; index <= 12; index++) {
+  //   AsyncStorage.setItem(
+  //     index.toString(),
+  //     JSON.stringify({
+  //       salary: 20000,
+  //       expend: 1000 * index
+  //     })
+  //   );
+  // }
 
   // for (let index = 1; index <= 12; index++) {
   //   AsyncStorage.removeItem(index.toString());
