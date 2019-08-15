@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import MonthList from "../components/MonthList";
 import { MonthData } from "../data/MonthData";
+import ExpendList from "../components/ExpendList";
 import { Ionicons } from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get("window");
@@ -24,25 +25,29 @@ const Home = props => {
   const [getSalaryOfMonth, setSalaryOfMonth] = useState(0);
   const [getExpensesOfMonth, setExpensesOfMonth] = useState(0);
 
-  const [getAllIncomesAndExpenses, setAllIncomesAndExpenses] = useState(0);
-  const [getSalaryModal, setSalaryModal] = useState(false);
   const [toggleAdding, setToggleAdding] = useState(false);
 
   useEffect(() => {
-    // change the salary to the selected month
+    //change the salary to the selected month
     AsyncStorage.getItem(getSelectedMonth.toString())
       .then(res => JSON.parse(res))
-      .then(res =>
+      .then(res => {
         res !== null
           ? setSelectedMonthCanExpend(
               parseFloat(res.salary - res.expend).toFixed(2)
             )
-          : setSelectedMonthCanExpend(0)
-      );
+          : setSelectedMonthCanExpend(0);
+      })
+      .then(() => {
+        HandleGetIncomeAndExpensesFromAsyncStoreg(getSelectedMonth);
+      });
   }, [getSelectedMonth]);
 
   const HandleClickMonth = async month => {
     setSelectedMonth(month);
+  };
+
+  const HandleGetIncomeAndExpensesFromAsyncStoreg = month => {
     const incomes = props.navigation.getParam("incomes");
     const expenses = props.navigation.getParam("expenses");
 
@@ -51,8 +56,6 @@ const Home = props => {
 
     setSalaryOfMonth(incomesFiltered);
     setExpensesOfMonth(expensesFiltered);
-    setAllIncomesAndExpenses(incomesFiltered.concat(expensesFiltered));
-    console.log("getAllIncomesAndExpenses: ", getAllIncomesAndExpenses);
   };
 
   const ToggleAdding = () => {
@@ -92,7 +95,6 @@ const Home = props => {
   );
 
   const HandleAddSalary = () => {
-    //setSalaryModal(true);
     AsyncStorage.getItem(getSelectedMonth.toString())
       .then(res => JSON.parse(res))
       .then(res => {
@@ -158,29 +160,12 @@ const Home = props => {
       <View style={styles.graphFilledPosition}>
         <MonthList
           HandleClickMonth={HandleClickMonth}
-          getSelectedMonth={getSelectedMonth}
           getSelectedMonthCanExpend={getSelectedMonthCanExpend}
         />
       </View>
-      <View style={styles.DetailsPosition}>
-        <FlatList
-          style={styles.flatList}
-          data={MonthData}
-          renderItem={({ item }) => (
-            <View>
-              <Text>asd</Text>
-            </View>
-          )}
-          keyExtractor={(item, index) => index.toString()}
-          showsVerticalScrollIndicator={false}
-          extraData={props}
-        />
-        {/* <Click text="Add" onPress={HandleAddSalary} />
-        <Click text="Remove" onPress={HandleExpendSalary} />
-        <Click text="Edit" />
-        <Click text="Bamba" />
-        <Click text="Bisli" />
-        <Click text="Tapo chips" /> */}
+      <View style={styles.expendDetailsPosition}>
+        <ExpendList getExpensesOfMonth={getExpensesOfMonth} />
+
         {(toggleAdding && renderAddingIncome()) || null}
         {(toggleAdding && renderAddingExpenses()) || null}
         <View
@@ -196,45 +181,10 @@ const Home = props => {
           </TouchableOpacity>
         </View>
       </View>
-
-      {/* <Modal style={{ flex: 1 }} visible={getSalaryModal}>
-        <Text>Edit Salary</Text>
-        <TextInput
-          placeholder="Enter Salary"
-          value={getSalary.toString()}
-          onChangeText={e => setSalary(e)}
-        />
-        <TouchableOpacity onPress={() => setSalaryModal(false)}>
-          <Text>Close</Text>
-        </TouchableOpacity>
-      </Modal> */}
     </View>
   );
 };
 export default Home;
-
-export const Click = props => (
-  <TouchableOpacity
-    style={{
-      width: "30%",
-      height: "20%",
-      marginVertical: "5%",
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: "#FFFFFF",
-      borderRadius: 10,
-      shadowOpacity: 1,
-      shadowColor: "rgba(0,0,0,0.15)",
-      shadowRadius: 5,
-      elevation: 15
-    }}
-    onPress={props.onPress}
-  >
-    <View>
-      <Text>{props.text}</Text>
-    </View>
-  </TouchableOpacity>
-);
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
@@ -245,10 +195,10 @@ const styles = StyleSheet.create({
   },
   canExpend: { fontWeight: "bold" },
   graphFilledPosition: { flex: 0.2 },
-  DetailsPosition: {
+  expendDetailsPosition: {
     flex: 0.6
   },
-  flatList: { flex: 1, width: width },
+
   btnAdd: {
     width: 60,
     height: 60,

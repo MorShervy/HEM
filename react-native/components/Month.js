@@ -12,13 +12,14 @@ const { width } = Dimensions.get("window");
 
 const Month = ({ item }, props) => {
   //render ech month (as component)
-  if (new Date().getMonth() + 1 >= item.key) {
+  if (item.key !== undefined && new Date().getMonth() + 1 >= item.key) {
     let _graphFilled = []; // cant change with state, so we set difference reference for ech item
     AsyncStorage.getItem(item.key.toString())
       .then(res => JSON.parse(res))
       .then(res => {
         let salary = res !== null && parseFloat(res.salary);
         let expend = res !== null && parseFloat(res.expend);
+        console.log(salary, expend);
         salary !== false && expend !== false && salary > expend // change the graph fill with ref
           ? _graphFilled[item.key].setNativeProps({
               style: { flex: parseFloat((expend / salary).toFixed(2)) }
