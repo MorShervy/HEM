@@ -12,7 +12,8 @@ import {
 } from "react-native";
 import MonthList from "../components/MonthList";
 import { MonthData } from "../data/MonthData";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, Octicons } from "@expo/vector-icons";
+import AddIncomeModal from '../components/AddIncomeModal';
 
 const { width, height } = Dimensions.get("window");
 
@@ -27,19 +28,29 @@ const Home = props => {
   const [getAllIncomesAndExpenses, setAllIncomesAndExpenses] = useState(0);
   const [getSalaryModal, setSalaryModal] = useState(false);
   const [toggleAdding, setToggleAdding] = useState(false);
+  const [expensesModal, setExpensesModal] = useState(false);
+  const [incomeModal, setIncomeModal] = useState(false);
+  const [user, setUser] = useState(null);
+
 
   useEffect(() => {
+    //AsyncStorage.getItem("user").then(res => JSON.parse(res)).then(res => setUser(res))
     // change the salary to the selected month
     AsyncStorage.getItem(getSelectedMonth.toString())
       .then(res => JSON.parse(res))
-      .then(res =>
+      .then(res => {
         res !== null
           ? setSelectedMonthCanExpend(
-              parseFloat(res.salary - res.expend).toFixed(2)
-            )
+            parseFloat(res.salary - res.expend).toFixed(2)
+          )
           : setSelectedMonthCanExpend(0)
-      );
+      });
   }, [getSelectedMonth]);
+
+  useEffect(() => {
+    AsyncStorage.getItem("user").then(res => JSON.parse(res)).then(res => setUser(res));
+
+  }, []);
 
   const HandleClickMonth = async month => {
     setSelectedMonth(month);
@@ -59,11 +70,20 @@ const Home = props => {
     setToggleAdding(!toggleAdding);
   };
 
+  const handleAddIncomeModal = () => {
+    setIncomeModal(true)
+  }
+
   const renderAddingIncome = () => (
-    <View style={{ marginTop: "62%", position: "absolute", marginLeft: "80%" }}>
+    <View style={{ flexDirection: "row", marginTop: "62%", position: "absolute", marginLeft: "52%" }}>
+      <View style={{ paddingTop: 10 }}>
+        <View style={styles.txtView}>
+          <Text style={{ marginTop: 10, textAlign: "center", color: "#fff", marginRight: 15 }}>Income</Text>
+        </View>
+      </View>
       <TouchableOpacity
         style={[styles.btnAdd, { backgroundColor: "#07D60D" }]}
-        onPress={ToggleAdding}
+        onPress={handleAddIncomeModal}
       >
         <Ionicons
           name="ios-add"
@@ -75,11 +95,18 @@ const Home = props => {
     </View>
   );
 
+
+
   const renderAddingExpenses = () => (
-    <View style={{ marginTop: "80%", position: "absolute", marginLeft: "80%" }}>
+    <View style={{ flexDirection: "row", marginTop: "80%", position: "absolute", marginLeft: "52%" }}>
+      <View style={{ paddingTop: 10 }}>
+        <View style={styles.txtView}>
+          <Text style={{ marginTop: 10, textAlign: "center", color: "#fff", marginRight: 15 }}>Expenses</Text>
+        </View>
+      </View>
       <TouchableOpacity
         style={[styles.btnAdd, { backgroundColor: "#FF0000" }]}
-        onPress={ToggleAdding}
+        onPress={() => setExpensesModal(true)}
       >
         <Ionicons
           name="ios-add"
@@ -90,6 +117,20 @@ const Home = props => {
       </TouchableOpacity>
     </View>
   );
+
+  const AddExpensesModal = () => (
+    <Modal
+      style={{ flex: 1 }}
+      animationType="slide"
+      transparent={false}
+      visible={expensesModal}
+      onRequestClose={() => {
+        setExpensesModal(false);
+      }}
+    >
+
+    </Modal>
+  )
 
   const HandleAddSalary = () => {
     //setSalaryModal(true);
@@ -105,8 +146,8 @@ const Home = props => {
         ).then(
           res !== null
             ? setSelectedMonthCanExpend(
-                parseFloat(res.salary - res.expend).toFixed(2)
-              )
+              parseFloat(res.salary - res.expend).toFixed(2)
+            )
             : setSelectedMonthCanExpend(2000)
         );
       });
@@ -125,8 +166,8 @@ const Home = props => {
         ).then(
           res !== null
             ? setSelectedMonthCanExpend(
-                parseFloat(res.salary - res.expend).toFixed(2)
-              )
+              parseFloat(res.salary - res.expend).toFixed(2)
+            )
             : setSelectedMonthCanExpend(-5000)
         );
       });
@@ -141,7 +182,7 @@ const Home = props => {
       <View style={styles.selectedMonthPosition}>
         <Text>{`at ${
           MonthData.find(month => month.key === getSelectedMonth).value
-        }`}</Text>
+          }`}</Text>
         <Text>you can expend</Text>
         <Text
           style={[
@@ -187,15 +228,23 @@ const Home = props => {
           style={{ marginTop: "98%", position: "absolute", marginLeft: "80%" }}
         >
           <TouchableOpacity style={styles.btnAdd} onPress={ToggleAdding}>
-            <Ionicons
-              name="ios-add"
-              size={30}
-              color="#fff"
-              style={{ textAlign: "center", marginTop: 15 }}
-            />
+            {!toggleAdding ?
+              <Ionicons
+                name="ios-add"
+                size={30}
+                color="#fff"
+                style={{ textAlign: "center", marginTop: 15 }}
+              />
+              :
+              <Octicons style={{ textAlign: "center", marginTop: 15 }} name="kebab-horizontal" size={30} color="white" />
+            }
+
           </TouchableOpacity>
         </View>
       </View>
+
+      <AddIncomeModal openIncomeModal={incomeModal} closeIncomeModal={() => setIncomeModal(false)} user={user} />
+      <AddExpensesModal openExpensesModal={expensesModal} closeExpensesModal={() => setExpensesModal(false)} />
 
       {/* <Modal style={{ flex: 1 }} visible={getSalaryModal}>
         <Text>Edit Salary</Text>
@@ -259,5 +308,12 @@ const styles = StyleSheet.create({
     shadowColor: "rgba(0,0,0,0.15)",
     shadowRadius: 5,
     elevation: 15
-  }
+  },
+  txtView: {
+    width: 115,
+    height: 40,
+    backgroundColor: "#000000BA",
+    borderRadius: 7,
+
+  },
 });
