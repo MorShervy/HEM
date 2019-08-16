@@ -16,6 +16,8 @@ import { Ionicons, Octicons } from "@expo/vector-icons";
 import AddIncomeModal from "../components/AddIncomeModal";
 import ExpendList from "../components/ExpendList";
 import AddExpensesModal from "../components/AddExpensesModal";
+import SQL from '../handlers/SQL';
+import RefreshDataFromDBToAsyncStorage from '../handlers/RefreshDataFromDBToAsyncStorage'
 
 const { width, height, fontScale } = Dimensions.get("window");
 
@@ -179,17 +181,6 @@ const Home = props => {
     </View>
   );
 
-  // const AddExpensesModal = () => (
-  //   <Modal
-  //     style={{ flex: 1 }}
-  //     animationType="slide"
-  //     transparent={false}
-  //     visible={expensesModal}
-  //     onRequestClose={() => {
-  //       setExpensesModal(false);
-  //     }}
-  //   />
-  // );
 
   const HandleAddSalary = details => {
     // "AccountID": 1027,
@@ -246,16 +237,37 @@ const Home = props => {
     setExpendSum(expend);
   };
 
-  const HandleDeleteExpense = item => {
-    AsyncStorage.setItem(
-      item.Month.toString(),
-      JSON.stringify({
-        salary: getIncomeSum,
-        expend: getExpendSum - item.Amount
-      })
-    );
-    setExpendSum(getExpendSum - item.Amount);
-    setExpensesOfAllYears(getExpensesOfAllYears.filter(res => res !== item));
+  const HandleDeleteExpense = async item => {
+    console.log("item=", item)
+
+    // changing date string format to fit the SQL
+    const date = item.Date.slice(0, 10);
+    const dateToSql = `${date.slice(6, 10)}/${date.slice(3, 5)}/${date.slice(0, 2)}`;
+    const expenseToDelete = {
+      accountID: item.AccountID,
+      date: dateToSql,
+      time: item.Time,
+      amount: item.Amount
+    }
+
+    const result = await SQL.DeleteExpense(expenseToDelete);
+    console.log("result=", result)
+    if (result.res === "0") {
+      const result = await RefreshDataFromDBToAsyncStorage.GetUserDetailsFromDB({ accountID: item.AccountID })
+      await props.navigation.replace("HomeNav", {
+        incomes: result.incomes,
+        expenses: result.expenses
+      });
+    }
+    // AsyncStorage.setItem(
+    //   item.Month.toString(),
+    //   JSON.stringify({
+    //     salary: getIncomeSum,
+    //     expend: getExpendSum - item.Amount
+    //   })
+    // );
+    // setExpendSum(getExpendSum - item.Amount);
+    // setExpensesOfAllYears(getExpensesOfAllYears.filter(res => res !== item));
   };
 
   return (
@@ -269,7 +281,7 @@ const Home = props => {
 
         <MonthList
           HandleClickMonth={HandleClickMonth}
-          getSelectedMonthCanExpend={getSelectedMonthCanExpend}
+          //getSelectedMonthCanExpend={getSelectedMonthCanExpend}
           getCanExpend={getIncomeSum - getExpendSum}
         />
 

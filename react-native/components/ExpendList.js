@@ -44,8 +44,8 @@ const ExpendList = props => {
       data={props.getExpensesOfMonth}
       renderItem={_renderItem}
       keyExtractor={(item, index) => index.toString()}
-      showsVerticalScrollIndicator={false}
-      extraData={props.getExpensesOfAllYears}
+    //showsVerticalScrollIndicator={false}
+    //extraData={props.getExpensesOfAllYears}
     />
   );
 };
