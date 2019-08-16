@@ -17,7 +17,7 @@ import AddIncomeModal from "../components/AddIncomeModal";
 import ExpendList from "../components/ExpendList";
 import AddExpensesModal from "../components/AddExpensesModal";
 
-const { width, height } = Dimensions.get("window");
+const { width, height, fontScale } = Dimensions.get("window");
 
 const Home = props => {
   const [getSelectedMonth, setSelectedMonth] = useState(
@@ -43,16 +43,18 @@ const Home = props => {
 
   useEffect(() => {
     // change the salary to the selected month
-    AsyncStorage.getItem(getSelectedMonth.toString())
-      .then(res => JSON.parse(res))
-      .then(res => {
-        res !== null
-          ? setSelectedMonthCanExpend(
-              parseFloat(res.salary - res.expend).toFixed(2)
-            )
-          : setSelectedMonthCanExpend(0);
-      })
-      .then(HandleGetIncomeAndExpensesFromAsyncStoreg(getSelectedMonth));
+    // AsyncStorage.getItem(getSelectedMonth.toString())
+    //   .then(res => JSON.parse(res))
+    //   .then(res => {
+    //     res !== null
+    //       ? setSelectedMonthCanExpend(
+    //           parseFloat(res.salary - res.expend).toFixed(2)
+    //         )
+    //       : setSelectedMonthCanExpend(0);
+    //   })
+    //   .then(
+    HandleGetIncomeAndExpensesFromAsyncStoreg(getSelectedMonth);
+    //);
   }, [getSelectedMonth]);
 
   useEffect(() => {
@@ -65,7 +67,6 @@ const Home = props => {
       .then(res => JSON.parse(res))
       .then(res => setUser(res));
 
-    console.log("getSalaryOfAllYears: ", getSalaryOfAllYears);
     for (let index = 1; index <= 12; index++) {
       let income = 0;
       let expend = 0;
@@ -89,11 +90,11 @@ const Home = props => {
     }
   }, []);
 
-  const HandleClickMonth = async month => {
+  const HandleClickMonth = month => {
     setSelectedMonth(month);
   };
 
-  const HandleGetIncomeAndExpensesFromAsyncStoreg = async month => {
+  const HandleGetIncomeAndExpensesFromAsyncStoreg = month => {
     const incomesFiltered =
       (getSalaryOfAllYears !== null &&
         getSalaryOfAllYears !== undefined &&
@@ -203,36 +204,57 @@ const Home = props => {
   //   />
   // );
 
-  const HandleAddSalary = () => {
-    setIncomeSum(getIncomeSum + 20000);
+  const HandleAddSalary = details => {
+    // "AccountID": 1027,
+    // "Amount": 14500,
+    // "Date": null,
+    // "Month": 5,
+    // "Type": "work",
+    // "Year": 2019,
+
     AsyncStorage.setItem(
-      getSelectedMonth.toString(),
+      details.Month.toString(),
       JSON.stringify({
-        salary: getIncomeSum,
+        salary: getIncomeSum + details.Amount,
         expend: getExpendSum
       })
     );
+    setIncomeSum(getIncomeSum + details.Amount);
+    setSalaryOfAllYears(getSalaryOfAllYears.concat(details));
   };
 
-  const HandleExpendSalary = () => {
-    setExpendSum(getExpendSum + 5000);
+  const HandleExpendSalary = async details => {
+    // "AccountID": 1027,
+    // "Amount": 8000,
+    // "CategoryID": 2,
+    // "Date": null,
+    // "Day": 12,
+    // "Info": "bisli",
+    // "Month": 2,
+    // "Time": "12:12:00",
+    // "Year": 2019,
+
+    //await HandleGetIncomeAndExpensesFromAsyncStoreg(details.Month);
+    //await setSelectedMonth(details.Month);
     AsyncStorage.setItem(
-      getSelectedMonth.toString(),
+      details.Month.toString(),
       JSON.stringify({
         salary: getIncomeSum,
-        expend: getExpendSum
+        expend: getExpendSum + details.Amount
       })
     );
+    setExpendSum(getExpendSum + details.Amount);
+    setExpensesOfAllYears(getExpensesOfAllYears.concat(details));
   };
 
-  const IncomeSum = async () => {
+  const IncomeSum = () => {
     let income = 0;
     getSalaryOfMonth !== null &&
       getSalaryOfMonth.map(res => (income += parseFloat(res.Amount)));
     setIncomeSum(income);
   };
 
-  const ExpendSum = async () => {
+  const ExpendSum = () => {
     let expend = 0;
     getExpensesOfMonth !== null &&
       getExpensesOfMonth.map(res => (expend += parseFloat(res.Amount)));
@@ -259,22 +281,39 @@ const Home = props => {
       <View style={styles.graphFilledPosition}>
         <MonthList
           HandleClickMonth={HandleClickMonth}
-          getSelectedMonthCanExpend={getSelectedMonthCanExpend}
+          //getSelectedMonthCanExpend={getSelectedMonthCanExpend}
           getCanExpend={getIncomeSum - getExpendSum}
         />
       </View>
 
       <View style={styles.expendDetailsPosition}>
-        <ExpendList getExpensesOfMonth={getExpensesOfMonth} />
+        <ExpendList
+          getExpensesOfMonth={getExpensesOfMonth}
+          getExpensesOfAllYears={getExpensesOfAllYears}
+        />
 
-        {/* start checking  */}
+        {/** start checking  */}
         <TouchableOpacity onPress={HandleAddSalary}>
           <Text>Click to add salary</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={HandleExpendSalary}>
+        <TouchableOpacity
+          onPress={() =>
+            HandleExpendSalary({
+              AccountID: 1027,
+              Amount: 1000,
+              CategoryID: 2,
+              Date: null,
+              Day: 12,
+              Info: "bamba",
+              Month: 2,
+              Time: "12:12:00",
+              Year: 2019
+            })
+          }
+        >
           <Text>Click to expend</Text>
         </TouchableOpacity>
-        {/* end checking  */}
+        {/** end checking  */}
 
         {(toggleAdding && renderAddingIncome()) || null}
         {(toggleAdding && renderAddingExpenses()) || null}
@@ -329,10 +368,10 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   headerSelectedMonth: {
-    fontSize: 14 * (Dimensions.get("screen").fontScale * 1.3)
+    fontSize: 14 * fontScale * 1.3
   },
   headerSalaryAndExpend: {
-    fontSize: 14 * Dimensions.get("screen").fontScale
+    fontSize: 14 * fontScale
   },
   canExpend: { fontWeight: "bold" },
   graphFilledPosition: { flex: 0.2 },
