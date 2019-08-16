@@ -15,6 +15,7 @@ import { MonthData } from "../data/MonthData";
 import { Ionicons, Octicons } from "@expo/vector-icons";
 import AddIncomeModal from "../components/AddIncomeModal";
 import ExpendList from "../components/ExpendList";
+import AddExpensesModal from "../components/AddExpensesModal";
 
 const { width, height } = Dimensions.get("window");
 
@@ -47,8 +48,8 @@ const Home = props => {
       .then(res => {
         res !== null
           ? setSelectedMonthCanExpend(
-              parseFloat(res.salary - res.expend).toFixed(2)
-            )
+            parseFloat(res.salary - res.expend).toFixed(2)
+          )
           : setSelectedMonthCanExpend(0);
       })
       .then(HandleGetIncomeAndExpensesFromAsyncStoreg(getSelectedMonth));
@@ -116,6 +117,67 @@ const Home = props => {
     setIncomeModal(true);
   };
 
+
+  const HandleAddSalary = () => {
+    AsyncStorage.getItem(getSelectedMonth.toString())
+      .then(res => JSON.parse(res))
+      .then(res => {
+        AsyncStorage.setItem(
+          getSelectedMonth.toString(),
+          JSON.stringify({
+            salary: 20000,
+            expend: res !== null ? parseFloat(res.expend) : 0
+          })
+        ).then(
+          res !== null
+            ? setSelectedMonthCanExpend(
+              parseFloat(res.salary - res.expend).toFixed(2)
+            )
+            : setSelectedMonthCanExpend(2000)
+        );
+      });
+  };
+
+  const HandleExpendSalary = () => {
+    AsyncStorage.getItem(getSelectedMonth.toString())
+      .then(res => JSON.parse(res))
+      .then(res => {
+        AsyncStorage.setItem(
+          getSelectedMonth.toString(),
+          JSON.stringify({
+            salary: res !== null ? parseFloat(res.salary) : 0,
+            expend: res !== null ? parseFloat(res.expend) + 5000 : 5000
+          })
+        ).then(
+          res !== null
+            ? setSelectedMonthCanExpend(
+              parseFloat(res.salary - res.expend).toFixed(2)
+            )
+            : setSelectedMonthCanExpend(-5000)
+        );
+      });
+  };
+
+  // for (let index = 1; index <= 12; index++) {
+  //   AsyncStorage.removeItem(index.toString());
+  // }
+
+  const IncomeSum = () => {
+    let income = 0;
+    getSalaryOfMonth !== null &&
+      getSalaryOfMonth.map(res => (income += parseFloat(res.Amount)));
+
+    setIncomeSum(income);
+  };
+
+  const ExpendSum = () => {
+    let expend = 0;
+    getExpensesOfMonth !== null &&
+      getExpensesOfMonth.map(res => (expend += parseFloat(res.Amount)));
+
+    setExpendSum(expend);
+  };
+
   const renderAddingIncome = () => (
     <View
       style={{
@@ -172,7 +234,7 @@ const Home = props => {
               marginRight: 15
             }}
           >
-            Expenses
+            Expense
           </Text>
         </View>
       </View>
@@ -266,9 +328,9 @@ const Home = props => {
     <View style={styles.container}>
       <View style={styles.selectedMonthPosition}>
         <Text style={[styles.headerText, styles.headerSelectedMonth]}>
-          {`at\n${
+          {`in\n${
             MonthData.find(month => month.key === getSelectedMonth).value
-          }`}
+            }`}
         </Text>
 
         <Text style={[styles.headerText, styles.headerSalaryAndExpend]}>
@@ -313,13 +375,13 @@ const Home = props => {
                 style={{ textAlign: "center", marginTop: 15 }}
               />
             ) : (
-              <Octicons
-                style={{ textAlign: "center", marginTop: 15 }}
-                name="kebab-horizontal"
-                size={30}
-                color="white"
-              />
-            )}
+                <Octicons
+                  style={{ textAlign: "center", marginTop: 15 }}
+                  name="kebab-horizontal"
+                  size={30}
+                  color="white"
+                />
+              )}
           </TouchableOpacity>
         </View>
       </View>
