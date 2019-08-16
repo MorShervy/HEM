@@ -11,12 +11,16 @@ import {
 } from "react-native";
 import Modal from 'react-native-modal';
 import { Ionicons } from "@expo/vector-icons";
+import SQL from '../handlers/SQL';
+import RefreshDataFromDBToAsyncStorage from '../handlers/RefreshDataFromDBToAsyncStorage';
 
 const { width, height } = Dimensions.get("window");
 
 const AddExpensesModal = props => {
     const [selectedCategory, setSelectedCategory] = useState("credit")
     const [selectedDate, setSelectedDate] = useState(new Date().toLocaleDateString())
+    const [getDescription, setDescription] = useState("");
+    const [getAmount, setAmount] = useState("");
 
     const handleOnPressDatePicker = async () => {
         try {
@@ -31,6 +35,39 @@ const AddExpensesModal = props => {
         } catch ({ code, message }) {
             console.log('Cannot open date picker', message);
         }
+    }
+
+    const getCategoryId = selectedCategory === "credit" && 1 ||
+        selectedCategory === "cash" && 2 ||
+        selectedCategory === "bank" && 3 ||
+        selectedCategory === "loan" && 4 ||
+        0;
+
+    const HandleNewExpense = async () => {
+        const expense = {
+            accountID: props.accountID,
+            date: selectedDate,
+            time: new Date().toLocaleTimeString(),
+            amount: getAmount,
+            categoryID: getCategoryId,
+            info: getDescription
+        }
+
+        const result = await SQL.InsertExpense(expense)
+        const insert = JSON.parse(result);
+        // res = "0" inserted income to DB - need to Save data from DB to AsyncStorage and Get new User Details
+        if (insert.res === "0") {
+            const result = await RefreshDataFromDBToAsyncStorage.GetUserDetailsFromDB({ accountID: props.accountID })
+            await props.navigation.replace("HomeNav", {
+                incomes: result.incomes,
+                expenses: result.expenses
+            });
+        }
+        // res = "0" || "1" handle error
+        else {
+
+        }
+
     }
 
     return (
@@ -60,6 +97,7 @@ const AddExpensesModal = props => {
                             placeholder="Amount"
                             style={styles.itemInput}
                             keyboardType="decimal-pad"
+                            onChangeText={e => setAmount(e)}
                         />
                     </View>
                     <View style={styles.itemView}>
@@ -67,6 +105,7 @@ const AddExpensesModal = props => {
                         <TextInput
                             placeholder="Description"
                             style={styles.itemInput}
+                            onChangeText={e => setDescription(e)}
                         />
                     </View>
                     <View style={styles.itemView}>
@@ -121,7 +160,9 @@ const AddExpensesModal = props => {
                         </View>
                     </View>
                     <View style={[styles.itemView, { paddingTop: 70 }]}>
-                        <TouchableOpacity style={styles.button}>
+                        <TouchableOpacity
+                            onPress={HandleNewExpense}
+                            style={styles.button}>
                             <Ionicons name="ios-checkmark" size={50} color="#fff" style={{ alignSelf: "center" }} />
                         </TouchableOpacity>
                     </View>

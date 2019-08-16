@@ -9,5 +9,9 @@ namespace WebApplication1.Models
     {
         public int AccountID { get; set; }
         public string Date { get; set; }
+        public string Time { get; set; }
+        public double Amount { get; set; }
+        public int CategoryID { get; set; }
+        public string Info { get; set; }
     }
 }

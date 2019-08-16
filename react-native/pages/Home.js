@@ -39,7 +39,7 @@ const Home = props => {
   const [toggleAdding, setToggleAdding] = useState(false);
   const [expensesModal, setExpensesModal] = useState(false);
   const [incomeModal, setIncomeModal] = useState(false);
-  const [user, setUser] = useState(null);
+  const [accountID, setAccountId] = useState(null);
 
   useEffect(() => {
     // change the salary to the selected month
@@ -63,9 +63,9 @@ const Home = props => {
   useEffect(() => {
     AsyncStorage.getItem("user")
       .then(res => JSON.parse(res))
-      .then(res => setUser(res));
+      .then(res => setAccountId(res.accountID));
 
-    console.log("getSalaryOfAllYears: ", getSalaryOfAllYears);
+    //console.log("getSalaryOfAllYears: ", getSalaryOfAllYears);
     for (let index = 1; index <= 12; index++) {
       let income = 0;
       let expend = 0;
@@ -241,6 +241,20 @@ const Home = props => {
 
   return (
     <View style={styles.container}>
+
+
+      <View style={styles.graphFilledPosition}>
+        <Text style={styles.headerText}>
+          {`${new Date().toLocaleDateString()}`}
+        </Text>
+
+        <MonthList
+          HandleClickMonth={HandleClickMonth}
+          getSelectedMonthCanExpend={getSelectedMonthCanExpend}
+          getCanExpend={getIncomeSum - getExpendSum}
+        />
+
+      </View>
       <View style={styles.selectedMonthPosition}>
         <Text style={[styles.headerText, styles.headerSelectedMonth]}>
           {`in\n${
@@ -255,15 +269,6 @@ const Home = props => {
           {`Can Expend\n${(getIncomeSum - getExpendSum).toFixed(2)}`}
         </Text>
       </View>
-
-      <View style={styles.graphFilledPosition}>
-        <MonthList
-          HandleClickMonth={HandleClickMonth}
-          getSelectedMonthCanExpend={getSelectedMonthCanExpend}
-          getCanExpend={getIncomeSum - getExpendSum}
-        />
-      </View>
-
       <View style={styles.expendDetailsPosition}>
         <ExpendList getExpensesOfMonth={getExpensesOfMonth} />
 
@@ -302,13 +307,16 @@ const Home = props => {
       </View>
 
       <AddIncomeModal
+        navigation={props.navigation}
         openIncomeModal={incomeModal}
         closeIncomeModal={() => setIncomeModal(false)}
-        user={user}
+        accountID={accountID}
       />
       <AddExpensesModal
+        navigation={props.navigation}
         openExpensesModal={expensesModal}
         closeExpensesModal={() => setExpensesModal(false)}
+        accountID={accountID}
       />
     </View>
   );
@@ -344,7 +352,6 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 60 / 2 + 60 / (8 + 14.8), // get radius
-
     backgroundColor: "#2D60FF",
     shadowOpacity: 1,
     shadowColor: "rgba(0,0,0,0.15)",

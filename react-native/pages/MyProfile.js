@@ -9,7 +9,7 @@ import {
   Dimensions,
   ImageBackground,
   TextInput,
-  Modal
+  Modal,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import KeyboardSpacer from "react-native-keyboard-spacer";
@@ -39,19 +39,19 @@ const MyProfile = props => {
 
   const handleUpdateName = () => {
     const name = getFirstName + " " + getLastName;
-    console.log("name=", name);
+    //console.log("name=", name);
     SQL.UpdateUserName(getUser.email, name)
       .then(res => {
-        console.log("res=", res.res);
+        //console.log("res=", res); // res is not object - JSON.Parse(res)
       })
       .then(setShowFullName(false))
       .then(alert("Updated")).then(clear());
   };
 
   const handlePicture = res => {
-    console.log("handlePictrue", res);
+    //console.log("handlePictrue", res);
 
-    console.log(getUser);
+    //console.log(getUser);
     setShowCamera(false);
   };
 

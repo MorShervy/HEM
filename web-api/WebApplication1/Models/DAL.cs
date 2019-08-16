@@ -240,6 +240,78 @@ namespace WebApplication1.Models
             return null;
         }
 
+        public static int InsertIncome(int accountID, string date, string time, double amount, string type)
+        {
+            int res = -1;
+
+            try
+            {
+                Con.Open();
+                _command = new SqlCommand($"InsertIncome", Con);
+                _command.CommandType = CommandType.StoredProcedure;
+
+                /* input parameters */
+                _command.Parameters.Add(new SqlParameter("AccountID", accountID));
+                _command.Parameters.Add(new SqlParameter("Date", date));
+                _command.Parameters.Add(new SqlParameter("Time", time));
+                _command.Parameters.Add(new SqlParameter("Amount", amount));
+                _command.Parameters.Add(new SqlParameter("Type", type));
+
+                SqlParameter returnPar = new SqlParameter();
+                returnPar.Direction = ParameterDirection.ReturnValue;
+                _command.Parameters.Add(returnPar);
+                _command.ExecuteNonQuery();
+                res = (int)returnPar.Value;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            finally
+            {
+                if (Con.State == ConnectionState.Open)
+                    Con.Close();
+            }
+            return res;
+        }
+
+        public static int InsertExpense(int accountID, string date, string time, double amount, int categoryID, string info)
+        {
+            int res = -1;
+
+            try
+            {
+                Con.Open();
+                _command = new SqlCommand($"InsertExpense", Con);
+                _command.CommandType = CommandType.StoredProcedure;
+
+                /* input parameters */
+                _command.Parameters.Add(new SqlParameter("AccountID", accountID));
+                _command.Parameters.Add(new SqlParameter("Date", date));
+                _command.Parameters.Add(new SqlParameter("Time", time));
+                _command.Parameters.Add(new SqlParameter("Amount", amount));
+                _command.Parameters.Add(new SqlParameter("CategoryID", categoryID));
+                _command.Parameters.Add(new SqlParameter("Info", info));
+
+                SqlParameter returnPar = new SqlParameter();
+                returnPar.Direction = ParameterDirection.ReturnValue;
+                _command.Parameters.Add(returnPar);
+                _command.ExecuteNonQuery();
+                res = (int)returnPar.Value;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            finally
+            {
+                if (Con.State == ConnectionState.Open)
+                    Con.Close();
+            }
+            return res;
+
+        }
+
         public static int UpdateUserName(string email, string name)
         {
             int res = -1;

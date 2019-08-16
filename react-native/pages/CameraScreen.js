@@ -124,7 +124,7 @@ export default class CameraScreen extends Component {
     if (this.camera) {
       let photo = await this.camera.takePictureAsync({ quality: 0.7 });
       //.then(console.log("pic=", this.onPictureSaved)); //this.props.navigation.goBack()
-      console.log("photo=", photo);
+      // console.log("photo=", photo);
       this.setState({ picUri: photo.uri, openModalPic: true });
     }
   };
@@ -169,14 +169,14 @@ export default class CameraScreen extends Component {
   };
 
   btnUploadPictureFromCamera = async () => {
-    console.log("user=", this.state.user.email);
-    console.log("picuri=", this.state.picUri);
+    //console.log("user=", this.state.user.email);
+    //console.log("picuri=", this.state.picUri);
     const email = this.state.user.email;
     const photoUrl = this.state.picUri;
     let imgName = "imgFromCamera.jpg";
 
     SQL.UpdateUserPicture(email, photoUrl).then(res => {
-      console.log(res);
+      //console.log(res);
     });
     await SQL.ImgUpload(photoUrl, imgName);
     AsyncStorage.setItem(

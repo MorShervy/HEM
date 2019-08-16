@@ -100,6 +100,20 @@ namespace WebApplication1.Controllers
             return BAL.Instance.GetExpensesUserByYear(expenses.AccountID, expenses.Date);
         }
 
+        [HttpPost]
+        [Route("InsertIncome")]
+        public object InsertIncome([FromBody]Income income)
+        {
+            return BAL.Instance.InsertIncome(income.AccountID, income.Date, income.Time, income.Amount, income.Type);
+        }
+
+        [HttpPost]
+        [Route("InsertExpense")]
+        public object InsertExpense([FromBody]Expenses ex)
+        {
+            return BAL.Instance.InsertExpense(ex.AccountID, ex.Date, ex.Time, ex.Amount, ex.CategoryID, ex.Info);
+        }
+
         [Route("uploadpicture")]
         public Task<HttpResponseMessage> Post()
         {

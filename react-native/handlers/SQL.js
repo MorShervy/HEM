@@ -177,6 +177,64 @@ export default class SQL {
     });
   } // End GetExpensesUserByYear
 
+
+  static InsertIncome(income) {
+    console.log("SQL.income->", income)
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await fetch(`${URL}/InsertIncome`, {
+          body: JSON.stringify({
+            accountID: income.accountID,
+            date: income.date,
+            time: income.time,
+            amount: income.amount,
+            type: income.type
+          }),
+          headers: {
+            "content-type": "application/json"
+          },
+          method: "POST"
+        });
+        console.log(`${URL}/InsertIncome`, res);
+        const data = await res.json();
+        console.log("data=", data);
+        if (data.d === null) reject("something went wrong")
+        resolve(data);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  } // End InsertIncome
+
+
+  static InsertExpense(expense) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await fetch(`${URL}/InsertExpense`, {
+          body: JSON.stringify({
+            accountID: expense.accountID,
+            date: expense.date,
+            time: expense.time,
+            amount: expense.amount,
+            categoryID: expense.categoryID,
+            info: expense.info
+          }),
+          headers: {
+            "content-type": "application/json"
+          },
+          method: "POST"
+        });
+        console.log(`${URL}/InsertExpense`, res);
+        const data = await res.json();
+        console.log("data=", data);
+        if (data.d === null) reject("something went wrong")
+        resolve(data);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  } // End InsertExpense
+
   static ImgUpload(imgUri, picName) {
     let urlAPI = "http://ruppinmobile.tempdomain.co.il/site04/uploadpicture";
     let dataI = new FormData();

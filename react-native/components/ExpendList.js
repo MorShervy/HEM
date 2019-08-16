@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   View,
@@ -38,7 +39,7 @@ const ExpendList = props => {
         >
           <Text>{`${(item.Info !== undefined && "Expenses") || "Incomes"}: ${
             item.Amount
-          }`}</Text>
+            }`}</Text>
           <Text>{(item.Info !== undefined && item.Info) || item.Type}</Text>
         </View>
         <View
@@ -74,8 +75,8 @@ const ExpendList = props => {
       data={props.getExpensesOfMonth}
       renderItem={_renderItem}
       keyExtractor={(item, index) => index.toString()}
-      //showsVerticalScrollIndicator={false}
-      //extraData={props}
+    //showsVerticalScrollIndicator={false}
+    //extraData={props}
     />
   );
 };
