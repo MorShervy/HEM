@@ -48,8 +48,8 @@ const Home = props => {
       .then(res => {
         res !== null
           ? setSelectedMonthCanExpend(
-            parseFloat(res.salary - res.expend).toFixed(2)
-          )
+              parseFloat(res.salary - res.expend).toFixed(2)
+            )
           : setSelectedMonthCanExpend(0);
       })
       .then(HandleGetIncomeAndExpensesFromAsyncStoreg(getSelectedMonth));
@@ -115,67 +115,6 @@ const Home = props => {
 
   const handleAddIncomeModal = () => {
     setIncomeModal(true);
-  };
-
-
-  const HandleAddSalary = () => {
-    AsyncStorage.getItem(getSelectedMonth.toString())
-      .then(res => JSON.parse(res))
-      .then(res => {
-        AsyncStorage.setItem(
-          getSelectedMonth.toString(),
-          JSON.stringify({
-            salary: 20000,
-            expend: res !== null ? parseFloat(res.expend) : 0
-          })
-        ).then(
-          res !== null
-            ? setSelectedMonthCanExpend(
-              parseFloat(res.salary - res.expend).toFixed(2)
-            )
-            : setSelectedMonthCanExpend(2000)
-        );
-      });
-  };
-
-  const HandleExpendSalary = () => {
-    AsyncStorage.getItem(getSelectedMonth.toString())
-      .then(res => JSON.parse(res))
-      .then(res => {
-        AsyncStorage.setItem(
-          getSelectedMonth.toString(),
-          JSON.stringify({
-            salary: res !== null ? parseFloat(res.salary) : 0,
-            expend: res !== null ? parseFloat(res.expend) + 5000 : 5000
-          })
-        ).then(
-          res !== null
-            ? setSelectedMonthCanExpend(
-              parseFloat(res.salary - res.expend).toFixed(2)
-            )
-            : setSelectedMonthCanExpend(-5000)
-        );
-      });
-  };
-
-  // for (let index = 1; index <= 12; index++) {
-  //   AsyncStorage.removeItem(index.toString());
-  // }
-
-  const IncomeSum = () => {
-    let income = 0;
-    getSalaryOfMonth !== null &&
-      getSalaryOfMonth.map(res => (income += parseFloat(res.Amount)));
-
-    setIncomeSum(income);
-  };
-
-  const ExpendSum = () => {
-    let expend = 0;
-    getExpensesOfMonth !== null &&
-      getExpensesOfMonth.map(res => (expend += parseFloat(res.Amount)));
-
-    setExpendSum(expend);
   };
 
   const renderAddingIncome = () => (
@@ -252,22 +191,19 @@ const Home = props => {
     </View>
   );
 
-  const AddExpensesModal = () => (
-    <Modal
-      style={{ flex: 1 }}
-      animationType="slide"
-      transparent={false}
-      visible={expensesModal}
-      onRequestClose={() => {
-        setExpensesModal(false);
-      }}
-    />
-  );
+  // const AddExpensesModal = () => (
+  //   <Modal
+  //     style={{ flex: 1 }}
+  //     animationType="slide"
+  //     transparent={false}
+  //     visible={expensesModal}
+  //     onRequestClose={() => {
+  //       setExpensesModal(false);
+  //     }}
+  //   />
+  // );
 
   const HandleAddSalary = () => {
-    // AsyncStorage.getItem(getSelectedMonth.toString())
-    //   .then(res => JSON.parse(res))
-    //   .then(res => {
     setIncomeSum(getIncomeSum + 20000);
     AsyncStorage.setItem(
       getSelectedMonth.toString(),
@@ -276,14 +212,9 @@ const Home = props => {
         expend: getExpendSum
       })
     );
-    //.then(res !== null && setIncomeSum(getIncomeSum + 20000));
-    //});
   };
 
   const HandleExpendSalary = () => {
-    // AsyncStorage.getItem(getSelectedMonth.toString())
-    //   .then(res => JSON.parse(res))
-    //   .then(res => {
     setExpendSum(getExpendSum + 5000);
     AsyncStorage.setItem(
       getSelectedMonth.toString(),
@@ -292,23 +223,7 @@ const Home = props => {
         expend: getExpendSum
       })
     );
-    //.then(res !== null && setExpendSum(getExpendSum + 5000));
-    //});
   };
-
-  // for (let index = 1; index <= 12; index++) {
-  //   AsyncStorage.setItem(
-  //     index.toString(),
-  //     JSON.stringify({
-  //       salary: 20000,
-  //       expend: 1000 * index
-  //     })
-  //   );
-  // }
-
-  // for (let index = 1; index <= 12; index++) {
-  //   AsyncStorage.removeItem(index.toString());
-  // }
 
   const IncomeSum = async () => {
     let income = 0;
@@ -330,7 +245,7 @@ const Home = props => {
         <Text style={[styles.headerText, styles.headerSelectedMonth]}>
           {`in\n${
             MonthData.find(month => month.key === getSelectedMonth).value
-            }`}
+          }`}
         </Text>
 
         <Text style={[styles.headerText, styles.headerSalaryAndExpend]}>
@@ -375,13 +290,13 @@ const Home = props => {
                 style={{ textAlign: "center", marginTop: 15 }}
               />
             ) : (
-                <Octicons
-                  style={{ textAlign: "center", marginTop: 15 }}
-                  name="kebab-horizontal"
-                  size={30}
-                  color="white"
-                />
-              )}
+              <Octicons
+                style={{ textAlign: "center", marginTop: 15 }}
+                name="kebab-horizontal"
+                size={30}
+                color="white"
+              />
+            )}
           </TouchableOpacity>
         </View>
       </View>
