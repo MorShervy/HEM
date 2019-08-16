@@ -114,6 +114,13 @@ namespace WebApplication1.Controllers
             return BAL.Instance.InsertExpense(ex.AccountID, ex.Date, ex.Time, ex.Amount, ex.CategoryID, ex.Info);
         }
 
+        [HttpPost]
+        [Route("DeleteExpense")]
+        public object DeleteExpense([FromBody]Expenses ex)
+        {
+            return BAL.Instance.DeleteExpense(ex.AccountID, ex.Date, ex.Time, ex.Amount);
+        }
+
         [Route("uploadpicture")]
         public Task<HttpResponseMessage> Post()
         {

@@ -312,6 +312,40 @@ namespace WebApplication1.Models
 
         }
 
+        public static int DeleteExpense(int accountId, string date, string time, double amount)
+        {
+            int res = -1;
+
+            try
+            {
+                Con.Open();
+                _command = new SqlCommand($"DeleteExpense", Con);
+                _command.CommandType = CommandType.StoredProcedure;
+
+                /* input parameters */
+                _command.Parameters.Add(new SqlParameter("@AccountID", accountId));
+                _command.Parameters.Add(new SqlParameter("@Date", date));
+                _command.Parameters.Add(new SqlParameter("@Time", time));
+                _command.Parameters.Add(new SqlParameter("@Amount", amount));
+
+                SqlParameter returnPar = new SqlParameter();
+                returnPar.Direction = ParameterDirection.ReturnValue;
+                _command.Parameters.Add(returnPar);
+                _command.ExecuteNonQuery();
+                res = (int)returnPar.Value;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            finally
+            {
+                if (Con.State == ConnectionState.Open)
+                    Con.Close();
+            }
+            return res;
+        }
+
         public static int UpdateUserName(string email, string name)
         {
             int res = -1;
