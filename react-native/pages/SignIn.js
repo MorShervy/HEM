@@ -34,11 +34,10 @@ export default function SignIn(props) {
       .then(res => {
         res !== null && GetUserDetailsFromDB(res);
       });
-
-    setLoading(false);
   }, []);
 
   const GetUserDetailsFromDB = async res => {
+    setLoading(true);
     const date = new Date();
 
     const income = await SQL.GetIncomeUserByYear(
@@ -51,6 +50,7 @@ export default function SignIn(props) {
       date.toLocaleDateString()
     );
 
+    setLoading(false);
     await props.navigation.replace("HomeNav", {
       incomes: income,
       expenses: expenses
