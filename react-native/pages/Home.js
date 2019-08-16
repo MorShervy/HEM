@@ -23,7 +23,6 @@ const Home = props => {
   const [getSelectedMonth, setSelectedMonth] = useState(
     new Date().getMonth() + 1
   );
-  const [getSelectedMonthCanExpend, setSelectedMonthCanExpend] = useState(0);
   const [getSalaryOfAllYears, setSalaryOfAllYears] = useState(
     props.navigation.getParam("incomes")
   );
@@ -42,19 +41,7 @@ const Home = props => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // change the salary to the selected month
-    // AsyncStorage.getItem(getSelectedMonth.toString())
-    //   .then(res => JSON.parse(res))
-    //   .then(res => {
-    //     res !== null
-    //       ? setSelectedMonthCanExpend(
-    //           parseFloat(res.salary - res.expend).toFixed(2)
-    //         )
-    //       : setSelectedMonthCanExpend(0);
-    //   })
-    //   .then(
     HandleGetIncomeAndExpensesFromAsyncStoreg(getSelectedMonth);
-    //);
   }, [getSelectedMonth]);
 
   useEffect(() => {
@@ -223,7 +210,7 @@ const Home = props => {
     setSalaryOfAllYears(getSalaryOfAllYears.concat(details));
   };
 
-  const HandleExpendSalary = async details => {
+  const HandleExpendSalary = details => {
     // "AccountID": 1027,
     // "Amount": 8000,
     // "CategoryID": 2,
@@ -234,8 +221,6 @@ const Home = props => {
     // "Time": "12:12:00",
     // "Year": 2019,
 
-    //await HandleGetIncomeAndExpensesFromAsyncStoreg(details.Month);
-    //await setSelectedMonth(details.Month);
     AsyncStorage.setItem(
       details.Month.toString(),
       JSON.stringify({
@@ -261,6 +246,18 @@ const Home = props => {
     setExpendSum(expend);
   };
 
+  const HandleDeleteExpense = item => {
+    AsyncStorage.setItem(
+      item.Month.toString(),
+      JSON.stringify({
+        salary: getIncomeSum,
+        expend: getExpendSum - item.Amount
+      })
+    );
+    setExpendSum(getExpendSum - item.Amount);
+    setExpensesOfAllYears(getExpensesOfAllYears.filter(res => res !== item));
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.selectedMonthPosition}>
@@ -271,17 +268,16 @@ const Home = props => {
         </Text>
 
         <Text style={[styles.headerText, styles.headerSalaryAndExpend]}>
-          {`Salary\n${getIncomeSum}`}
+          {`Salary\n${getIncomeSum}$`}
         </Text>
         <Text style={[styles.headerText, styles.headerSalaryAndExpend]}>
-          {`Can Expend\n${(getIncomeSum - getExpendSum).toFixed(2)}`}
+          {`Can Expend\n${(getIncomeSum - getExpendSum).toFixed(2)}$`}
         </Text>
       </View>
 
       <View style={styles.graphFilledPosition}>
         <MonthList
           HandleClickMonth={HandleClickMonth}
-          //getSelectedMonthCanExpend={getSelectedMonthCanExpend}
           getCanExpend={getIncomeSum - getExpendSum}
         />
       </View>
@@ -290,6 +286,7 @@ const Home = props => {
         <ExpendList
           getExpensesOfMonth={getExpensesOfMonth}
           getExpensesOfAllYears={getExpensesOfAllYears}
+          HandleDeleteExpense={HandleDeleteExpense}
         />
 
         {/** start checking  */}

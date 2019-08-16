@@ -32,7 +32,9 @@ const Month = ({ item }, props) => {
           : _graphFilled[item.key].setNativeProps({ style: { flex: 1 } });
         expend !== false &&
           _textExpend[item.key].setNativeProps({
-            text: parseInt(expend).toString()
+            text: parseFloat(expend)
+              .toFixed(0)
+              .toString()
           });
       });
 
@@ -84,5 +86,5 @@ const styles = StyleSheet.create({
     backgroundColor: "green"
   },
   graphFilled: { backgroundColor: "red" },
-  text: { flex: 0.15, fontSize: 12 * fontScale }
+  text: { flex: 0.15, fontSize: 12 * fontScale, textAlign: "center" }
 });
