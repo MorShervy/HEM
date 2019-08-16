@@ -1,3 +1,4 @@
+
 import React from "react";
 import { FlatList, StyleSheet } from "react-native";
 import Expend from "./Expend";
@@ -11,8 +12,8 @@ const ExpendList = props => {
       data={props.getExpensesOfMonth}
       renderItem={_renderItem}
       keyExtractor={(item, index) => index.toString()}
-      showsVerticalScrollIndicator={false}
-      extraData={props.getExpensesOfAllYears}
+    //showsVerticalScrollIndicator={false}
+    //extraData={props.getExpensesOfAllYears}
     />
   );
 };

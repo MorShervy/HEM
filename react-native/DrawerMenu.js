@@ -29,7 +29,7 @@ const DrawerWithLogoutButton = props => {
 
   const onChangeHeaderBar = r => {
     const [titleToShow] = headerTitle.filter(item => item.key === r.route.key);
-    console.log("title=", titleToShow.value);
+    //console.log("title=", titleToShow.value);
     props.navigation.setParams({ otherParam: titleToShow.value });
     props.navigation.navigate(r.route.key, {
       otherParam: titleToShow.value

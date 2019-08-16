@@ -16,6 +16,8 @@ import { Ionicons, Octicons } from "@expo/vector-icons";
 import AddIncomeModal from "../components/AddIncomeModal";
 import ExpendList from "../components/ExpendList";
 import AddExpensesModal from "../components/AddExpensesModal";
+import SQL from "../handlers/SQL";
+import RefreshDataFromDBToAsyncStorage from "../handlers/RefreshDataFromDBToAsyncStorage";
 
 const { width, height, fontScale } = Dimensions.get("window");
 
@@ -38,7 +40,7 @@ const Home = props => {
   const [toggleAdding, setToggleAdding] = useState(false);
   const [expensesModal, setExpensesModal] = useState(false);
   const [incomeModal, setIncomeModal] = useState(false);
-  const [user, setUser] = useState(null);
+  const [accountID, setAccountId] = useState(null);
 
   useEffect(() => {
     HandleGetIncomeAndExpensesFromAsyncStoreg(getSelectedMonth);
@@ -52,7 +54,7 @@ const Home = props => {
   useEffect(() => {
     AsyncStorage.getItem("user")
       .then(res => JSON.parse(res))
-      .then(res => setUser(res));
+      .then(res => setAccountId(res.accountID));
 
     for (let index = 1; index <= 12; index++) {
       let income = 0;
@@ -180,18 +182,6 @@ const Home = props => {
     </View>
   );
 
-  // const AddExpensesModal = () => (
-  //   <Modal
-  //     style={{ flex: 1 }}
-  //     animationType="slide"
-  //     transparent={false}
-  //     visible={expensesModal}
-  //     onRequestClose={() => {
-  //       setExpensesModal(false);
-  //     }}
-  //   />
-  // );
-
   const HandleAddSalary = details => {
     // "AccountID": 1027,
     // "Amount": 14500,
@@ -249,21 +239,58 @@ const Home = props => {
     setExpendSum(expend);
   };
 
-  const HandleDeleteExpense = item => {
-    AsyncStorage.setItem(
-      item.Month.toString(),
-      JSON.stringify({
-        salary: getIncomeSum,
-        expend: getExpendSum - item.Amount
-      })
-    );
-    setExpendSum(getExpendSum - item.Amount);
-    setExpensesOfAllYears(getExpensesOfAllYears.filter(res => res !== item));
-    setExpensesOfMonth(getExpensesOfMonth.filter(res => res !== item));
+  const HandleDeleteExpense = async item => {
+    console.log("item=", item);
+
+    // changing date string format to fit the SQL
+    const date = item.Date.slice(0, 10);
+    const dateToSql = `${date.slice(6, 10)}/${date.slice(3, 5)}/${date.slice(
+      0,
+      2
+    )}`;
+    const expenseToDelete = {
+      accountID: item.AccountID,
+      date: dateToSql,
+      time: item.Time,
+      amount: item.Amount
+    };
+
+    const result = await SQL.DeleteExpense(expenseToDelete);
+    console.log("result=", result);
+    if (result.res === "0") {
+      const result = await RefreshDataFromDBToAsyncStorage.GetUserDetailsFromDB(
+        { accountID: item.AccountID }
+      );
+      await props.navigation.replace("HomeNav", {
+        incomes: result.incomes,
+        expenses: result.expenses
+      });
+    }
+    // AsyncStorage.setItem(
+    //   item.Month.toString(),
+    //   JSON.stringify({
+    //     salary: getIncomeSum,
+    //     expend: getExpendSum - item.Amount
+    //   })
+    // );
+    // setExpendSum(getExpendSum - item.Amount);
+    // setExpensesOfAllYears(getExpensesOfAllYears.filter(res => res !== item));
+    // setExpensesOfMonth(getExpensesOfMonth.filter(res => res !== item));
   };
 
   return (
     <View style={styles.container}>
+      <View style={styles.graphFilledPosition}>
+        <Text style={styles.headerText}>
+          {`${new Date().toLocaleDateString()}`}
+        </Text>
+
+        <MonthList
+          HandleClickMonth={HandleClickMonth}
+          //getSelectedMonthCanExpend={getSelectedMonthCanExpend}
+          getCanExpend={getIncomeSum - getExpendSum}
+        />
+      </View>
       <View style={styles.selectedMonthPosition}>
         <Text style={[styles.headerText, styles.headerSelectedMonth]}>
           {`in\n${
@@ -278,14 +305,6 @@ const Home = props => {
           {`Can Expend\n${(getIncomeSum - getExpendSum).toFixed(2)}$`}
         </Text>
       </View>
-
-      <View style={styles.graphFilledPosition}>
-        <MonthList
-          HandleClickMonth={HandleClickMonth}
-          getCanExpend={getIncomeSum - getExpendSum}
-        />
-      </View>
-
       <View style={styles.expendDetailsPosition}>
         <ExpendList
           getExpensesOfMonth={getExpensesOfMonth}
@@ -353,13 +372,16 @@ const Home = props => {
       </View>
 
       <AddIncomeModal
+        navigation={props.navigation}
         openIncomeModal={incomeModal}
         closeIncomeModal={() => setIncomeModal(false)}
-        user={user}
+        accountID={accountID}
       />
       <AddExpensesModal
+        navigation={props.navigation}
         openExpensesModal={expensesModal}
         closeExpensesModal={() => setExpensesModal(false)}
+        accountID={accountID}
       />
     </View>
   );
@@ -395,7 +417,6 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 60 / 2 + 60 / (8 + 14.8), // get radius
-
     backgroundColor: "#2D60FF",
     shadowOpacity: 1,
     shadowColor: "rgba(0,0,0,0.15)",

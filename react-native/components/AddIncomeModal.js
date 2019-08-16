@@ -7,20 +7,20 @@ import {
     Dimensions,
     StyleSheet,
     AsyncStorage,
-    Picker,
-    Button,
     DatePickerAndroid
 } from "react-native";
 import Modal from 'react-native-modal';
 import { Ionicons } from "@expo/vector-icons";
+import SQL from '../handlers/SQL';
+import RefreshDataFromDBToAsyncStorage from '../handlers/RefreshDataFromDBToAsyncStorage';
 
 const { width, height } = Dimensions.get("window");
 
 const AddIncomeModal = props => {
 
     const [selectedDate, setSelectedDate] = useState(new Date().toLocaleDateString())
-    const [setAmount, getAmount] = useState(null)
-    const [setType, getType] = useState(null)
+    const [getAmount, setAmount] = useState("")
+    const [getType, setType] = useState("")
 
 
     const handleOnPressDatePicker = async () => {
@@ -30,11 +30,37 @@ const AddIncomeModal = props => {
                 mode: 'default' // spiner or calender
             });
             if (action === DatePickerAndroid.dateSetAction) {
-                console.log(year + '-' + month + '-' + day);
+                setSelectedDate(`${month + 1}/${day}/${year}`);
             }
 
         } catch ({ code, message }) {
             console.log('Cannot open date picker', message);
+        }
+    }
+
+    const HandleNewIncome = async () => {
+        const income = {
+            accountID: props.accountID,
+            date: selectedDate,
+            time: new Date().toLocaleTimeString(),
+            amount: getAmount,
+            type: getType
+        }
+        //console.log("income:", income);
+        const result = await SQL.InsertIncome(income)
+
+        const insert = JSON.parse(result);
+        // res = "0" inserted income to DB - need to Save data from DB to AsyncStorage and Get new User Details
+        if (insert.res === "0") {
+            const result = await RefreshDataFromDBToAsyncStorage.GetUserDetailsFromDB({ accountID: props.accountID })
+            await props.navigation.replace("HomeNav", {
+                incomes: result.incomes,
+                expenses: result.expenses
+            });
+        }
+        // res = "0" || "1" handle error
+        else {
+
         }
     }
 
@@ -89,7 +115,9 @@ const AddIncomeModal = props => {
                         </TouchableOpacity>
                     </View>
                     <View style={[styles.itemView, { paddingTop: 200 }]}>
-                        <TouchableOpacity style={styles.button}>
+                        <TouchableOpacity
+                            onPress={HandleNewIncome}
+                            style={styles.button}>
                             <Ionicons name="ios-checkmark" size={50} color="#fff" style={{ alignSelf: "center" }} />
                         </TouchableOpacity>
                     </View>

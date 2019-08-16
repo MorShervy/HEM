@@ -123,6 +123,8 @@ namespace WebApplication1.Models
                 income.Add(new IncomeByYear()
                 {
                     AccountID = int.Parse(row["AccountID"].ToString()),
+                    Date = row["Date"].ToString(),
+                    Time = row["Time"].ToString(),
                     Year = int.Parse(row["Year"].ToString()),
                     Month = int.Parse(row["Month"].ToString()),
                     Amount = double.Parse(row["Amount"].ToString()),
@@ -149,10 +151,11 @@ namespace WebApplication1.Models
                 expenses.Add(new ExpensesByYear()
                 {
                     AccountID = int.Parse(row["AccountID"].ToString()),
+                    Date = row["Date"].ToString(),
+                    Time = row["Time"].ToString(),
                     Year = int.Parse(row["Year"].ToString()),
                     Month = int.Parse(row["Month"].ToString()),
                     Day = int.Parse(row["Day"].ToString()),
-                    Time = row["Time"].ToString(),
                     Amount = double.Parse(row["Amount"].ToString()),
                     CategoryID = int.Parse(row["CategoryID"].ToString()),
                     Info = row["Info"].ToString()
@@ -160,6 +163,27 @@ namespace WebApplication1.Models
             }
 
             return expenses;
+        }
+
+        public object InsertIncome(int accountID,string date,string time,double amount,string type)
+        {
+            int result = DAL.InsertIncome(accountID, date, time, amount, type);
+            var res = new { res = result.ToString() };
+            return new JavaScriptSerializer().Serialize(res);
+        }
+
+        public object InsertExpense(int accountID,string date,string time,double amount,int categoryID,string info)
+        {
+            int result = DAL.InsertExpense(accountID, date, time, amount, categoryID, info);
+            var res = new { res = result.ToString() };
+            return new JavaScriptSerializer().Serialize(res);
+        }
+
+        public object DeleteExpense(int accountId, string date, string time, double amount)
+        {
+            int result = DAL.DeleteExpense(accountId, date, time, amount);
+            var res = new { res = result.ToString() };
+            return res;
         }
 
         public object UpdateUserName(string email, string name)

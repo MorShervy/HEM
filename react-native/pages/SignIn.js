@@ -17,6 +17,7 @@ import Logo from "../components/Logo";
 import SignInWIthFB from "../handlers/SignInWIthFB";
 import SignInWithGL from "../handlers/SignInWithGL";
 import SQL from "../handlers/SQL";
+import RefreshDataFromDBToAsyncStorage from '../handlers/RefreshDataFromDBToAsyncStorage'
 
 const { width, height } = Dimensions.get("window");
 const regexEmail = /^(([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}))$/;
@@ -36,40 +37,20 @@ export default function SignIn(props) {
       });
   }, []);
 
-  const GetUserDetailsFromDB = async res => {
+  const GetUserDetailsFromDB = async user => {
     setLoading(true);
-    const date = new Date();
-
-    const income = await SQL.GetIncomeUserByYear(
-      res.accountID,
-      date.toLocaleDateString()
-    );
-
-    const expenses = await SQL.GetExpensesUserByYear(
-      res.accountID,
-      date.toLocaleDateString()
-    );
-
+    const result = await RefreshDataFromDBToAsyncStorage.GetUserDetailsFromDB(user)
     setLoading(false);
     await props.navigation.replace("HomeNav", {
-      incomes: income,
-      expenses: expenses
+      incomes: result.incomes,
+      expenses: result.expenses
     });
   };
 
-  const SaveToAsyncStorage = (email, name, url) => {
-    SQL.InsertUserFBandGL(email, name, url).then(res => {
-      //console.log("res=", res);
-      AsyncStorage.setItem(
-        "user",
-        JSON.stringify({
-          accountID: res.AccountID,
-          email: res.Email,
-          name: res.Name,
-          url: res.PhotoUrl
-        })
-      ).then(successAuth(res));
-    });
+  const SaveToAsyncStorage = async (email, name, url) => {
+    const res = await RefreshDataFromDBToAsyncStorage.SaveToAsyncStorage(email, name, url)
+    successAuth(res);
+
   };
 
   const _HandleLoginWithGoogle = async () => {
