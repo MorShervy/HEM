@@ -99,64 +99,41 @@ const Home = props => {
   };
 
 
-  const HandleAddSalary = () => {
-    AsyncStorage.getItem(getSelectedMonth.toString())
-      .then(res => JSON.parse(res))
-      .then(res => {
-        AsyncStorage.setItem(
-          getSelectedMonth.toString(),
-          JSON.stringify({
-            salary: 20000,
-            expend: res !== null ? parseFloat(res.expend) : 0
-          })
-        ).then(
-          res !== null
-            ? setSelectedMonthCanExpend(
-              parseFloat(res.salary - res.expend).toFixed(2)
-            )
-            : setSelectedMonthCanExpend(2000)
-        );
-      });
-  };
-
-  const HandleExpendSalary = () => {
-    AsyncStorage.getItem(getSelectedMonth.toString())
-      .then(res => JSON.parse(res))
-      .then(res => {
-        AsyncStorage.setItem(
-          getSelectedMonth.toString(),
-          JSON.stringify({
-            salary: res !== null ? parseFloat(res.salary) : 0,
-            expend: res !== null ? parseFloat(res.expend) + 5000 : 5000
-          })
-        ).then(
-          res !== null
-            ? setSelectedMonthCanExpend(
-              parseFloat(res.salary - res.expend).toFixed(2)
-            )
-            : setSelectedMonthCanExpend(-5000)
-        );
-      });
-  };
-
   // for (let index = 1; index <= 12; index++) {
   //   AsyncStorage.removeItem(index.toString());
   // }
 
-  const IncomeSum = () => {
-    let income = 0;
-    getSalaryOfMonth !== null &&
-      getSalaryOfMonth.map(res => (income += parseFloat(res.Amount)));
 
-    setIncomeSum(income);
+  const HandleAddSalary = () => {
+    // AsyncStorage.getItem(getSelectedMonth.toString())
+    //   .then(res => JSON.parse(res))
+    //   .then(res => {
+    setIncomeSum(getIncomeSum + 20000);
+    AsyncStorage.setItem(
+      getSelectedMonth.toString(),
+      JSON.stringify({
+        salary: getIncomeSum,
+        expend: getExpendSum
+      })
+    );
+    //.then(res !== null && setIncomeSum(getIncomeSum + 20000));
+    //});
   };
 
-  const ExpendSum = () => {
-    let expend = 0;
-    getExpensesOfMonth !== null &&
-      getExpensesOfMonth.map(res => (expend += parseFloat(res.Amount)));
-
-    setExpendSum(expend);
+  const HandleExpendSalary = () => {
+    // AsyncStorage.getItem(getSelectedMonth.toString())
+    //   .then(res => JSON.parse(res))
+    //   .then(res => {
+    setExpendSum(getExpendSum + 5000);
+    AsyncStorage.setItem(
+      getSelectedMonth.toString(),
+      JSON.stringify({
+        salary: getIncomeSum,
+        expend: getExpendSum
+      })
+    );
+    //.then(res !== null && setExpendSum(getExpendSum + 5000));
+    //});
   };
 
   const renderAddingIncome = () => (
@@ -232,50 +209,6 @@ const Home = props => {
       </TouchableOpacity>
     </View>
   );
-
-  const AddExpensesModal = () => (
-    <Modal
-      style={{ flex: 1 }}
-      animationType="slide"
-      transparent={false}
-      visible={expensesModal}
-      onRequestClose={() => {
-        setExpensesModal(false);
-      }}
-    />
-  );
-
-  const HandleAddSalary = () => {
-    // AsyncStorage.getItem(getSelectedMonth.toString())
-    //   .then(res => JSON.parse(res))
-    //   .then(res => {
-    setIncomeSum(getIncomeSum + 20000);
-    AsyncStorage.setItem(
-      getSelectedMonth.toString(),
-      JSON.stringify({
-        salary: getIncomeSum,
-        expend: getExpendSum
-      })
-    );
-    //.then(res !== null && setIncomeSum(getIncomeSum + 20000));
-    //});
-  };
-
-  const HandleExpendSalary = () => {
-    // AsyncStorage.getItem(getSelectedMonth.toString())
-    //   .then(res => JSON.parse(res))
-    //   .then(res => {
-    setExpendSum(getExpendSum + 5000);
-    AsyncStorage.setItem(
-      getSelectedMonth.toString(),
-      JSON.stringify({
-        salary: getIncomeSum,
-        expend: getExpendSum
-      })
-    );
-    //.then(res !== null && setExpendSum(getExpendSum + 5000));
-    //});
-  };
 
   // for (let index = 1; index <= 12; index++) {
   //   AsyncStorage.setItem(

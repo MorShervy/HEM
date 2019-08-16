@@ -18,6 +18,11 @@ const { width, height } = Dimensions.get("window");
 
 const AddIncomeModal = props => {
 
+    const [selectedDate, setSelectedDate] = useState(new Date().toLocaleDateString())
+    const [setAmount, getAmount] = useState(null)
+    const [setType, getType] = useState(null)
+
+
     const handleOnPressDatePicker = async () => {
         try {
             const { action, year, month, day } = await DatePickerAndroid.open({
@@ -55,41 +60,38 @@ const AddIncomeModal = props => {
                 </View>
                 <View style={styles.content}>
                     <View style={styles.itemView}>
-                        <Text style={styles.amountText}>Amount</Text>
+                        <Text style={styles.itemText}>Amount</Text>
                         <TextInput
                             placeholder="Amount"
-                            style={styles.amountInput}
+                            style={styles.itemInput}
                             keyboardType="decimal-pad"
+                            onChangeText={e => setAmount(e)}
                         />
                     </View>
                     <View style={styles.itemView}>
-                        <View style={styles.category}>
-                            <Text style={styles.categoryText}>Choose Category</Text>
-                            <View style={styles.categoryIcons}>
-                                <View style={styles.iconView}>
-
-                                    <Ionicons name="md-card" size={55} />
-                                    <Text>Credit</Text>
-                                </View>
-                                <View style={styles.iconView}>
-                                    <Ionicons name="ios-cash" size={55} />
-                                    <Text>Cash</Text>
-                                </View>
-                                <View style={styles.iconView}>
-                                    <Ionicons name="ios-paper" size={55} />
-                                    <Text>Bank</Text>
-                                </View>
-                                <View style={styles.iconView}>
-                                    <Ionicons name="ios-cash" size={55} />
-                                    <Text>Loan</Text>
-                                </View>
-
+                        <Text style={styles.itemText}>Title</Text>
+                        <TextInput
+                            placeholder="Title"
+                            style={styles.itemInput}
+                            onChangeText={(e) => setType(e)}
+                        />
+                    </View>
+                    <View style={styles.itemView}>
+                        <Text style={[styles.itemText, { paddingTop: 15 }]}>Date</Text>
+                        <TouchableOpacity
+                            style={styles.itemInput}
+                            onPress={handleOnPressDatePicker}
+                        >
+                            <View style={{ flexDirection: "row" }}>
+                                <Ionicons name="ios-calendar" size={30} />
+                                <Text style={{ paddingLeft: 20, paddingTop: 5 }}>{selectedDate}</Text>
                             </View>
-
-                        </View>
-                        <View style={styles.itemView}>
-                            {/* <Button title='Date Picker Example' onPress={handleOnPressDatePicker} /> */}
-                        </View>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={[styles.itemView, { paddingTop: 200 }]}>
+                        <TouchableOpacity style={styles.button}>
+                            <Ionicons name="ios-checkmark" size={50} color="#fff" style={{ alignSelf: "center" }} />
+                        </TouchableOpacity>
                     </View>
                 </View>
 
@@ -137,7 +139,7 @@ const styles = StyleSheet.create({
         paddingLeft: 15,
         paddingTop: 15,
     },
-    amountInput: {
+    itemInput: {
         width: width - 80,
         height: 40,
         borderBottomColor: "#000",
@@ -145,25 +147,21 @@ const styles = StyleSheet.create({
         color: "#000",
         paddingHorizontal: 20,
     },
-    amountText: {
-        fontSize: 20, fontWeight: "bold", paddingLeft: 10
-    },
-    category: {
-        flexDirection: "column",
-        justifyContent: "space-between",
-
-    },
-    categoryText: {
-        fontSize: 20, fontWeight: "bold", paddingLeft: 10
-    },
-    categoryIcons: {
-        marginTop: 10,
-        flexDirection: "row",
-        justifyContent: "space-evenly",
-        flexWrap: "wrap",
+    itemText: {
+        fontSize: 20,
+        fontWeight: "bold",
+        paddingLeft: 10
     },
     iconView: {
-        height: 55, width: 55, backgroundColor: "rgba(0,0,0,0.15)", flexDirection: "column", alignItems: "center",
-
+        height: 55,
+        width: 55,
+        backgroundColor: "rgba(0,0,0,0.15)",
+        flexDirection: "column",
+        alignItems: "center",
+    },
+    button: {
+        width: width - 80,
+        height: 50,
+        backgroundColor: "#2C3E50",
     }
 })
