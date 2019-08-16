@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { StyleSheet, FlatList, Dimensions } from "react-native";
 import { MonthData } from "../data/MonthData";
 import Month from "./Month";

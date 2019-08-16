@@ -2,18 +2,20 @@ import React from "react";
 import {
   View,
   Text,
+  TextInput,
   TouchableOpacity,
   AsyncStorage,
   Dimensions,
   StyleSheet
 } from "react-native";
 
-const { width } = Dimensions.get("window");
+const { width, fontScale } = Dimensions.get("window");
 
 const Month = ({ item }, props) => {
   //render ech month (as component)
   if (item.key !== undefined && new Date().getMonth() + 1 >= item.key) {
     let _graphFilled = []; // cant change with state, so we set difference reference for ech item
+    let _textExpend = [];
 
     AsyncStorage.getItem(item.key.toString())
       .then(res => JSON.parse(res))
@@ -28,6 +30,12 @@ const Month = ({ item }, props) => {
           : salary !== false && salary > expend
           ? _graphFilled[item.key].setNativeProps({ style: { flex: 0 } })
           : _graphFilled[item.key].setNativeProps({ style: { flex: 1 } });
+        expend !== false &&
+          _textExpend[item.key].setNativeProps({
+            text: parseFloat(expend)
+              .toFixed(0)
+              .toString()
+          });
       });
 
     const HandleClickMonth = () => {
@@ -39,6 +47,7 @@ const Month = ({ item }, props) => {
         style={styles.touchableOpacity}
         onPress={HandleClickMonth}
       >
+        <Text style={styles.text}>{item.value.substring(0, 3)}</Text>
         <View style={styles.graphSize}>
           <View
             style={styles.graphFilled}
@@ -48,7 +57,14 @@ const Month = ({ item }, props) => {
             }}
           />
         </View>
-        <Text style={styles.text}>{item.value.substring(0, 3)}</Text>
+        <TextInput
+          style={[styles.text, { fontSize: 9 * fontScale }]}
+          editable={false}
+          ref={ref => {
+            // cant change with state, so we set difference reference for ech item
+            _textExpend[item.key] = ref;
+          }}
+        />
       </TouchableOpacity>
     );
   }
@@ -63,12 +79,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 10
   },
   graphSize: {
-    flex: 0.85,
+    flex: 0.7,
     width: "100%",
     borderWidth: 1,
     justifyContent: "flex-end",
     backgroundColor: "green"
   },
   graphFilled: { backgroundColor: "red" },
-  text: { flex: 0.15 }
+  text: { flex: 0.15, fontSize: 12 * fontScale, textAlign: "center" }
 });

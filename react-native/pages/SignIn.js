@@ -35,12 +35,12 @@ export default function SignIn(props) {
       .then(res => {
         res !== null && GetUserDetailsFromDB(res);
       });
-
-    setLoading(false);
   }, []);
 
   const GetUserDetailsFromDB = async user => {
+    setLoading(true);
     const result = await RefreshDataFromDBToAsyncStorage.GetUserDetailsFromDB(user)
+    setLoading(false);
     await props.navigation.replace("HomeNav", {
       incomes: result.incomes,
       expenses: result.expenses
