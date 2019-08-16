@@ -7,8 +7,6 @@ import {
     Dimensions,
     StyleSheet,
     AsyncStorage,
-    Picker,
-    Button,
     DatePickerAndroid
 } from "react-native";
 import Modal from 'react-native-modal';
@@ -72,6 +70,18 @@ const AddExpensesModal = props => {
                         />
                     </View>
                     <View style={styles.itemView}>
+                        <Text style={[styles.itemText, { paddingTop: 15 }]}>Date</Text>
+                        <TouchableOpacity
+                            style={styles.itemInput}
+                            onPress={handleOnPressDatePicker}
+                        >
+                            <View style={{ flexDirection: "row" }}>
+                                <Ionicons name="ios-calendar" size={30} />
+                                <Text style={{ paddingLeft: 20, paddingTop: 5 }}>{selectedDate}</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.itemView}>
                         <View style={styles.category}>
                             <Text style={styles.itemText}>Payment Method</Text>
                             <View style={styles.categoryIcons}>
@@ -107,24 +117,10 @@ const AddExpensesModal = props => {
                                     </TouchableOpacity>
                                     <Text>Loan</Text>
                                 </View>
-
                             </View>
-
                         </View>
                     </View>
-                    <View style={styles.itemView}>
-                        <Text style={[styles.itemText, { paddingTop: 15 }]}>Date</Text>
-                        <TouchableOpacity
-                            style={styles.itemInput}
-                            onPress={handleOnPressDatePicker}
-                        >
-                            <View style={{ flexDirection: "row" }}>
-                                <Ionicons name="ios-calendar" size={30} />
-                                <Text style={{ paddingLeft: 20, paddingTop: 5 }}>{selectedDate}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={[styles.itemView, { paddingTop: 25 }]}>
+                    <View style={[styles.itemView, { paddingTop: 70 }]}>
                         <TouchableOpacity style={styles.button}>
                             <Ionicons name="ios-checkmark" size={50} color="#fff" style={{ alignSelf: "center" }} />
                         </TouchableOpacity>
@@ -135,7 +131,7 @@ const AddExpensesModal = props => {
         </Modal>
     )
 }
-{/* <Button title='Date Picker Example' onPress={handleOnPressDatePicker} /> */ }
+
 export default AddExpensesModal;
 
 const styles = StyleSheet.create({

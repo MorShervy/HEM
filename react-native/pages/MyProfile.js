@@ -45,7 +45,7 @@ const MyProfile = props => {
         console.log("res=", res.res);
       })
       .then(setShowFullName(false))
-      .then(alert("Updated"));
+      .then(alert("Updated")).then(clear());
   };
 
   const handlePicture = res => {
@@ -76,42 +76,58 @@ const MyProfile = props => {
 
   if (getShowFullName) {
     return (
+
       <Modal
         style={{ flex: 1 }}
+        animationIn="zoomInDown"
+        animationOut="zoomOutUp"
+        animationInTiming={600}
+        animationOutTiming={600}
+        backdropTransitionInTiming={600}
+        backdropTransitionOutTiming={600}
         animationType="slide"
         transparent={false}
         visible={getShowFullName}
         onRequestClose={() => clear()}
       >
-        <View style={styles.form}>
-          <View style={{ paddingTop: 10 }}>
-            <Text style={{ color: "#000", fontSize: 20, fontWeight: "bold" }}>
-              Update Profile
+
+        <View style={styles.containerModal}>
+          <View style={styles.header}>
+            <Text style={styles.headerText}>Update Profile</Text>
+            <Ionicons name="ios-person-add" size={70} color="#83B5D1" style={styles.iconModal} />
+          </View>
+          <View style={styles.content}>
+            <View style={styles.itemView}>
+              <Text style={{ color: "#000", fontSize: 20, fontWeight: "bold" }}>
+                Update FullName Profile
             </Text>
-          </View>
-          <View style={{ paddingTop: 10 }}>
-            <TextInput
-              style={styles.txtInput}
-              placeholder="Enter First Name"
-              onChangeText={e => setFirstName(e)}
-              value={getFirstName}
-            />
-          </View>
-          <View style={{ paddingTop: 10 }}>
-            <TextInput
-              style={styles.txtInput}
-              placeholder="Enter Last Name"
-              onChangeText={e => setLastName(e)}
-              value={getLastName}
-            />
-          </View>
-          <View style={{ paddingTop: 20 }}>
-            <TouchableOpacity
-              style={styles.btnStyle}
-              onPress={handleUpdateName}
-            >
-              <Text style={styles.btnTxt}>Save</Text>
-            </TouchableOpacity>
+            </View>
+            <View style={styles.itemView}>
+              <Text style={styles.itemText}>First Name</Text>
+              <TextInput
+                style={styles.txtInput}
+                placeholder="Enter First Name"
+                onChangeText={e => setFirstName(e)}
+                value={getFirstName}
+              />
+            </View>
+            <View style={styles.itemView}>
+              <Text style={styles.itemText}>Last Name</Text>
+              <TextInput
+                style={styles.txtInput}
+                placeholder="Enter Last Name"
+                onChangeText={e => setLastName(e)}
+                value={getLastName}
+              />
+            </View>
+            <View style={[styles.itemView, { paddingTop: 250 }]}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={handleUpdateName}
+              >
+                <Ionicons name="ios-checkmark" size={50} color="#fff" style={{ alignSelf: "center" }} />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
@@ -162,7 +178,6 @@ const MyProfile = props => {
           <Text style={styles.txtUpdate}>Update Full Name</Text>
         </TouchableOpacity>
       </View>
-      <KeyboardSpacer />
     </View>
   );
 };
@@ -170,8 +185,51 @@ export default MyProfile;
 
 const styles = StyleSheet.create({
   container: {
+
     width: width,
     height: height / 3
+  },
+  containerModal: {
+    flex: 1, flexDirection: 'column', justifyContent: 'flex-start',
+    margin: 20,
+    backgroundColor: "#fff",
+    shadowOpacity: 1,
+    shadowColor: "rgba(0,0,0,0.15)",
+    shadowRadius: 5,
+    elevation: 15
+  },
+  header: {
+    width: width - 40,
+    height: height / 5,
+    backgroundColor: "#2C3E50",
+  },
+  headerText: {
+    textAlign: "center",
+    fontSize: 35,
+    fontWeight: "bold",
+    color: "#fff",
+    marginTop: 20,
+  },
+  content: {
+    flexDirection: "column",
+    justifyContent: "space-evenly",
+    backgroundColor: "transparent",
+    marginTop: 25
+  },
+  itemView: {
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    paddingLeft: 15,
+    paddingTop: 15,
+  },
+  iconModal: {
+    marginTop: 25,
+    alignSelf: "center",
+  },
+  button: {
+    width: width - 80,
+    height: 50,
+    backgroundColor: "#2C3E50",
   },
   user: {
     marginTop: height / 4,
