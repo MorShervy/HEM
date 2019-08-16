@@ -11,8 +11,8 @@ const ExpendList = props => {
   const _renderItem = ({ item }) => (
     <View
       style={{
-        //paddingVertical: "2%",
-        //marginHorizontal: "2%",
+        paddingVertical: "5%",
+        flex: 1,
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#FFFFFF",
@@ -29,25 +29,39 @@ const ExpendList = props => {
           flexDirection: "row"
         }}
       >
-        <View style={{ flex: 0.5, justifyContent: "space-evenly" }}>
+        <View
+          style={{
+            flex: 0.7,
+            flexDirection: "row",
+            justifyContent: "space-evenly"
+          }}
+        >
           <Text>{`${(item.Info !== undefined && "Expenses") || "Incomes"}: ${
             item.Amount
           }`}</Text>
           <Text>{(item.Info !== undefined && item.Info) || item.Type}</Text>
         </View>
-        <View style={{ flex: 0.5, flexDirection: "row" }}>
+        <View
+          style={{
+            flex: 0.3,
+            flexDirection: "row",
+            justifyContent: "space-evenly"
+          }}
+        >
+          <TouchableOpacity>
+            <Text>Edit</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={{
-              borderRadius: 10,
+              borderRadius: 100,
               borderWidth: 1,
+              height: "50%",
+              width: "23%",
               justifyContent: "center",
               alignItems: "center"
             }}
           >
             <Text>-</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Text>Edit</Text>
           </TouchableOpacity>
         </View>
       </View>

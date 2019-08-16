@@ -29,6 +29,7 @@ const Home = props => {
 
   const [getIncomeSum, setIncomeSum] = useState(0);
   const [getExpendSum, setExpendSum] = useState(0);
+  const [getCanExpend, setCanExpend] = useState(0);
 
   const [toggleAdding, setToggleAdding] = useState(false);
   const [expensesModal, setExpensesModal] = useState(false);
@@ -68,7 +69,11 @@ const Home = props => {
     const incomes = props.navigation.getParam("incomes");
     const expenses = props.navigation.getParam("expenses");
 
-    console.log("incomes: ", incomes);
+    // incomes !== null &&
+    //   incomes !== undefined &&
+    //   expenses !== null &&
+    //   expenses !== undefined &&
+    //   setAllIncomesAndExpenses(incomes.concat(expenses));
 
     const incomesFiltered =
       (incomes !== null &&
@@ -228,6 +233,78 @@ const Home = props => {
     </View>
   );
 
+  const AddExpensesModal = () => (
+    <Modal
+      style={{ flex: 1 }}
+      animationType="slide"
+      transparent={false}
+      visible={expensesModal}
+      onRequestClose={() => {
+        setExpensesModal(false);
+      }}
+    />
+  );
+
+  const HandleAddSalary = () => {
+    // AsyncStorage.getItem(getSelectedMonth.toString())
+    //   .then(res => JSON.parse(res))
+    //   .then(res => {
+    setIncomeSum(getIncomeSum + 20000);
+    AsyncStorage.setItem(
+      getSelectedMonth.toString(),
+      JSON.stringify({
+        salary: getIncomeSum,
+        expend: getExpendSum
+      })
+    );
+    //.then(res !== null && setIncomeSum(getIncomeSum + 20000));
+    //});
+  };
+
+  const HandleExpendSalary = () => {
+    // AsyncStorage.getItem(getSelectedMonth.toString())
+    //   .then(res => JSON.parse(res))
+    //   .then(res => {
+    setExpendSum(getExpendSum + 5000);
+    AsyncStorage.setItem(
+      getSelectedMonth.toString(),
+      JSON.stringify({
+        salary: getIncomeSum,
+        expend: getExpendSum
+      })
+    );
+    //.then(res !== null && setExpendSum(getExpendSum + 5000));
+    //});
+  };
+
+  // for (let index = 1; index <= 12; index++) {
+  //   AsyncStorage.setItem(
+  //     index.toString(),
+  //     JSON.stringify({
+  //       salary: 20000,
+  //       expend: 1000 * index
+  //     })
+  //   );
+  // }
+
+  // for (let index = 1; index <= 12; index++) {
+  //   AsyncStorage.removeItem(index.toString());
+  // }
+
+  const IncomeSum = async () => {
+    let income = 0;
+    getSalaryOfMonth !== null &&
+      getSalaryOfMonth.map(res => (income += parseFloat(res.Amount)));
+    setIncomeSum(income);
+  };
+
+  const ExpendSum = async () => {
+    let expend = 0;
+    getExpensesOfMonth !== null &&
+      getExpensesOfMonth.map(res => (expend += parseFloat(res.Amount)));
+    setExpendSum(expend);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.selectedMonthPosition}>
@@ -236,11 +313,12 @@ const Home = props => {
             MonthData.find(month => month.key === getSelectedMonth).value
             }`}
         </Text>
+
         <Text style={[styles.headerText, styles.headerSalaryAndExpend]}>
           {`Salary\n${getIncomeSum}`}
         </Text>
         <Text style={[styles.headerText, styles.headerSalaryAndExpend]}>
-          {`Can Expend\n${getIncomeSum - getExpendSum}`}
+          {`Can Expend\n${(getIncomeSum - getExpendSum).toFixed(2)}`}
         </Text>
       </View>
 
@@ -248,11 +326,21 @@ const Home = props => {
         <MonthList
           HandleClickMonth={HandleClickMonth}
           getSelectedMonthCanExpend={getSelectedMonthCanExpend}
+          getCanExpend={getIncomeSum - getExpendSum}
         />
       </View>
 
       <View style={styles.expendDetailsPosition}>
         <ExpendList getExpensesOfMonth={getExpensesOfMonth} />
+
+        {/* start checking  */}
+        <TouchableOpacity onPress={HandleAddSalary}>
+          <Text>Click to add salary</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={HandleExpendSalary}>
+          <Text>Click to expend</Text>
+        </TouchableOpacity>
+        {/* end checking  */}
 
         {(toggleAdding && renderAddingIncome()) || null}
         {(toggleAdding && renderAddingExpenses()) || null}
