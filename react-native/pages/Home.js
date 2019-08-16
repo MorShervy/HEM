@@ -23,12 +23,17 @@ const Home = props => {
     new Date().getMonth() + 1
   );
   const [getSelectedMonthCanExpend, setSelectedMonthCanExpend] = useState(0);
+  const [getSalaryOfAllYears, setSalaryOfAllYears] = useState(
+    props.navigation.getParam("incomes")
+  );
+  const [getExpensesOfAllYears, setExpensesOfAllYears] = useState(
+    props.navigation.getParam("expenses")
+  );
   const [getSalaryOfMonth, setSalaryOfMonth] = useState(null);
   const [getExpensesOfMonth, setExpensesOfMonth] = useState(null);
 
   const [getIncomeSum, setIncomeSum] = useState(0);
   const [getExpendSum, setExpendSum] = useState(0);
-  const [getCanExpend, setCanExpend] = useState(0);
 
   const [toggleAdding, setToggleAdding] = useState(false);
   const [expensesModal, setExpensesModal] = useState(false);
@@ -58,6 +63,29 @@ const Home = props => {
     AsyncStorage.getItem("user")
       .then(res => JSON.parse(res))
       .then(res => setUser(res));
+
+    console.log("getSalaryOfAllYears: ", getSalaryOfAllYears);
+    for (let index = 1; index <= 12; index++) {
+      let income = 0;
+      let expend = 0;
+      getSalaryOfAllYears !== null &&
+        getSalaryOfAllYears !== undefined &&
+        getSalaryOfAllYears
+          .filter(res => res.Month === index)
+          .map(res => (income += parseFloat(res.Amount)));
+      getExpensesOfAllYears !== null &&
+        getExpensesOfAllYears !== undefined &&
+        getExpensesOfAllYears
+          .filter(res => res.Month === index)
+          .map(res => (expend += parseFloat(res.Amount)));
+      AsyncStorage.setItem(
+        index.toString(),
+        JSON.stringify({
+          salary: income,
+          expend: expend
+        })
+      );
+    }
   }, []);
 
   const HandleClickMonth = async month => {
@@ -65,24 +93,15 @@ const Home = props => {
   };
 
   const HandleGetIncomeAndExpensesFromAsyncStoreg = async month => {
-    const incomes = props.navigation.getParam("incomes");
-    const expenses = props.navigation.getParam("expenses");
-
-    // incomes !== null &&
-    //   incomes !== undefined &&
-    //   expenses !== null &&
-    //   expenses !== undefined &&
-    //   setAllIncomesAndExpenses(incomes.concat(expenses));
-
     const incomesFiltered =
-      (incomes !== null &&
-        incomes !== undefined &&
-        incomes.filter(res => res.Month === month)) ||
+      (getSalaryOfAllYears !== null &&
+        getSalaryOfAllYears !== undefined &&
+        getSalaryOfAllYears.filter(res => res.Month === month)) ||
       [];
     const expensesFiltered =
-      (expenses !== null &&
-        expenses !== undefined &&
-        expenses.filter(res => res.Month === month)) ||
+      (getExpensesOfAllYears !== null &&
+        getExpensesOfAllYears !== undefined &&
+        getExpensesOfAllYears.filter(res => res.Month === month)) ||
       [];
 
     setSalaryOfMonth(incomesFiltered);
