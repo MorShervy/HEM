@@ -93,6 +93,7 @@ const Home = props => {
         getExpensesOfAllYears.filter(res => res.Month === month)) ||
       [];
 
+    console.log("shit append");
     setSalaryOfMonth(incomesFiltered);
     setExpensesOfMonth(expensesFiltered);
   };
@@ -210,7 +211,7 @@ const Home = props => {
     setSalaryOfAllYears(getSalaryOfAllYears.concat(details));
   };
 
-  const HandleExpendSalary = details => {
+  const HandleExpendSalary = async details => {
     // "AccountID": 1027,
     // "Amount": 8000,
     // "CategoryID": 2,
@@ -221,6 +222,7 @@ const Home = props => {
     // "Time": "12:12:00",
     // "Year": 2019,
 
+    getSelectedMonth !== details.Month && setSelectedMonth(details.Month);
     AsyncStorage.setItem(
       details.Month.toString(),
       JSON.stringify({
@@ -230,6 +232,7 @@ const Home = props => {
     );
     setExpendSum(getExpendSum + details.Amount);
     setExpensesOfAllYears(getExpensesOfAllYears.concat(details));
+    setExpensesOfMonth(getExpensesOfMonth.concat(details));
   };
 
   const IncomeSum = () => {
@@ -256,6 +259,7 @@ const Home = props => {
     );
     setExpendSum(getExpendSum - item.Amount);
     setExpensesOfAllYears(getExpensesOfAllYears.filter(res => res !== item));
+    setExpensesOfMonth(getExpensesOfMonth.filter(res => res !== item));
   };
 
   return (
@@ -290,7 +294,18 @@ const Home = props => {
         />
 
         {/** start checking  */}
-        <TouchableOpacity onPress={HandleAddSalary}>
+        <TouchableOpacity
+          onPress={() =>
+            HandleAddSalary({
+              AccountID: 1027,
+              Amount: 14500,
+              Date: null,
+              Month: 5,
+              Type: "work",
+              Year: 2019
+            })
+          }
+        >
           <Text>Click to add salary</Text>
         </TouchableOpacity>
         <TouchableOpacity

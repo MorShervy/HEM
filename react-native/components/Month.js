@@ -20,11 +20,11 @@ const Month = ({ item }, props) => {
     AsyncStorage.getItem(item.key.toString())
       .then(res => JSON.parse(res))
       .then(res => {
-        //console.log("res: ", res);
         let salary = res !== null && parseFloat(res.salary);
         let expend = res !== null && parseFloat(res.expend);
-        salary !== false && expend !== false && salary > expend // change the graph fill with ref
-          ? _graphFilled[item.key].setNativeProps({
+        salary !== false && expend !== false && salary > expend
+          ? // change the graph fill with ref
+            _graphFilled[item.key].setNativeProps({
               style: { flex: parseFloat((expend / salary).toFixed(2)) }
             })
           : salary !== false && salary > expend
