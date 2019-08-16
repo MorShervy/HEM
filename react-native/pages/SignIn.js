@@ -27,18 +27,12 @@ export default function SignIn(props) {
   const [getEmail, setEmail] = useState("");
   const [getPassword, setPassword] = useState("");
   const [getErrLogin, setErrLogin] = useState(false);
-  const [getIncome, setIncome] = useState(null);
 
   useEffect(() => {
-    console.log("userEfect");
     AsyncStorage.getItem("user")
       .then(res => JSON.parse(res))
       .then(res => {
         res !== null && GetUserDetailsFromDB(res);
-        // SQL.GetIncomeUserByYear(
-        //   res.accountID,
-        //   date.toLocaleDateString()
-        // ).then(res => props.navigation.replace("HomeNav", { incomes: res })); //
       });
 
     setLoading(false);
@@ -65,7 +59,7 @@ export default function SignIn(props) {
 
   const SaveToAsyncStorage = (email, name, url) => {
     SQL.InsertUserFBandGL(email, name, url).then(res => {
-      console.log("res=", res);
+      //console.log("res=", res);
       AsyncStorage.setItem(
         "user",
         JSON.stringify({
@@ -74,7 +68,7 @@ export default function SignIn(props) {
           name: res.Name,
           url: res.PhotoUrl
         })
-      ).then(successAuth());
+      ).then(successAuth(res));
     });
   };
 
@@ -89,17 +83,18 @@ export default function SignIn(props) {
   const _HandleLoginWithFacebook = async () => {
     setLoading(true);
     const user = await SignInWIthFB.Login();
-    console.log("user=", user);
+    //console.log("user=", user);
     if (user != undefined) {
       SaveToAsyncStorage(user.email, user.name, user.picture.data.url);
     }
   };
 
-  const successAuth = () => {
+  const successAuth = res => {
     setErrLogin(false);
     setEmail("");
     setPassword("");
-    props.navigation.replace("HomeNav");
+    GetUserDetailsFromDB({ accountID: res.AccountID });
+    //props.navigation.replace("HomeNav");
   };
 
   const _HandleLogin = async () => {
@@ -108,9 +103,9 @@ export default function SignIn(props) {
       regexEmail.test(getEmail.toUpperCase()) &&
       regexPassword.test(getPassword.toUpperCase())
     ) {
-      console.log(getEmail, getPassword);
+      //console.log(getEmail, getPassword);
       SQL.Login(getEmail, getPassword).then(res => {
-        console.log("res=", res);
+        //console.log("res=", res);
         (res.error === undefined &&
           AsyncStorage.setItem(
             "user",
@@ -120,7 +115,7 @@ export default function SignIn(props) {
               name: res.Name,
               url: res.PhotoUrl
             })
-          ).then(successAuth())) ||
+          ).then(successAuth(res))) ||
           setErrLogin(true);
       });
       return;
