@@ -83,8 +83,8 @@ const styles = StyleSheet.create({
     width: "100%",
     borderWidth: 1,
     justifyContent: "flex-end",
-    backgroundColor: "green"
+    backgroundColor: "#b2ffb2"
   },
-  graphFilled: { backgroundColor: "red" },
+  graphFilled: { backgroundColor: "#df8888" },
   text: { flex: 0.15, fontSize: 12 * fontScale, textAlign: "center" }
 });

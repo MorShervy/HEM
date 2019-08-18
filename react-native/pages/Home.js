@@ -33,6 +33,9 @@ const Home = props => {
   );
   const [getSalaryOfMonth, setSalaryOfMonth] = useState(null);
   const [getExpensesOfMonth, setExpensesOfMonth] = useState(null);
+  const [getSalaryAndExpensesOfMonth, setSalaryAndExpensesOfMonth] = useState(
+    null
+  );
 
   const [getIncomeSum, setIncomeSum] = useState(0);
   const [getExpendSum, setExpendSum] = useState(0);
@@ -98,6 +101,9 @@ const Home = props => {
     console.log("shit append");
     setSalaryOfMonth(incomesFiltered);
     setExpensesOfMonth(expensesFiltered);
+    setSalaryAndExpensesOfMonth(
+      incomesFiltered.concat(expensesFiltered).reverse()
+    );
   };
 
   const ToggleAdding = () => {
@@ -182,49 +188,6 @@ const Home = props => {
     </View>
   );
 
-  const HandleAddSalary = details => {
-    // "AccountID": 1027,
-    // "Amount": 14500,
-    // "Date": null,
-    // "Month": 5,
-    // "Type": "work",
-    // "Year": 2019,
-
-    AsyncStorage.setItem(
-      details.Month.toString(),
-      JSON.stringify({
-        salary: getIncomeSum + details.Amount,
-        expend: getExpendSum
-      })
-    );
-    setIncomeSum(getIncomeSum + details.Amount);
-    setSalaryOfAllYears(getSalaryOfAllYears.concat(details));
-  };
-
-  const HandleExpendSalary = async details => {
-    // "AccountID": 1027,
-    // "Amount": 8000,
-    // "CategoryID": 2,
-    // "Date": null,
-    // "Day": 12,
-    // "Info": "bisli",
-    // "Month": 2,
-    // "Time": "12:12:00",
-    // "Year": 2019,
-
-    getSelectedMonth !== details.Month && setSelectedMonth(details.Month);
-    AsyncStorage.setItem(
-      details.Month.toString(),
-      JSON.stringify({
-        salary: getIncomeSum,
-        expend: getExpendSum + details.Amount
-      })
-    );
-    setExpendSum(getExpendSum + details.Amount);
-    setExpensesOfAllYears(getExpensesOfAllYears.concat(details));
-    setExpensesOfMonth(getExpensesOfMonth.concat(details));
-  };
-
   const IncomeSum = () => {
     let income = 0;
     getSalaryOfMonth !== null &&
@@ -266,16 +229,6 @@ const Home = props => {
         expenses: result.expenses
       });
     }
-    // AsyncStorage.setItem(
-    //   item.Month.toString(),
-    //   JSON.stringify({
-    //     salary: getIncomeSum,
-    //     expend: getExpendSum - item.Amount
-    //   })
-    // );
-    // setExpendSum(getExpendSum - item.Amount);
-    // setExpensesOfAllYears(getExpensesOfAllYears.filter(res => res !== item));
-    // setExpensesOfMonth(getExpensesOfMonth.filter(res => res !== item));
   };
 
   return (
@@ -287,7 +240,6 @@ const Home = props => {
 
         <MonthList
           HandleClickMonth={HandleClickMonth}
-          //getSelectedMonthCanExpend={getSelectedMonthCanExpend}
           getCanExpend={getIncomeSum - getExpendSum}
         />
       </View>
@@ -307,44 +259,9 @@ const Home = props => {
       </View>
       <View style={styles.expendDetailsPosition}>
         <ExpendList
-          getExpensesOfMonth={getExpensesOfMonth}
-          getExpensesOfAllYears={getExpensesOfAllYears}
+          getSalaryAndExpensesOfMonth={getSalaryAndExpensesOfMonth}
           HandleDeleteExpense={HandleDeleteExpense}
         />
-
-        {/** start checking  */}
-        <TouchableOpacity
-          onPress={() =>
-            HandleAddSalary({
-              AccountID: 1027,
-              Amount: 14500,
-              Date: null,
-              Month: 5,
-              Type: "work",
-              Year: 2019
-            })
-          }
-        >
-          <Text>Click to add salary</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() =>
-            HandleExpendSalary({
-              AccountID: 1027,
-              Amount: 1000,
-              CategoryID: 2,
-              Date: null,
-              Day: 12,
-              Info: "bamba",
-              Month: 2,
-              Time: "12:12:00",
-              Year: 2019
-            })
-          }
-        >
-          <Text>Click to expend</Text>
-        </TouchableOpacity>
-        {/** end checking  */}
 
         {(toggleAdding && renderAddingIncome()) || null}
         {(toggleAdding && renderAddingExpenses()) || null}

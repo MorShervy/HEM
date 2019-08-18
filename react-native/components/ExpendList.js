@@ -1,6 +1,5 @@
-
 import React from "react";
-import { FlatList, StyleSheet } from "react-native";
+import { View, Text, FlatList, StyleSheet } from "react-native";
 import Expend from "./Expend";
 
 const ExpendList = props => {
@@ -9,16 +8,15 @@ const ExpendList = props => {
   return (
     <FlatList
       style={styles.flatList}
-      data={props.getExpensesOfMonth}
+      data={props.getSalaryAndExpensesOfMonth}
       renderItem={_renderItem}
       keyExtractor={(item, index) => index.toString()}
-    //showsVerticalScrollIndicator={false}
-    //extraData={props.getExpensesOfAllYears}
+      showsVerticalScrollIndicator={false}
     />
   );
 };
 export default ExpendList;
 
 const styles = StyleSheet.create({
-  flatList: { flex: 1, flexGrow: 1 }
+  flatList: { flex: 0.7, flexGrow: 1 }
 });

@@ -3,25 +3,38 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
 const Expend = ({ item }, props) => (
-  <View style={styles.item}>
+  <View
+    style={[
+      styles.item,
+      { backgroundColor: (item.Info !== undefined && "#df8888") || "#b2ffb2" }
+    ]}
+  >
     <View style={styles.itemPosition}>
       <View style={styles.itemDescription}>
-        <View>
-          <Text>{`Expense ${item.Amount}$`}</Text>
-          <Text>{`on ${item.Info}`}</Text>
+        <View style={{ marginTop: (item.Info === undefined && "3%") || null }}>
+          {item.Info !== undefined && (
+            <Text style={styles.text}>
+              {`${item.Day}/${item.Month}/${item.Year}`}
+            </Text>
+          )}
+          <Text style={styles.text}>{item.Time.substring(0, 5)}</Text>
         </View>
         <View>
-          <Text>{`at ${item.Day}/${item.Month}/${item.Year}`}</Text>
-          <Text>{`in ${(item.CategoryID === 1 && "Credit") ||
-            (item.CategoryID === 2 && "Cash") ||
-            (item.CategoryID === 3 && "Bank") ||
-            (item.CategoryID === 4 && "Loan")}`}</Text>
+          <Text style={styles.text}>{item.Amount}</Text>
+          <Text style={styles.text}>
+            {(item.Info !== undefined && item.Info) || item.Type}
+          </Text>
         </View>
+
+        <Text style={[styles.text, styles.payment]}>
+          {item.Info !== undefined &&
+            ((item.CategoryID === 1 && "Credit") ||
+              (item.CategoryID === 2 && "Cash") ||
+              (item.CategoryID === 3 && "Bank") ||
+              (item.CategoryID === 4 && "Loan"))}
+        </Text>
       </View>
       <View style={styles.itemButtons}>
-        <TouchableOpacity>
-          <AntDesign name="edit" size={20} color="black" />
-        </TouchableOpacity>
         <TouchableOpacity onPress={() => props.HandleDeleteExpense(item)}>
           <AntDesign name="delete" size={20} color="red" />
         </TouchableOpacity>
@@ -46,14 +59,20 @@ const styles = StyleSheet.create({
   },
   itemPosition: { flex: 1, flexDirection: "row" },
   itemDescription: {
-    flex: 0.7,
+    flex: 0.8,
     flexDirection: "row",
     justifyContent: "space-evenly"
   },
   itemButtons: {
-    flex: 0.3,
+    flex: 0.2,
     flexDirection: "row",
-    justifyContent: "space-evenly",
+    justifyContent: "center",
+    marginTop: "3%"
+  },
+  text: {
+    textAlign: "center"
+  },
+  payment: {
     marginTop: "3%"
   }
 });
