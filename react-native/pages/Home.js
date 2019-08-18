@@ -82,7 +82,6 @@ const Home = props => {
         })
       );
     }
-
   }, []);
 
   const HandleClickMonth = month => {
@@ -114,34 +113,38 @@ const Home = props => {
   };
 
   const HandleDelete = async item => {
-    console.log("item=", item)
+    console.log("item=", item);
     // changing date string format to fit the SQL
     const date = item.Date.slice(0, 10);
-    const dateToSql = `${date.slice(6, 10)}/${date.slice(3, 5)}/${date.slice(0, 2)}`;
+    const dateToSql = `${date.slice(6, 10)}/${date.slice(3, 5)}/${date.slice(
+      0,
+      2
+    )}`;
     const itemToDelete = {
       accountID: item.AccountID,
       date: dateToSql,
       time: item.Time,
       amount: item.Amount
-    }
+    };
 
     let result;
-    if (item.Info !== undefined) //expense
+    if (item.Info !== undefined)
+      //expense
       result = await SQL.DeleteExpense(itemToDelete);
-    else //income
-      result = await SQL.DeleteIncome(itemToDelete);
-
+    //income
+    else result = await SQL.DeleteIncome(itemToDelete);
 
     //console.log("result=", result)
     if (result.res === "0") {
-      const result = await RefreshDataFromDBToAsyncStorage.GetUserDetailsFromDB({ accountID: item.AccountID })
+      const result = await RefreshDataFromDBToAsyncStorage.GetUserDetailsFromDB(
+        { accountID: item.AccountID }
+      );
       await props.navigation.replace("HomeNav", {
         incomes: result.incomes,
         expenses: result.expenses
-      })
+      });
     }
   };
-
 
   const IncomeSum = () => {
     let income = 0;
@@ -231,19 +234,24 @@ const Home = props => {
     </View>
   );
 
-
-
   return (
     <View style={styles.container}>
-
-      {Loading && <ActivityIndicator
-        style={{ flex: 1, paddingTop: 150, position: "absolute", marginLeft: width / 2 }}
-        size={50} />}
+      {Loading && (
+        <ActivityIndicator
+          style={{
+            flex: 1,
+            paddingTop: 150,
+            position: "absolute",
+            marginLeft: width / 2
+          }}
+          size={50}
+        />
+      )}
 
       <View style={styles.graphFilledPosition}>
-        <Text style={styles.headerBoldText}>
-          {`${new Date().toLocaleDateString()}`}
-        </Text>
+        <Text
+          style={[styles.headerBoldText, { fontSize: 30 * fontScale }]}
+        >{`${new Date().getFullYear()}`}</Text>
 
         <MonthList
           HandleClickMonth={HandleClickMonth}
@@ -261,7 +269,7 @@ const Home = props => {
         >
           {`in\n${
             MonthData.find(month => month.key === getSelectedMonth).value
-            }`}
+          }`}
         </Text>
 
         <View style={[styles.hederEchTextPosition, styles.rightSideBorder]}>
@@ -306,7 +314,7 @@ const Home = props => {
         {(toggleAdding && renderAddingIncome()) || null}
         {(toggleAdding && renderAddingExpenses()) || null}
         <View
-          style={{ marginTop: "98%", position: "absolute", marginLeft: "80%" }}
+          style={{ marginTop: "97%", position: "absolute", marginLeft: "80%" }}
         >
           <TouchableOpacity style={styles.btnAdd} onPress={ToggleAdding}>
             {!toggleAdding ? (
@@ -317,17 +325,16 @@ const Home = props => {
                 style={{ textAlign: "center", marginTop: 15 }}
               />
             ) : (
-                <Octicons
-                  style={{ textAlign: "center", marginTop: 15 }}
-                  name="kebab-horizontal"
-                  size={30}
-                  color="white"
-                />
-              )}
+              <Octicons
+                style={{ textAlign: "center", marginTop: 15 }}
+                name="kebab-horizontal"
+                size={30}
+                color="white"
+              />
+            )}
           </TouchableOpacity>
         </View>
       </View>
-
       <AddIncomeModal
         navigation={props.navigation}
         openIncomeModal={incomeModal}
@@ -348,7 +355,7 @@ export default Home;
 const styles = StyleSheet.create({
   container: { flex: 1 },
   selectedMonthPosition: {
-    flex: 0.1,
+    flex: 0.07,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center"
@@ -360,7 +367,7 @@ const styles = StyleSheet.create({
   headerSalaryAndExpend: { fontSize: 18 * fontScale },
   headerExpenseText: { color: "red" },
   canExpend: { fontWeight: "bold" },
-  graphFilledPosition: { flex: 0.2 },
+  graphFilledPosition: { flex: 0.25 },
   expendDetailsPosition: { flex: 0.5 },
   rightSideBorder: { borderRightWidth: 1, borderRightColor: "gray" },
   btnAdd: {

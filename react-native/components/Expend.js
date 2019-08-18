@@ -12,11 +12,7 @@ const Expend = ({ item }, props) => (
     <View style={styles.itemPosition}>
       <View style={styles.itemDescription}>
         <View style={{ marginTop: (item.Info === undefined && "3%") || null }}>
-          {item.Info !== undefined && (
-            <Text style={styles.text}>
-              {`${item.Day}/${item.Month}/${item.Year}`}
-            </Text>
-          )}
+          <Text style={styles.text}>{item.Date.substring(0, 5)}</Text>
           <Text style={styles.text}>{item.Time.substring(0, 5)}</Text>
         </View>
 
@@ -48,7 +44,7 @@ export default Expend;
 
 const styles = StyleSheet.create({
   item: {
-    paddingVertical: "5%",
+    paddingVertical: "3%",
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
