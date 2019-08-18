@@ -35,7 +35,7 @@ const Expend = ({ item }, props) => (
         </Text>
       </View>
       <View style={styles.itemButtons}>
-        <TouchableOpacity onPress={() => props.HandleDeleteExpense(item)}>
+        <TouchableOpacity onPress={() => props.HandleDelete(item)}>
           <AntDesign name="delete" size={20} color="red" />
         </TouchableOpacity>
       </View>

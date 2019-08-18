@@ -113,22 +113,26 @@ const Home = props => {
     setToggleAdding(!toggleAdding);
   };
 
-  const HandleDeleteExpense = async item => {
-    //console.log("item=", item)
-    setLoading(true);
+  const HandleDelete = async item => {
+    console.log("item=", item)
     // changing date string format to fit the SQL
     const date = item.Date.slice(0, 10);
     const dateToSql = `${date.slice(6, 10)}/${date.slice(3, 5)}/${date.slice(0, 2)}`;
-    const expenseToDelete = {
+    const itemToDelete = {
       accountID: item.AccountID,
       date: dateToSql,
       time: item.Time,
       amount: item.Amount
     }
 
-    const result = await SQL.DeleteExpense(expenseToDelete);
+    let result;
+    if (item.Info !== undefined) //expense
+      result = await SQL.DeleteExpense(itemToDelete);
+    else //income
+      result = await SQL.DeleteIncome(itemToDelete);
+
+
     //console.log("result=", result)
-    setLoading(false);
     if (result.res === "0") {
       const result = await RefreshDataFromDBToAsyncStorage.GetUserDetailsFromDB({ accountID: item.AccountID })
       await props.navigation.replace("HomeNav", {
@@ -138,46 +142,6 @@ const Home = props => {
     }
   };
 
-  const HandleAddSalary = details => {
-    // "AccountID": 1027,
-    // "Amount": 14500,
-    // "Date": null,
-    // "Month": 5,
-    // "Type": "work",
-    // "Year": 2019,
-
-    AsyncStorage.setItem(
-      details.Month.toString(),
-      JSON.stringify({
-        salary: getIncomeSum + details.Amount,
-        expend: getExpendSum
-      })
-    );
-    setIncomeSum(getIncomeSum + details.Amount);
-    setSalaryOfAllYears(getSalaryOfAllYears.concat(details));
-  };
-
-  const HandleExpendSalary = details => {
-    // "AccountID": 1027,
-    // "Amount": 8000,
-    // "CategoryID": 2,
-    // "Date": null,
-    // "Day": 12,
-    // "Info": "bisli",
-    // "Month": 2,
-    // "Time": "12:12:00",
-    // "Year": 2019,
-
-    AsyncStorage.setItem(
-      details.Month.toString(),
-      JSON.stringify({
-        salary: getIncomeSum,
-        expend: getExpendSum + details.Amount
-      })
-    );
-    setExpendSum(getExpendSum + details.Amount);
-    setExpensesOfAllYears(getExpensesOfAllYears.concat(details));
-  };
 
   const IncomeSum = () => {
     let income = 0;
@@ -335,7 +299,7 @@ const Home = props => {
       <View style={styles.expendDetailsPosition}>
         <ExpendList
           getSalaryAndExpensesOfMonth={getSalaryAndExpensesOfMonth}
-          HandleDeleteExpense={HandleDeleteExpense}
+          HandleDelete={HandleDelete}
         />
 
         {(toggleAdding && renderAddingIncome()) || null}
