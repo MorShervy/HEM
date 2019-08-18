@@ -109,9 +109,8 @@ export default function SignIn(props) {
     <View style={styles.container}>
       {getLoading && (
         <ActivityIndicator
-          style={{ flex: 1, paddingTop: 150, position: "absolute" }}
-          size="large"
-        />
+          style={{ flex: 1, paddingTop: 150, position: "absolute", marginLeft: width / 2 }}
+          size={50} />
       )}
       <Logo styles={[styles.logo, styles.image]} />
 

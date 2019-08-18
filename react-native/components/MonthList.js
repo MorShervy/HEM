@@ -18,7 +18,7 @@ const MonthList = props => {
       keyExtractor={item => item.key.toString()}
       showsHorizontalScrollIndicator={false}
       horizontal
-      extraData={props.getCanExpend}
+    //extraData={props.getCanExpend}
     />
   );
 };

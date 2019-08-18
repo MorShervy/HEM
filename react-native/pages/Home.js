@@ -8,7 +8,8 @@ import {
   FlatList,
   Dimensions,
   StyleSheet,
-  AsyncStorage
+  AsyncStorage,
+  ActivityIndicator
 } from "react-native";
 import MonthList from "../components/MonthList";
 import { MonthData } from "../data/MonthData";
@@ -41,6 +42,7 @@ const Home = props => {
   const [expensesModal, setExpensesModal] = useState(false);
   const [incomeModal, setIncomeModal] = useState(false);
   const [accountID, setAccountId] = useState(null);
+  const [Loading, setLoading] = useState(false);
 
   useEffect(() => {
     HandleGetIncomeAndExpensesFromAsyncStoreg(getSelectedMonth);
@@ -77,6 +79,7 @@ const Home = props => {
         })
       );
     }
+
   }, []);
 
   const HandleClickMonth = month => {
@@ -103,84 +106,30 @@ const Home = props => {
     setToggleAdding(!toggleAdding);
   };
 
-  const handleAddIncomeModal = () => {
-    setIncomeModal(true);
+  const HandleDeleteExpense = async item => {
+    //console.log("item=", item)
+    setLoading(true);
+    // changing date string format to fit the SQL
+    const date = item.Date.slice(0, 10);
+    const dateToSql = `${date.slice(6, 10)}/${date.slice(3, 5)}/${date.slice(0, 2)}`;
+    const expenseToDelete = {
+      accountID: item.AccountID,
+      date: dateToSql,
+      time: item.Time,
+      amount: item.Amount
+    }
+
+    const result = await SQL.DeleteExpense(expenseToDelete);
+    //console.log("result=", result)
+    setLoading(false);
+    if (result.res === "0") {
+      const result = await RefreshDataFromDBToAsyncStorage.GetUserDetailsFromDB({ accountID: item.AccountID })
+      await props.navigation.replace("HomeNav", {
+        incomes: result.incomes,
+        expenses: result.expenses
+      })
+    }
   };
-
-  const renderAddingIncome = () => (
-    <View
-      style={{
-        flexDirection: "row",
-        marginTop: "62%",
-        position: "absolute",
-        marginLeft: "52%"
-      }}
-    >
-      <View style={{ paddingTop: 10 }}>
-        <View style={styles.txtView}>
-          <Text
-            style={{
-              marginTop: 10,
-              textAlign: "center",
-              color: "#fff",
-              marginRight: 15
-            }}
-          >
-            Income
-          </Text>
-        </View>
-      </View>
-      <TouchableOpacity
-        style={[styles.btnAdd, { backgroundColor: "#07D60D" }]}
-        onPress={handleAddIncomeModal}
-      >
-        <Ionicons
-          name="ios-add"
-          size={30}
-          color="#fff"
-          style={{ textAlign: "center", marginTop: 15 }}
-        />
-      </TouchableOpacity>
-    </View>
-  );
-
-  const renderAddingExpenses = () => (
-    <View
-      style={{
-        flexDirection: "row",
-        marginTop: "80%",
-        position: "absolute",
-        marginLeft: "52%"
-      }}
-    >
-      <View style={{ paddingTop: 10 }}>
-        <View style={styles.txtView}>
-          <Text
-            style={{
-              marginTop: 10,
-              textAlign: "center",
-              color: "#fff",
-              marginRight: 15
-            }}
-          >
-            Expense
-          </Text>
-        </View>
-      </View>
-      <TouchableOpacity
-        style={[styles.btnAdd, { backgroundColor: "#FF0000" }]}
-        onPress={() => setExpensesModal(true)}
-      >
-        <Ionicons
-          name="ios-add"
-          size={30}
-          color="#fff"
-          style={{ textAlign: "center", marginTop: 15 }}
-        />
-      </TouchableOpacity>
-    </View>
-  );
-
 
   const HandleAddSalary = details => {
     // "AccountID": 1027,
@@ -237,42 +186,88 @@ const Home = props => {
     setExpendSum(expend);
   };
 
-  const HandleDeleteExpense = async item => {
-    console.log("item=", item)
+  const renderAddingIncome = () => (
+    <View
+      style={{
+        flexDirection: "row",
+        marginTop: "62%",
+        position: "absolute",
+        marginLeft: "52%"
+      }}
+    >
+      <View style={{ paddingTop: 10 }}>
+        <View style={styles.txtView}>
+          <Text
+            style={{
+              marginTop: 10,
+              textAlign: "center",
+              color: "#fff",
+              marginRight: 15
+            }}
+          >
+            Income
+          </Text>
+        </View>
+      </View>
+      <TouchableOpacity
+        style={[styles.btnAdd, { backgroundColor: "#07D60D" }]}
+        onPress={() => setIncomeModal(true)}
+      >
+        <Ionicons
+          name="ios-add"
+          size={30}
+          color="#fff"
+          style={{ textAlign: "center", marginTop: 15 }}
+        />
+      </TouchableOpacity>
+    </View>
+  );
 
-    // changing date string format to fit the SQL
-    const date = item.Date.slice(0, 10);
-    const dateToSql = `${date.slice(6, 10)}/${date.slice(3, 5)}/${date.slice(0, 2)}`;
-    const expenseToDelete = {
-      accountID: item.AccountID,
-      date: dateToSql,
-      time: item.Time,
-      amount: item.Amount
-    }
+  const renderAddingExpenses = () => (
+    <View
+      style={{
+        flexDirection: "row",
+        marginTop: "80%",
+        position: "absolute",
+        marginLeft: "52%"
+      }}
+    >
+      <View style={{ paddingTop: 10 }}>
+        <View style={styles.txtView}>
+          <Text
+            style={{
+              marginTop: 10,
+              textAlign: "center",
+              color: "#fff",
+              marginRight: 15
+            }}
+          >
+            Expense
+          </Text>
+        </View>
+      </View>
+      <TouchableOpacity
+        style={[styles.btnAdd, { backgroundColor: "#FF0000" }]}
+        onPress={() => setExpensesModal(true)}
+      >
+        <Ionicons
+          name="ios-add"
+          size={30}
+          color="#fff"
+          style={{ textAlign: "center", marginTop: 15 }}
+        />
+      </TouchableOpacity>
+    </View>
+  );
 
-    const result = await SQL.DeleteExpense(expenseToDelete);
-    console.log("result=", result)
-    if (result.res === "0") {
-      const result = await RefreshDataFromDBToAsyncStorage.GetUserDetailsFromDB({ accountID: item.AccountID })
-      await props.navigation.replace("HomeNav", {
-        incomes: result.incomes,
-        expenses: result.expenses
-      });
-    }
-    // AsyncStorage.setItem(
-    //   item.Month.toString(),
-    //   JSON.stringify({
-    //     salary: getIncomeSum,
-    //     expend: getExpendSum - item.Amount
-    //   })
-    // );
-    // setExpendSum(getExpendSum - item.Amount);
-    // setExpensesOfAllYears(getExpensesOfAllYears.filter(res => res !== item));
-  };
+
 
   return (
     <View style={styles.container}>
 
+      {Loading && <ActivityIndicator
+        style={{ flex: 1, paddingTop: 150, position: "absolute", marginLeft: width / 2 }}
+        size={50} />}
 
       <View style={styles.graphFilledPosition}>
         <Text style={styles.headerText}>
