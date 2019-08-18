@@ -7,7 +7,7 @@ import {
     Dimensions,
     StyleSheet,
     AsyncStorage,
-    DatePickerAndroid
+    DatePickerAndroid,
 } from "react-native";
 import Modal from 'react-native-modal';
 import { Ionicons } from "@expo/vector-icons";
@@ -17,10 +17,14 @@ import RefreshDataFromDBToAsyncStorage from '../handlers/RefreshDataFromDBToAsyn
 const { width, height } = Dimensions.get("window");
 
 const AddExpensesModal = props => {
+    //console.log("prpr=", props)
     const [selectedCategory, setSelectedCategory] = useState("credit")
     const [selectedDate, setSelectedDate] = useState(new Date().toLocaleDateString())
     const [getDescription, setDescription] = useState("");
     const [getAmount, setAmount] = useState("");
+    const [getExpense, setExpense] = useState({});
+
+
 
     const handleOnPressDatePicker = async () => {
         try {
@@ -52,7 +56,6 @@ const AddExpensesModal = props => {
             categoryID: getCategoryId,
             info: getDescription
         }
-
         const result = await SQL.InsertExpense(expense)
         const insert = JSON.parse(result);
         // res = "0" inserted income to DB - need to Save data from DB to AsyncStorage and Get new User Details
@@ -61,13 +64,12 @@ const AddExpensesModal = props => {
             await props.navigation.replace("HomeNav", {
                 incomes: result.incomes,
                 expenses: result.expenses
-            });
+            })
         }
         // res = "0" || "1" handle error
         else {
 
         }
-
     }
 
     return (

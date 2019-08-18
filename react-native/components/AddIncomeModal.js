@@ -7,7 +7,7 @@ import {
     Dimensions,
     StyleSheet,
     AsyncStorage,
-    DatePickerAndroid
+    DatePickerAndroid,
 } from "react-native";
 import Modal from 'react-native-modal';
 import { Ionicons } from "@expo/vector-icons";

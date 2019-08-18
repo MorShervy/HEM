@@ -8,7 +8,8 @@ import {
   FlatList,
   Dimensions,
   StyleSheet,
-  AsyncStorage
+  AsyncStorage,
+  ActivityIndicator
 } from "react-native";
 import MonthList from "../components/MonthList";
 import { MonthData } from "../data/MonthData";
@@ -44,6 +45,7 @@ const Home = props => {
   const [expensesModal, setExpensesModal] = useState(false);
   const [incomeModal, setIncomeModal] = useState(false);
   const [accountID, setAccountId] = useState(null);
+  const [Loading, setLoading] = useState(false);
 
   useEffect(() => {
     HandleGetIncomeAndExpensesFromAsyncStoreg(getSelectedMonth);
@@ -80,6 +82,7 @@ const Home = props => {
         })
       );
     }
+
   }, []);
 
   const HandleClickMonth = month => {
@@ -110,8 +113,84 @@ const Home = props => {
     setToggleAdding(!toggleAdding);
   };
 
-  const handleAddIncomeModal = () => {
-    setIncomeModal(true);
+  const HandleDeleteExpense = async item => {
+    //console.log("item=", item)
+    setLoading(true);
+    // changing date string format to fit the SQL
+    const date = item.Date.slice(0, 10);
+    const dateToSql = `${date.slice(6, 10)}/${date.slice(3, 5)}/${date.slice(0, 2)}`;
+    const expenseToDelete = {
+      accountID: item.AccountID,
+      date: dateToSql,
+      time: item.Time,
+      amount: item.Amount
+    }
+
+    const result = await SQL.DeleteExpense(expenseToDelete);
+    //console.log("result=", result)
+    setLoading(false);
+    if (result.res === "0") {
+      const result = await RefreshDataFromDBToAsyncStorage.GetUserDetailsFromDB({ accountID: item.AccountID })
+      await props.navigation.replace("HomeNav", {
+        incomes: result.incomes,
+        expenses: result.expenses
+      })
+    }
+  };
+
+  const HandleAddSalary = details => {
+    // "AccountID": 1027,
+    // "Amount": 14500,
+    // "Date": null,
+    // "Month": 5,
+    // "Type": "work",
+    // "Year": 2019,
+
+    AsyncStorage.setItem(
+      details.Month.toString(),
+      JSON.stringify({
+        salary: getIncomeSum + details.Amount,
+        expend: getExpendSum
+      })
+    );
+    setIncomeSum(getIncomeSum + details.Amount);
+    setSalaryOfAllYears(getSalaryOfAllYears.concat(details));
+  };
+
+  const HandleExpendSalary = details => {
+    // "AccountID": 1027,
+    // "Amount": 8000,
+    // "CategoryID": 2,
+    // "Date": null,
+    // "Day": 12,
+    // "Info": "bisli",
+    // "Month": 2,
+    // "Time": "12:12:00",
+    // "Year": 2019,
+
+    AsyncStorage.setItem(
+      details.Month.toString(),
+      JSON.stringify({
+        salary: getIncomeSum,
+        expend: getExpendSum + details.Amount
+      })
+    );
+    setExpendSum(getExpendSum + details.Amount);
+    setExpensesOfAllYears(getExpensesOfAllYears.concat(details));
+  };
+
+  const IncomeSum = () => {
+    let income = 0;
+    getSalaryOfMonth !== null &&
+      getSalaryOfMonth.map(res => (income += parseFloat(res.Amount)));
+    setIncomeSum(income);
+  };
+
+  const ExpendSum = () => {
+    let expend = 0;
+    getExpensesOfMonth !== null &&
+      getExpensesOfMonth.map(res => (expend += parseFloat(res.Amount)));
+    setExpendSum(expend);
   };
 
   const renderAddingIncome = () => (
@@ -139,7 +218,7 @@ const Home = props => {
       </View>
       <TouchableOpacity
         style={[styles.btnAdd, { backgroundColor: "#07D60D" }]}
-        onPress={handleAddIncomeModal}
+        onPress={() => setIncomeModal(true)}
       >
         <Ionicons
           name="ios-add"
@@ -188,51 +267,15 @@ const Home = props => {
     </View>
   );
 
-  const IncomeSum = () => {
-    let income = 0;
-    getSalaryOfMonth !== null &&
-      getSalaryOfMonth.map(res => (income += parseFloat(res.Amount)));
-    setIncomeSum(income);
-  };
 
-  const ExpendSum = () => {
-    let expend = 0;
-    getExpensesOfMonth !== null &&
-      getExpensesOfMonth.map(res => (expend += parseFloat(res.Amount)));
-    setExpendSum(expend);
-  };
-
-  const HandleDeleteExpense = async item => {
-    console.log("item=", item);
-
-    // changing date string format to fit the SQL
-    const date = item.Date.slice(0, 10);
-    const dateToSql = `${date.slice(6, 10)}/${date.slice(3, 5)}/${date.slice(
-      0,
-      2
-    )}`;
-    const expenseToDelete = {
-      accountID: item.AccountID,
-      date: dateToSql,
-      time: item.Time,
-      amount: item.Amount
-    };
-
-    const result = await SQL.DeleteExpense(expenseToDelete);
-    console.log("result=", result);
-    if (result.res === "0") {
-      const result = await RefreshDataFromDBToAsyncStorage.GetUserDetailsFromDB(
-        { accountID: item.AccountID }
-      );
-      await props.navigation.replace("HomeNav", {
-        incomes: result.incomes,
-        expenses: result.expenses
-      });
-    }
-  };
 
   return (
     <View style={styles.container}>
+
+      {Loading && <ActivityIndicator
+        style={{ flex: 1, paddingTop: 150, position: "absolute", marginLeft: width / 2 }}
+        size={50} />}
+
       <View style={styles.graphFilledPosition}>
         <Text style={styles.headerBoldText}>
           {`${new Date().toLocaleDateString()}`}
@@ -254,7 +297,7 @@ const Home = props => {
         >
           {`in\n${
             MonthData.find(month => month.key === getSelectedMonth).value
-          }`}
+            }`}
         </Text>
 
         <View style={[styles.hederEchTextPosition, styles.rightSideBorder]}>
@@ -310,13 +353,13 @@ const Home = props => {
                 style={{ textAlign: "center", marginTop: 15 }}
               />
             ) : (
-              <Octicons
-                style={{ textAlign: "center", marginTop: 15 }}
-                name="kebab-horizontal"
-                size={30}
-                color="white"
-              />
-            )}
+                <Octicons
+                  style={{ textAlign: "center", marginTop: 15 }}
+                  name="kebab-horizontal"
+                  size={30}
+                  color="white"
+                />
+              )}
           </TouchableOpacity>
         </View>
       </View>

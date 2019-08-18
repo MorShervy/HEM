@@ -262,6 +262,33 @@ export default class SQL {
     });
   } // End DeleteExpense
 
+  static DeleteIncome(income) {
+    console.log("incomeSQL=", income);
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await fetch(`${URL}/DeleteIncome/`, {
+          body: JSON.stringify({
+            accountID: income.accountID,
+            date: income.date,
+            time: income.time,
+            amount: income.amount,
+          }),
+          headers: {
+            "content-type": "application/json"
+          },
+          method: "POST"
+        });
+        console.log(`${URL}/DeleteIncome`, res);
+        const data = await res.json();
+        console.log("data=", data);
+        if (data.d === null) reject("something went wrong")
+        resolve(data);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  } // End DeleteIncome
+
   static ImgUpload(imgUri, picName) {
     let urlAPI = "http://ruppinmobile.tempdomain.co.il/site04/uploadpicture";
     let dataI = new FormData();
