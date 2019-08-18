@@ -17,8 +17,8 @@ import { Ionicons, Octicons } from "@expo/vector-icons";
 import AddIncomeModal from "../components/AddIncomeModal";
 import ExpendList from "../components/ExpendList";
 import AddExpensesModal from "../components/AddExpensesModal";
-import SQL from '../handlers/SQL';
-import RefreshDataFromDBToAsyncStorage from '../handlers/RefreshDataFromDBToAsyncStorage'
+import SQL from "../handlers/SQL";
+import RefreshDataFromDBToAsyncStorage from "../handlers/RefreshDataFromDBToAsyncStorage";
 
 const { width, height, fontScale } = Dimensions.get("window");
 
@@ -34,6 +34,9 @@ const Home = props => {
   );
   const [getSalaryOfMonth, setSalaryOfMonth] = useState(null);
   const [getExpensesOfMonth, setExpensesOfMonth] = useState(null);
+  const [getSalaryAndExpensesOfMonth, setSalaryAndExpensesOfMonth] = useState(
+    null
+  );
 
   const [getIncomeSum, setIncomeSum] = useState(0);
   const [getExpendSum, setExpendSum] = useState(0);
@@ -98,8 +101,12 @@ const Home = props => {
         getExpensesOfAllYears.filter(res => res.Month === month)) ||
       [];
 
+    console.log("shit append");
     setSalaryOfMonth(incomesFiltered);
     setExpensesOfMonth(expensesFiltered);
+    setSalaryAndExpensesOfMonth(
+      incomesFiltered.concat(expensesFiltered).reverse()
+    );
   };
 
   const ToggleAdding = () => {
@@ -276,10 +283,8 @@ const Home = props => {
 
         <MonthList
           HandleClickMonth={HandleClickMonth}
-          //getSelectedMonthCanExpend={getSelectedMonthCanExpend}
           getCanExpend={getIncomeSum - getExpendSum}
         />
-
       </View>
       <View style={styles.selectedMonthPosition}>
         <Text style={[styles.headerText, styles.headerSelectedMonth]}>
@@ -297,33 +302,9 @@ const Home = props => {
       </View>
       <View style={styles.expendDetailsPosition}>
         <ExpendList
-          getExpensesOfMonth={getExpensesOfMonth}
-          getExpensesOfAllYears={getExpensesOfAllYears}
+          getSalaryAndExpensesOfMonth={getSalaryAndExpensesOfMonth}
           HandleDeleteExpense={HandleDeleteExpense}
         />
-
-        {/** start checking  */}
-        <TouchableOpacity onPress={HandleAddSalary}>
-          <Text>Click to add salary</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() =>
-            HandleExpendSalary({
-              AccountID: 1027,
-              Amount: 1000,
-              CategoryID: 2,
-              Date: null,
-              Day: 12,
-              Info: "bamba",
-              Month: 2,
-              Time: "12:12:00",
-              Year: 2019
-            })
-          }
-        >
-          <Text>Click to expend</Text>
-        </TouchableOpacity>
-        {/** end checking  */}
 
         {(toggleAdding && renderAddingIncome()) || null}
         {(toggleAdding && renderAddingExpenses()) || null}

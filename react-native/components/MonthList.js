@@ -6,9 +6,7 @@ import Month from "./Month";
 const { width } = Dimensions.get("window");
 
 const MonthList = props => {
-  const _renderItem = item => {
-    return Month(item, props);
-  };
+  const _renderItem = item => Month(item, props);
 
   return (
     <FlatList
