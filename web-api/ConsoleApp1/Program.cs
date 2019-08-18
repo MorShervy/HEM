@@ -23,7 +23,8 @@ namespace ConsoleApp1
             //Console.WriteLine("updateName=" + BAL.Instance.UpdateUserName("bla@vla.com","test"));
             //Console.WriteLine("insert income = " + BAL.Instance.InsertIncome(1011,"06/10/2019","11:00",15000,"work"));
             //WConsole.WriteLine("insert expense=" + BAL.Instance.InsertExpense(1011,"07/10/2019","11:13",3000,1,"Pool"));
-            Console.WriteLine("delete expense=" + BAL.Instance.DeleteExpense(1011, "2019-08-01", "20:46:04", 2500.00));
+            //Console.WriteLine("delete expense=" + BAL.Instance.DeleteExpense(1011, "2019-08-01", "20:46:04", 2500.00));
+            //Console.WriteLine("delete income=" + BAL.Instance.DeleteIncome(1011, "2019-03-10", "00:00:00", 12000.00));
             Console.WriteLine("end");
             Console.ReadLine();
         }

@@ -186,6 +186,13 @@ namespace WebApplication1.Models
             return res;
         }
 
+        public object DeleteIncome(int accountId, string date, string time, double amount)
+        {
+            int result = DAL.DeleteIncome(accountId, date, time, amount);
+            var res = new { res = result.ToString() };
+            return res;
+        }
+
         public object UpdateUserName(string email, string name)
         {
             int result = DAL.UpdateUserName(email, name);
