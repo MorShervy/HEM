@@ -234,7 +234,7 @@ const Home = props => {
   return (
     <View style={styles.container}>
       <View style={styles.graphFilledPosition}>
-        <Text style={styles.headerText}>
+        <Text style={styles.headerBoldText}>
           {`${new Date().toLocaleDateString()}`}
         </Text>
 
@@ -244,18 +244,50 @@ const Home = props => {
         />
       </View>
       <View style={styles.selectedMonthPosition}>
-        <Text style={[styles.headerText, styles.headerSelectedMonth]}>
+        <Text
+          style={[
+            styles.headerBoldText,
+            styles.headerSelectedMonth,
+            styles.hederEchTextPosition
+          ]}
+        >
           {`in\n${
             MonthData.find(month => month.key === getSelectedMonth).value
           }`}
         </Text>
 
-        <Text style={[styles.headerText, styles.headerSalaryAndExpend]}>
-          {`Salary\n${getIncomeSum}$`}
-        </Text>
-        <Text style={[styles.headerText, styles.headerSalaryAndExpend]}>
-          {`Can Expend\n${(getIncomeSum - getExpendSum).toFixed(2)}$`}
-        </Text>
+        <View style={styles.hederEchTextPosition}>
+          <Text>Incomes</Text>
+          <Text style={[styles.headerBoldText, styles.headerSalaryAndExpend]}>
+            {getIncomeSum}$
+          </Text>
+        </View>
+
+        <View style={styles.hederEchTextPosition}>
+          <Text>Expenses</Text>
+          <Text
+            style={[
+              styles.headerBoldText,
+              styles.headerSalaryAndExpend,
+              styles.headerExpenseText
+            ]}
+          >
+            {getExpendSum}$
+          </Text>
+        </View>
+
+        <View style={styles.hederEchTextPosition}>
+          <Text>Can Expense</Text>
+          <Text
+            style={[
+              styles.headerBoldText,
+              styles.headerSalaryAndExpend,
+              { color: (getIncomeSum - getExpendSum > 0 && "green") || "red" }
+            ]}
+          >
+            {(getIncomeSum - getExpendSum).toFixed(2)}$
+          </Text>
+        </View>
       </View>
       <View style={styles.expendDetailsPosition}>
         <ExpendList
@@ -313,23 +345,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
-  headerText: {
-    flex: 0.3,
-    fontWeight: "bold",
-    textAlign: "center"
-  },
-  headerSelectedMonth: {
-    fontSize: 14 * fontScale * 1.3
-  },
-  headerSalaryAndExpend: {
-    fontSize: 14 * fontScale
-  },
+  hederEchTextPosition: { flex: 0.25, alignItems: "center" },
+  headerBoldText: { fontWeight: "bold", textAlign: "center" },
+  headerSelectedMonth: { fontSize: 14 * fontScale * 1.3 },
+  headerSalaryAndExpend: { fontSize: 14 * fontScale },
+  headerExpenseText: { color: "red" },
   canExpend: { fontWeight: "bold" },
   graphFilledPosition: { flex: 0.2 },
-  expendDetailsPosition: {
-    flex: 0.6
-  },
-
+  expendDetailsPosition: { flex: 0.6 },
   btnAdd: {
     width: 60,
     height: 60,
