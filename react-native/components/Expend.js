@@ -19,12 +19,14 @@ const Expend = ({ item }, props) => (
           )}
           <Text style={styles.text}>{item.Time.substring(0, 5)}</Text>
         </View>
-        <View>
-          <Text style={styles.text}>{item.Amount}</Text>
-          <Text style={styles.text}>
-            {(item.Info !== undefined && item.Info) || item.Type}
-          </Text>
-        </View>
+
+        <Text style={[styles.text, styles.payment, { fontSize: 18 }]}>
+          {item.Amount}
+        </Text>
+
+        <Text style={[styles.text, styles.payment]}>
+          {(item.Info !== undefined && item.Info) || item.Type}
+        </Text>
 
         <Text style={[styles.text, styles.payment]}>
           {item.Info !== undefined &&
@@ -51,11 +53,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#FFFFFF",
-    borderRadius: 10,
+    //borderRadius: 10,
+    marginVertical: "1%",
     shadowOpacity: 1,
     shadowColor: "rgba(0,0,0,0.15)",
     shadowRadius: 5,
-    elevation: 15
+    elevation: 15,
+    marginHorizontal: "2%"
   },
   itemPosition: { flex: 1, flexDirection: "row" },
   itemDescription: {
