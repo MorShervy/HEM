@@ -4,7 +4,7 @@ export const MonthData = [
   { key: 3, value: "March" },
   { key: 4, value: "April" },
   { key: 5, value: "May" },
-  { key: 6, value: "Jane" },
+  { key: 6, value: "June" },
   { key: 7, value: "July" },
   { key: 8, value: "August" },
   { key: 9, value: "September" },

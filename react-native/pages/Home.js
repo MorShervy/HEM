@@ -248,7 +248,8 @@ const Home = props => {
           style={[
             styles.headerBoldText,
             styles.headerSelectedMonth,
-            styles.hederEchTextPosition
+            styles.hederEchTextPosition,
+            styles.rightSideBorder
           ]}
         >
           {`in\n${
@@ -256,15 +257,14 @@ const Home = props => {
           }`}
         </Text>
 
-        <View style={styles.hederEchTextPosition}>
-          <Text>Incomes</Text>
+        <View style={[styles.hederEchTextPosition, styles.rightSideBorder]}>
           <Text style={[styles.headerBoldText, styles.headerSalaryAndExpend]}>
-            {getIncomeSum}$
+            {getIncomeSum}
           </Text>
+          <Text style={styles.text}>Incomes</Text>
         </View>
 
-        <View style={styles.hederEchTextPosition}>
-          <Text>Expenses</Text>
+        <View style={[styles.hederEchTextPosition, styles.rightSideBorder]}>
           <Text
             style={[
               styles.headerBoldText,
@@ -272,12 +272,12 @@ const Home = props => {
               styles.headerExpenseText
             ]}
           >
-            {getExpendSum}$
+            {getExpendSum}
           </Text>
+          <Text style={styles.text}>Expenses</Text>
         </View>
 
         <View style={styles.hederEchTextPosition}>
-          <Text>Can Expense</Text>
           <Text
             style={[
               styles.headerBoldText,
@@ -285,8 +285,9 @@ const Home = props => {
               { color: (getIncomeSum - getExpendSum > 0 && "green") || "red" }
             ]}
           >
-            {(getIncomeSum - getExpendSum).toFixed(2)}$
+            {(getIncomeSum - getExpendSum).toFixed(2)}
           </Text>
+          <Text style={styles.text}>Balance</Text>
         </View>
       </View>
       <View style={styles.expendDetailsPosition}>
@@ -345,14 +346,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
+  text: { fontSize: 10 * fontScale },
   hederEchTextPosition: { flex: 0.25, alignItems: "center" },
   headerBoldText: { fontWeight: "bold", textAlign: "center" },
-  headerSelectedMonth: { fontSize: 14 * fontScale * 1.3 },
-  headerSalaryAndExpend: { fontSize: 14 * fontScale },
+  headerSelectedMonth: { fontSize: 18 * fontScale },
+  headerSalaryAndExpend: { fontSize: 18 * fontScale },
   headerExpenseText: { color: "red" },
   canExpend: { fontWeight: "bold" },
   graphFilledPosition: { flex: 0.2 },
-  expendDetailsPosition: { flex: 0.6 },
+  expendDetailsPosition: { flex: 0.5 },
+  rightSideBorder: { borderRightWidth: 1, borderRightColor: "gray" },
   btnAdd: {
     width: 60,
     height: 60,
